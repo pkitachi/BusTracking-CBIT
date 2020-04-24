@@ -1,0 +1,94 @@
+*{
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+}
+
+body{
+	font-family: 'Poppins', sans-serif;
+    overflow: hidden;
+}
+.container{
+	padding: 5% 10% 0% 10%;
+}
+/* Nav-Bar */
+.nav-head{
+	width:70%;
+	height: 70px;
+	background-color: #333;
+	color: #fff;
+	font-size: x-large;
+	display: flex;
+	float: left;
+	align-items: center;
+	padding-left: 20px;
+}
+.nav-buttons{
+	float: left;
+	width: 30%;
+	display: flex;
+	align-items: center;
+	justify-content: space-evenly;
+	height: 70px;
+	background-color: #333;
+}
+.nav-buttons a{
+	color: #bbbbbb;
+	text-decoration: none;
+	margin-right: 50px;
+	padding: 20px 5px;
+}
+
+.line::after{
+	text-decoration: none;
+	content: '';
+	display: block;
+	background: #fff;
+	width: 0px;
+	height: 2px;
+	transition: width .3s;
+}
+
+.line:hover::after{
+	width: 100%;
+	transition: width .3s;
+	color:#fff;
+}
+
+.nav-buttons a:hover{
+	color: #fff;
+}
+
+/* Map */
+#map {
+	height: 400px;  /* The height is 400 pixels */
+	width: 100%;  /* The width is the width of the web page */
+   }
+
+.map-heading{
+	padding: 10px;
+}
+
+/* Footer */
+.footer-logo{
+	width:2%;
+	height:2%;
+	margin: 2px;
+}
+
+.footer{
+	width: 100%;
+	display: flex;
+	position: fixed;
+	bottom: 0px;
+	justify-content: flex-end;
+	align-items: center;
+	padding: 10px;
+}
+.footer a{
+	width: fit-content;
+	text-decoration: none;
+	font-size: small;
+	margin: 3px;
+	color: #333;
+}
