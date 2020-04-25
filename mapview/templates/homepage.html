@@ -1,0 +1,147 @@
+  
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Bus Tracking </title>
+	<style>
+       /* Set the size of the div element that contains the map */
+      #map {
+        height: 400px;  /* The height is 400 pixels */
+        width: 100%;  /* The width is the width of the web page */
+       }
+    </style>
+</head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+<body>
+	<!--header starts-->
+	<div class="container">
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">Bus Tracking</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <ul class="navbar-nav justify-content-end">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">About</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">signup/login</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Menu
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="#">Action 1</a>
+          <a class="dropdown-item" href="#">Action 2</a>
+          <a class="dropdown-item" href="#">Action 3</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+</div>
+<br>
+<!--header ends-->
+
+
+
+<!--map starts-->
+
+ 	<div class="container">
+    <h3>CBIT BUS TRACKING</h3>
+    <!--The div element for the map -->
+    <div id="map"></div>
+    <!-- trial-->
+    <script>
+      function initMap() {
+        var location = {lat:17.3920,lng:78.3194}
+         var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 11,
+          center: location
+        });
+         var marker = new google.maps.Marker({
+    map: map,
+    //draggable: true,
+    //title: cpname,
+    //animation: google.maps.Animation.DROP,
+    position:location,
+    label:'CBIT',
+    
+  });
+      {% for i in locs %}
+        var lat = parseFloat('{{i.lat}}');
+        var lng = parseFloat('{{i.lon}}');
+        var pos={lat:lat ,lng:lng};
+
+  var marker = new google.maps.Marker({
+    map: map,
+    //draggable: true,
+    //title: cpname,
+    //animation: google.maps.Animation.DROP,
+    position: pos,
+    label:'{{i.bno}}',
+    
+  });
+  var infowindow = new google.maps.InfoWindow({
+          content: '<p>Location:' + marker.getPosition() + '</p>'
+        });
+
+        google.maps.event.addListener(marker, 'click', function() {
+          infowindow.open(map, marker);
+        });
+      
+
+     
+
+ {% endfor %}
+}
+    </script>
+    <!--trail-->
+   <!-- <script>
+// Initialize and add the map
+function initMap() {
+  // The location of Uluru
+  var koth = {lat: 17.3730, lng: 78.5476};
+  var sec={lat:17.4399 , lng:78.4983 }
+  // The map, centered at Uluru
+  var map = new google.maps.Map(
+      document.getElementById('map'), {zoom: 11,center: koth});
+  // The marker, positioned at Uluru
+  var marker = new google.maps.Marker({position: koth, map: map,label:"36"});
+    var marker = new google.maps.Marker({position: sec, map: map,label:"34"});
+}
+    </script>
+  -->
+    <!--Load the API from the specified URL
+    * The async attribute allows the browser to render the page while the API loads
+    * The key parameter will contain your own API key (which is not needed for this tutorial)
+    * The callback parameter executes the initMap() function
+    -->
+   <script async differ type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCclG7w5m1rAyb_KxV8cp2eY4FsTtTm7Bs&libraries=drawing&callback=initMap">
+    </script>
+ </div>
+<!--map ends-->
+<br>
+<!--footer starts-->
+<!-- Image and text -->
+<div class="container">
+<nav class="navbar navbar-light bg-light">
+  <a class="navbar-brand" href="#">
+    <img src="/cbit.png" width="30" height="30" class="d-inline-block align-top" alt="">
+    By CBIT
+  </a>
+</nav>
+</div>
+<!--footer ends-->
+</body>
+</html> 
