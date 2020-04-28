@@ -6,3 +6,7 @@ def homepage(request):
 	locs=Loc.objects.all()
 
 	return render(request,'homepage.html',{"locs":locs}) 
+def index(request):
+	locs=Loc.objects.all()
+
+	return render(request,'index.html',{"locs":locs}) 	

@@ -3,8 +3,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Bus Tracking </title>
-	<style>
+  <title>Bus Tracking </title>
+  <style>
        /* Set the size of the div element that contains the map */
       #map {
         height: 400px;  /* The height is 400 pixels */
@@ -16,11 +16,11 @@
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-
+<link rel="stylesheet" type="text/css" href="{%static 'css/style.css' %}">
 <body>
-	<!--header starts-->
-	<div class="container">
-	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <!--header starts-->
+  <div class="container">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand" href="#">Bus Tracking</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -57,7 +57,7 @@
 
 <!--map starts-->
 
- 	<div class="container">
+  <div class="container">
     <h3>CBIT BUS TRACKING</h3>
     <!--The div element for the map -->
     <div id="map"></div>
@@ -69,25 +69,30 @@
           zoom: 11,
           center: location
         });
-         var marker = new google.maps.Marker({
+         var markerc = new google.maps.Marker({
     map: map,
-    //draggable: true,
-    //title: cpname,
-    //animation: google.maps.Animation.DROP,
     position:location,
     label:'CBIT',
     
   });
+
+
+         var myFunctinForListener = function(aMarker, aInfoWindow) {
+      google.maps.event.addListener(aMarker, 'click', function() {
+          
+          
+          aInfoWindow.open(map, aMarker);
+        });
+  }
+
+         
       {% for i in locs %}
         var lat = parseFloat('{{i.lat}}');
         var lng = parseFloat('{{i.lon}}');
         var pos={lat:lat ,lng:lng};
-
-  var marker = new google.maps.Marker({
+        var k='{{i.bno}}';
+  marker = new google.maps.Marker({
     map: map,
-    //draggable: true,
-    //title: cpname,
-    //animation: google.maps.Animation.DROP,
     position: pos,
     label:'{{i.bno}}',
     
@@ -95,13 +100,7 @@
   var infowindow = new google.maps.InfoWindow({
           content: '<p>Location:' + marker.getPosition() + '</p>'
         });
-
-        google.maps.event.addListener(marker, 'click', function() {
-          infowindow.open(map, marker);
-        });
-      
-
-     
+  myFunctinForListener(marker, infowindow);
 
  {% endfor %}
 }
@@ -137,7 +136,7 @@ function initMap() {
 <div class="container">
 <nav class="navbar navbar-light bg-light">
   <a class="navbar-brand" href="#">
-    <img src="/cbit.png" width="30" height="30" class="d-inline-block align-top" alt="">
+    <img src="cbit.png" width="30" height="30" class="d-inline-block align-top" alt="">
     By CBIT
   </a>
 </nav>
