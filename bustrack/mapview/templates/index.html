@@ -52,11 +52,6 @@
       <!-- Divider -->
       <hr class="sidebar-divider">
 
-      <!-- Heading 
-      <div class="sidebar-heading">
-        Interface
-      </div>
-      -->
       <!-- Nav Item - Pages Collapse Menu -->
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
@@ -66,8 +61,8 @@
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">About Users:</h6>
-            <a class="collapse-item" href="buttons.html">Add </a>
-            <a class="collapse-item" href="cards.html">Users</a>
+            <a class="collapse-item" href="#">Add </a>
+            <a class="collapse-item" href="#">Users</a>
           </div>
         </div>
       </li>
@@ -81,15 +76,8 @@
         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Vehicle Info:</h6>
-            <!--
-            <a class="collapse-item" href="utilities-color.html">Colors</a>
-            <a class="collapse-item" href="utilities-border.html">Borders</a>
-
-            <a class="collapse-item" href="utilities-animation.html">Animations</a>
-            <a class="collapse-item" href="utilities-other.html">Other</a>
-          -->
-          <a class="collapse-item" href="utilities-animation.html">Select Vehicle</a>
-          <a class="collapse-item" href="utilities-animation.html">Search Vehicle</a>
+          <a class="collapse-item" href="#"  data-toggle="modal" data-target="#bus-list" >Select Vehicle</a>
+          <a class="collapse-item" href="#">Search Vehicle</a>
           </div>
         </div>
       </li>
@@ -97,33 +85,6 @@
       <!-- Divider -->
       <hr class="sidebar-divider">
 
-      <!-- Heading 
-      <div class="sidebar-heading">
-        Addons
-      </div>
-      -->
-      <!-- Nav Item - Pages Collapse Menu 
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
-          <i class="fas fa-fw fa-folder"></i>
-          <span>Pages</span>
-          
-          
-        </a>
-        <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Login Screens:</h6>
-            <a class="collapse-item" href="login.html">Login</a>
-            <a class="collapse-item" href="register.html">Register</a>
-            <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
-            <div class="collapse-divider"></div>
-            <h6 class="collapse-header">Other Pages:</h6>
-            <a class="collapse-item" href="404.html">404 Page</a>
-            <a class="collapse-item" href="blank.html">Blank Page</a>
-          </div>
-        </div>
-      </li>
-      -->
       <!-- Nav Item - Charts -->
        <li class="nav-item">
         <a class="nav-link" href="charts.html">
@@ -131,24 +92,24 @@
           <span>Tools</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="charts.html">
+        <a class="nav-link" href="tracking.html">
           <i class="fas fa-route"></i>
           <span>Tracking History</span></a>
       </li>
 
       <!-- Nav Item - Tables -->
       <li class="nav-item">
-        <a class="nav-link" href="tables.html">
+        <a class="nav-link" href="reports.html">
           <i class="fas fa-fw fa-table"></i>
           <span>Reports</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="charts.html">
+        <a class="nav-link" href="#">
           <i class="fas fa-fw fa-chart-area"></i>
           <span>Legend</span></a>
       </li>
        <li class="nav-item">
-        <a class="nav-link" href="charts.html">
+        <a class="nav-link" href="#">
           <i class="fas fa-fw fa-table"></i>
           <span>Bin Reports</span></a>
       </li>
@@ -489,70 +450,91 @@
                     <div class="modal-header">
                       <h5 class="m-0 font-weight-bold text-primary">Busses List</h5>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                        <span class="text">&times;</span>
                       </button>
                     </div>
-                    <div class="modal-body">
-                        <h6 class="m-1">Online</h6>
-                        <ul class="list-group mb-3">
-                          <li class="list-group-item d-flex justify-content-between lh-condensed">
-                            <div>
-                              <h6 class="my-0 font-weight-bold">Bus - 19</h6>
-                              <small class="text-muted">Brief description</small>
-                            </div>
-                            <span class="md-2">
-                              <i class="fas fa-circle" style="color: #1cc88a;"></i>
-                            </span>
-                          </li>
-                          <li class="list-group-item d-flex justify-content-between lh-condensed">
-                            <div>
-                              <h6 class="my-0 font-weight-bold">Bus - 64</h6>
-                              <small class="text-muted">Brief description</small>
-                            </div>
-                            <span class="md-2">
-                              <i class="fas fa-circle" style="color: #1cc88a;"></i>
-                            </span>
-                          </li>
-                          <li class="list-group-item d-flex justify-content-between lh-condensed">
-                            <div>
-                              <h6 class="my-0  font-weight-bold">Bus - 15</h6>
-                              <small class="text-muted">Brief description</small>
-                            </div>
-                            <span class="md-2">
-                              <i class="fas fa-circle" style="color: #1cc88a;"></i>
-                            </span>
-                          </li>
-                          <li class="list-group-item d-flex justify-content-between lh-condensed">
-                            <div>
-                              <h6 class="my-0 font-weight-bold">Bus - 12</h6>
-                              <small class="text-muted">Brief description</small>
-                            </div>
-                            <span class="md-2">
-                              <i class="fas fa-circle" style="color: #1cc88a;"></i>
-                            </span>
-                          </li>
-                        </ul>
-                        <h6 class="m-1">Offline</h6>
-                        <ul class="list-group mb-3">
-                          <li class="list-group-item d-flex justify-content-between lh-condensed">
-                            <div>
-                              <h6 class="my-0 font-weight-bold">Bus - 90</h6>
-                              <small class="text-muted">Brief description</small>
-                            </div>
-                            <span class="md-2">
-                              <i class="fas fa-circle" style="color: #858796;"></i>
-                            </span>
-                          </li>
-                          <li class="list-group-item d-flex justify-content-between lh-condensed">
-                            <div>
-                              <h6 class="my-0 font-weight-bold">Bus - 68</h6>
-                              <small class="text-muted">Brief description</small>
-                            </div>
-                            <span class="md-2">
-                              <i class="fas fa-circle" style="color: #858796;"></i>
-                            </span>
-                          </li>
-                        </ul>
+                    <div class="modal-body" style="padding-bottom: 55px;">
+                      <h6 class="m-1">Online</h6>
+                      <ul class="list-group mb-3">
+                        <li class="list-group-item d-flex justify-content-between lh-condensed">
+                          <div>
+                            <h6 class="my-0 font-weight-bold">Bus - 19</h6>
+                            <small class="text-muted">Brief description</small>
+                          </div>
+                          <span class="md-2">
+                            <i class="fas fa-circle" style="color: #1cc88a;"></i>
+                          </span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between lh-condensed">
+                          <div>
+                            <h6 class="my-0 font-weight-bold">Bus - 64</h6>
+                            <small class="text-muted">Brief description</small>
+                          </div>
+                          <span class="md-2">
+                            <i class="fas fa-circle" style="color: #1cc88a;"></i>
+                          </span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between lh-condensed">
+                          <div>
+                            <h6 class="my-0  font-weight-bold">Bus - 15</h6>
+                            <small class="text-muted">Brief description</small>
+                          </div>
+                          <span class="md-2">
+                            <i class="fas fa-circle" style="color: #1cc88a;"></i>
+                          </span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between lh-condensed">
+                          <div>
+                            <h6 class="my-0 font-weight-bold">Bus - 12</h6>
+                            <small class="text-muted">Brief description</small>
+                          </div>
+                          <span class="md-2">
+                            <i class="fas fa-circle" style="color: #1cc88a;"></i>
+                          </span>
+                        </li>
+                      </ul>
+                      <h6 class="m-1">Offline</h6>
+                      <ul class="list-group mb-3">
+                        <li class="list-group-item d-flex justify-content-between lh-condensed">
+                          <div>
+                            <h6 class="my-0 font-weight-bold">Bus - 90</h6>
+                            <small class="text-muted">Brief description</small>
+                          </div>
+                          <span class="md-2">
+                            <i class="fas fa-circle" style="color: #858796;"></i>
+                          </span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between lh-condensed">
+                          <div>
+                            <h6 class="my-0 font-weight-bold">Bus - 68</h6>
+                            <small class="text-muted">Brief description</small>
+                          </div>
+                          <span class="md-2">
+                            <i class="fas fa-circle" style="color: #858796;"></i>
+                          </span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between lh-condensed">
+                          <div>
+                            <h6 class="my-0 font-weight-bold">Bus - 68</h6>
+                            <small class="text-muted">Brief description</small>
+                          </div>
+                          <span class="md-2">
+                            <i class="fas fa-circle" style="color: #858796;"></i>
+                          </span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between lh-condensed">
+                          <div>
+                            <h6 class="my-0 font-weight-bold">Bus - 68</h6>
+                            <small class="text-muted">Brief description</small>
+                          </div>
+                          <span class="md-2">
+                            <i class="fas fa-circle" style="color: #858796;"></i>
+                          </span>
+                        </li>
+                      </ul>
+                      <a href="#" class="btn btn-primary" data-dismiss="modal" aria-label="Close" style="right: 15px; position: absolute;">
+                        <span class="text">Close</span>
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -649,6 +631,8 @@
       </div>
     </div>
   </div>
+
+
 
   <!-- Bootstrap core JavaScript-->
   <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
