@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import Http404 
 from django.http import HttpResponse
 from . models import Loc
 
@@ -10,3 +11,10 @@ def index(request):
 	locs=Loc.objects.all()
 
 	return render(request,'index.html',{"locs":locs}) 	
+
+def detail(request, bno):
+    try:
+        bus=Loc.objects.get(bno=bno)
+    except Loc.DoesNotExist:
+        raise Http404("Bus does not exist")
+    return render(request, 'dashboard/bus-detail.html', { 'bus' : bus })
