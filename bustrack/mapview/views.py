@@ -17,4 +17,4 @@ def detail(request, bno):
         bus=Loc.objects.get(bno=bno)
     except Loc.DoesNotExist:
         raise Http404("Bus does not exist")
-    return render(request, 'dashboard/bus-detail.html', { 'bus' : bus })
+    return render(request, 'bus-detail.html', { 'bus' : bus })
