@@ -10,9 +10,11 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>SB Admin 2 - Dashboard</title>
+  <title>CBIT Bus Tracking Dashboard</title>
 
   <!-- Custom fonts for this template-->
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    
   <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -41,7 +43,7 @@
 
       <!-- Nav Item - Dashboard -->
       <li class="nav-item active">
-        <a class="nav-link" href="index.html">
+        <a class="nav-link" href="">
           <i class="fas fa-home"></i>
           <!--
                    <img class="img-profile rounded-circle" alt=" "src="{% static 'cbit.png' %}">
@@ -61,8 +63,8 @@
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">About Users:</h6>
-            <a class="collapse-item" href="#">Add </a>
-            <a class="collapse-item" href="#">Users</a>
+            <a class="collapse-item" href="adduser.html">Add </a>
+            <a class="collapse-item" href="userinfo.html">Users</a>
           </div>
         </div>
       </li>
@@ -76,8 +78,8 @@
         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Vehicle Info:</h6>
-          <a class="collapse-item" href="#"  data-toggle="modal" data-target="#bus-list" >Select Vehicle</a>
-          <a class="collapse-item" href="#">Search Vehicle</a>
+          <a class="collapse-item" href="vehicleinfo.html"  data-toggle="modal" data-target="#bus-list" >Select Vehicle</a>
+          <a class="collapse-item" href="vehiclesearch.html">Search Vehicle</a>
           </div>
         </div>
       </li>
@@ -87,12 +89,12 @@
 
       <!-- Nav Item - Charts -->
        <li class="nav-item">
-        <a class="nav-link" href="charts.html">
+        <a class="nav-link" href="tools.html">
           <i class="fas fa-tools"></i>
           <span>Tools</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="tracking.html">
+        <a class="nav-link" href="trackingvehicle.html">
           <i class="fas fa-route"></i>
           <span>Tracking History</span></a>
       </li>
@@ -104,12 +106,12 @@
           <span>Reports</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">
+        <a class="nav-link" href="lehend.html">
           <i class="fas fa-fw fa-chart-area"></i>
           <span>Legend</span></a>
       </li>
        <li class="nav-item">
-        <a class="nav-link" href="#">
+        <a class="nav-link" href="binreports">
           <i class="fas fa-fw fa-table"></i>
           <span>Bin Reports</span></a>
       </li>
@@ -286,6 +288,8 @@
                 <div class="card-body map-container z-depth-1-half" style="height: 500px; padding: 0;">
                     <!--The div element for the map -->
                     <div id="map" style="width: auto; height: 500px;"></div>
+                    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"> 
+                    </script>
                     <script>
                       // Initialize and add the map
                       function initMap() {
@@ -297,29 +301,40 @@
                         var markerc = new google.maps.Marker({
                           map: map,
                           position:location,
-                          icon:"{% static 'markers/casetta_base.png' %}",                   
+                          label:'CBIT',
+                          icon:"{% static 'markers/pin1.png' %}",                   
                         });
                         var myFunctinForListener = function(aMarker, aInfoWindow) {
                           google.maps.event.addListener(aMarker, 'click', function() {                          
                             aInfoWindow.open(map, aMarker);
                           });
                         }
-                        img="{% static 'markers/Car.png' %}"
+                        var myFunctinForListener1 = function(aMarker) {
+                          google.maps.event.addListener(aMarker, 'dblclick', function() {   
+                            window.location.href = this.url;     
+
+                             
+                        });
+                      }
+                        img="{% static 'markers/Bus.png' %}"
                         {% for i in locs %}
                           var lat = parseFloat('{{i.lat}}');
                           var lng = parseFloat('{{i.lon}}');
                           var pos={lat:lat ,lng:lng};
                           var k='{{i.bno}}';
+
                           marker = new google.maps.Marker({
                             map: map,
                             icon:img,
                             position: pos,
+                            url:'http://127.0.0.1:8000/home/Bus-'+'{{i.bno}}',
                             label:'{{i.bno}}',                      
                           });
                           var infowindow = new google.maps.InfoWindow({
                             content: '<p>Location:' + marker.getPosition() + '</p>'
                           });
                           myFunctinForListener(marker, infowindow);
+                          myFunctinForListener1(marker);
                         {% endfor %}
                       }
                     </script>
@@ -598,7 +613,7 @@
       <footer class="sticky-footer bg-white col-lg-12 mb-4">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
-            <span>Copyright &copy; Your Website 2019</span>
+            <span>Copyright &copy; Your Website 2020</span>
           </div>
         </div>
       </footer>
@@ -651,7 +666,7 @@
 
   <!-- Page level custom scripts -->
   <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
-  <script src="{% static 's/demo/chart-pie-demo.js' %}"></script>
+  <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
 
 </body>
 

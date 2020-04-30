@@ -18,14 +18,10 @@ from django.urls import path,include,re_path
 from . import views
 
 urlpatterns = [
-	path('',views.index,name='index'),
+	path('home/',views.index,name='index'),
     #/homepage/
-	path('/homepage',views.homepage,name='homepage'),
-<<<<<<< HEAD
+	path('homepage/',views.homepage,name='homepage'),
     # /dashboard/Bus-67/
-=======
-    # /dashboard/Bus-42/
->>>>>>> 61588fd40df76ddcd34dc49f33abbfb73505e7bd
-    re_path(r'^Bus-(?P<bno>[0-9]+)', views.detail, name='detail'),
+    re_path(r'^home/Bus-(?P<bno>[0-9]+)/', views.detail, name='detail'),
     
 ]
