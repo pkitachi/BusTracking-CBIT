@@ -10,11 +10,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-<<<<<<< HEAD
   <title>CBIT Bus Tracking Dashboard</title>
-=======
-  <title>Admin - Dashboard</title>
->>>>>>> c4102f18c5de332b49ae2b397e4e5230dbdfa612
 
   <!-- Custom fonts for this template-->
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -47,11 +43,7 @@
 
       <!-- Nav Item - Dashboard -->
       <li class="nav-item active">
-<<<<<<< HEAD
-        <a class="nav-link" href="">
-=======
         <a class="nav-link" href="/">
->>>>>>> c4102f18c5de332b49ae2b397e4e5230dbdfa612
           <i class="fas fa-home"></i>
           <!--
                    <img class="img-profile rounded-circle" alt=" "src="{% static 'cbit.png' %}">
@@ -83,16 +75,6 @@
           <i class="fa fa-bus"></i>
           <span>Vehicle</span>
         </a>
-<<<<<<< HEAD
-        <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Vehicle Info:</h6>
-          <a class="collapse-item" href="vehicleinfo.html"  data-toggle="modal" data-target="#bus-list" >Select Vehicle</a>
-          <a class="collapse-item" href="vehiclesearch.html">Search Vehicle</a>
-          </div>
-        </div>
-=======
->>>>>>> c4102f18c5de332b49ae2b397e4e5230dbdfa612
       </li>
 
       <!-- Divider -->
@@ -312,10 +294,6 @@
                         var markerc = new google.maps.Marker({
                           map: map,
                           position:location,
-<<<<<<< HEAD
-                          label:'CBIT',
-=======
->>>>>>> c4102f18c5de332b49ae2b397e4e5230dbdfa612
                           icon:"{% static 'markers/pin1.png' %}",                   
                         });
                         var myFunctinForListener = function(aMarker, aInfoWindow) {
@@ -323,7 +301,6 @@
                             aInfoWindow.open(map, aMarker);
                           });
                         }
-<<<<<<< HEAD
                         var myFunctinForListener1 = function(aMarker) {
                           google.maps.event.addListener(aMarker, 'dblclick', function() {   
                             window.location.href = this.url;     
@@ -331,8 +308,6 @@
                              
                         });
                       }
-=======
->>>>>>> c4102f18c5de332b49ae2b397e4e5230dbdfa612
                         img="{% static 'markers/Bus.png' %}"
                         {% for i in locs %}
                           var lat = parseFloat('{{i.lat}}');

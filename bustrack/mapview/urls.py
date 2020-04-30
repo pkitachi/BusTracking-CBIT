@@ -20,14 +20,8 @@ from . import views
 urlpatterns = [
 	path('home/',views.index,name='index'),
     #/homepage/
-<<<<<<< HEAD
-	path('homepage/',views.homepage,name='homepage'),
-    # /dashboard/Bus-67/
-    re_path(r'^home/Bus-(?P<bno>[0-9]+)/', views.detail, name='detail'),
-=======
 	path('/homepage',views.homepage,name='homepage'),
     # /dashboard/Bus-42/
     re_path(r'^Bus-(?P<bno>[0-9]+)', views.detail, name='detail'),
->>>>>>> c4102f18c5de332b49ae2b397e4e5230dbdfa612
     
 ]
