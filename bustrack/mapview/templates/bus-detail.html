@@ -32,7 +32,7 @@
     <ul class="navbar-nav bg-gradient-primary sidebar toggled sidebar-dark accordion" id="accordionSidebar">
 
       <!-- Sidebar - Brand -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
         <div class="sidebar-brand-text mx-3">Menu</div>
       </a>
 
@@ -41,7 +41,7 @@
 
       <!-- Nav Item - Dashboard -->
       <li class="nav-item active">
-        <a class="nav-link" href="">
+        <a class="nav-link" href="/">
           <i class="fas fa-home"></i>
           <!--
                    <img class="img-profile rounded-circle" alt=" "src="{% static 'cbit.png' %}">
@@ -85,7 +85,7 @@
             <a class="collapse-item" href="utilities-other.html">Other</a>
           -->
           <a class="collapse-item" href="#" data-toggle="modal" data-target="#bus-list" >Select Vehicle</a>
-          <a class="collapse-item" href="">Search Vehicle</a>
+          <a class="collapse-item" href="/">Search Vehicle</a>
           </div>
         </div>
       </li>
@@ -276,7 +276,7 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
                         <div class="dropdown-header">Dropdown Header:</div>
-                        <a class="dropdown-item" href="#">Action</a>
+                        <a id="actn" class="dropdown-item" href="#">Action</a>
                         <a class="dropdown-item" href="#">Another action</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="#">Something else here</a>
@@ -299,7 +299,8 @@
                     var markerc = new google.maps.Marker({
                     map: map,
                     position:cbit,
-                    label:'CBIT',                    
+                    label:'CBIT',
+                    icon:"{% static 'markers/pin1.png' %}",                    
                     });
                     var myFunctinForListener = function(aMarker, aInfoWindow) {
                     google.maps.event.addListener(aMarker, 'click', function() {                          
@@ -313,25 +314,27 @@
                     marker = new google.maps.Marker({
                     map: map,
                     position: pos,
-                    label:'{{bus.bno}}',                      
+                    label:'{{bus.bno}}',
+                    icon:"{% static 'markers/bus.png' %}",                        
                     });
                     var infowindow = new google.maps.InfoWindow({
                     content: '<p>Location:' + marker.getPosition() + '</p>'
                     });
-                    function calcRoute() {
-                        var request = {
-                            origin: pos,
-                            destination: cbit,
-                            travelMode: google.maps.TravelMode.DRIVING
-                        };
-                        directionsService.route(request, function (response, status) {
-                            if (status == google.maps.DirectionsStatus.OK) {
-                                directionsDisplay.setDirections(response);
-                            }
-                        });
-                    }
-
-                    myFunctinForListener(marker, infowindow);
+                    var directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
+                    var directionsService = new google.maps.DirectionsService();
+                    directionsDisplay.setMap(map);
+                    var request = {
+                        origin: pos,
+                        destination: cbit,
+                        travelMode: google.maps.TravelMode.DRIVING
+                    };
+                    directionsService.route(request, function (response, status) {
+                      console.log(status);
+                        if (status == 'OK') {
+                            directionsDisplay.setDirections(response);
+                        }
+                    });
+                
                 }
                 </script>
                 <script async differ type="text/javascript"
@@ -474,7 +477,7 @@
 
   <!-- Page level custom scripts -->
   <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
-  <script src="{% static 's/demo/chart-pie-demo.js' %}"></script>
+  <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
 
 </body>
 

@@ -32,7 +32,7 @@
     <ul class="navbar-nav bg-gradient-primary sidebar toggled sidebar-dark accordion" id="accordionSidebar">
 
       <!-- Sidebar - Brand -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
         <div class="sidebar-brand-text mx-3">Menu</div>
       </a>
 
@@ -41,7 +41,7 @@
 
       <!-- Nav Item - Dashboard -->
       <li class="nav-item active">
-        <a class="nav-link" href="index.html">
+        <a class="nav-link" href="/">
           <i class="fas fa-home"></i>
           <!--
                    <img class="img-profile rounded-circle" alt=" "src="{% static 'cbit.png' %}">
@@ -297,14 +297,14 @@
                         var markerc = new google.maps.Marker({
                           map: map,
                           position:location,
-                          icon:"{% static 'markers/casetta_base.png' %}",                   
+                          icon:"{% static 'markers/pin1.png' %}",                   
                         });
                         var myFunctinForListener = function(aMarker, aInfoWindow) {
                           google.maps.event.addListener(aMarker, 'click', function() {                          
                             aInfoWindow.open(map, aMarker);
                           });
                         }
-                        img="{% static 'markers/Car.png' %}"
+                        img="{% static 'markers/Bus.png' %}"
                         {% for i in locs %}
                           var lat = parseFloat('{{i.lat}}');
                           var lng = parseFloat('{{i.lon}}');
@@ -514,7 +514,7 @@
 
   <!-- Page level custom scripts -->
   <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
-  <script src="{% static 's/demo/chart-pie-demo.js' %}"></script>
+  <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
 
 </body>
 
