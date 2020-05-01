@@ -163,14 +163,41 @@
               <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-bell fa-fw"></i>
                 <!-- Counter - Alerts -->
-                <span class="badge badge-danger badge-counter">3+</span>
+                <span id="alert-count" class="badge badge-danger badge-counter"></span>
               </a>
               <!-- Dropdown - Alerts -->
               <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
                 <h6 class="dropdown-header">
                   Emergency Alerts
                 </h6>
-                <ul class="list-group mb-3" style="margin: 10px;">
+                <ul id="alert-list" class="list-group mb-0"  style="max-height: 340px; overflow: scroll; margin:15px;">
+                  <li class="list-group-item d-flex justify-content-between lh-condensed">
+                    <div>
+                      <h6 class="my-0 font-weight-bold">Bus - 19</h6>
+                      <small class="text-muted">Brief description</small>
+                    </div>
+                    <span class="md-2">
+                      <i class="fas fa-circle" style="color: #e74a3b;"></i>
+                    </span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between lh-condensed">
+                    <div>
+                      <h6 class="my-0 font-weight-bold">Bus - 26</h6>
+                      <small class="text-muted">Brief description</small>
+                    </div>
+                    <span class="md-2">
+                      <i class="fas fa-circle" style="color: #e74a3b;"></i>
+                    </span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between lh-condensed">
+                    <div>
+                      <h6 class="my-0 font-weight-bold">Bus - 28</h6>
+                      <small class="text-muted">Brief description</small>
+                    </div>
+                    <span class="md-2">
+                      <i class="fas fa-circle" style="color: #e74a3b;"></i>
+                    </span>
+                  </li>
                   <li class="list-group-item d-flex justify-content-between lh-condensed">
                     <div>
                       <h6 class="my-0 font-weight-bold">Bus - 29</h6>
@@ -189,16 +216,18 @@
                       <i class="fas fa-circle" style="color: #e74a3b;"></i>
                     </span>
                   </li>
-                  <li class="list-group-item d-flex justify-content-between lh-condensed">
-                    <div>
-                      <h6 class="my-0 font-weight-bold">Bus - 65</h6>
-                      <small class="text-muted">Brief description</small>
-                    </div>
-                    <span class="md-2">
-                      <i class="fas fa-circle" style="color: #e74a3b;"></i>
-                    </span>
-                  </li>
+                  
                 </ul>
+                <script>
+                  var ul = document.getElementById("alert-list").getElementsByTagName("li").length;
+                  if ( ul>5 ) {
+                    document.getElementById("alert-count").innerHTML = "5+";
+                  }
+                  else {
+                    document.getElementById("alert-count").innerHTML = ul;
+                  }
+                  
+                </script>
               </div>
             </li>
 
