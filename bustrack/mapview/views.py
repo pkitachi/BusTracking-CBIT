@@ -20,3 +20,8 @@ def detail(request, bno):
     except Loc.DoesNotExist:
         raise Http404("Bus does not exist")
     return render(request, 'bus-detail.html', { 'bus' : bus, 'locs' : locs })
+
+def alerts(request):
+	locs=Loc.objects.all()
+
+	return render(request,'alerts.html',{"locs":locs}) 

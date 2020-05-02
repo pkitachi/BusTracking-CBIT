@@ -20,10 +20,7 @@
   <link rel="stylesheet" type="text/css" href="{% static 'css/sb-admin-2.min.css' %}">
   <!-- Custom styles for this template-->
   <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
-
-  
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    
 
 </head>
 
@@ -202,6 +199,33 @@
                       <i class="fas fa-circle" style="color: #e74a3b;"></i>
                     </span>
                   </li>
+                  <li class="list-group-item d-flex justify-content-between lh-condensed">
+                    <div>
+                      <h6 class="my-0 font-weight-bold">Bus - 65</h6>
+                      <small class="text-muted">Brief description</small>
+                    </div>
+                    <span class="md-2">
+                      <i class="fas fa-circle" style="color: #e74a3b;"></i>
+                    </span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between lh-condensed">
+                    <div>
+                      <h6 class="my-0 font-weight-bold">Bus - 65</h6>
+                      <small class="text-muted">Brief description</small>
+                    </div>
+                    <span class="md-2">
+                      <i class="fas fa-circle" style="color: #e74a3b;"></i>
+                    </span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between lh-condensed">
+                    <div>
+                      <h6 class="my-0 font-weight-bold">Bus - 65</h6>
+                      <small class="text-muted">Brief description</small>
+                    </div>
+                    <span class="md-2">
+                      <i class="fas fa-circle" style="color: #e74a3b;"></i>
+                    </span>
+                  </li>
                 </ul>
               </div>
               <script>
@@ -259,13 +283,7 @@
               <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary" style="flex: 1;">Bus Routes</h6>
-                  <a href="#" id="popup-btn" class="btn btn-primary btn-icon-split" data-toggle="modal" data-target="#bus-list" style="margin-right: 20px;">
-                    <span class="icon text-white-50">
-                      <i class="fas fa-bus"></i>
-                    </span>
-                    <span class="text">Busses</span>
-                  </a>
+                  <h6 class="m-0 font-weight-bold text-primary" style="flex: 1;">Alerts History</h6>
                   <div class="dropdown no-arrow">
                     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
@@ -280,64 +298,14 @@
                   </div>
                 </div>
                 <!-- Card Body -->
-                <div class="card-body map-container z-depth-1-half" style="height: 500px; padding: 0;">
-                    <!--The div element for the map -->
-                    <div id="map" style="width: auto; height: 500px;"></div>
-                    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"> 
-                    </script>
-                    <script>
-                      // Initialize and add the map
-                      function initMap() {
-                        var location = {lat:17.3920,lng:78.3194}
-                        var map = new google.maps.Map(document.getElementById('map'), {
-                          zoom: 11,
-                          center: location
-                        });
-                        var markerc = new google.maps.Marker({
-                          map: map,
-                          position:location,
-                          icon:"{% static 'markers/pin1.png' %}",                   
-                        });
-                        var myFunctinForListener = function(aMarker, aInfoWindow) {
-                          google.maps.event.addListener(aMarker, 'click', function() {                          
-                            aInfoWindow.open(map, aMarker);
-                          });
-                        }
-                        var myFunctinForListener1 = function(aMarker) {
-                          google.maps.event.addListener(aMarker, 'dblclick', function() {   
-                            window.location.href = this.url;     
-
-                             
-                        });
-                      }
-                        img="{% static 'markers/Bus.png' %}"
-                        {% for i in locs %}
-                          var lat = parseFloat('{{i.lat}}');
-                          var lng = parseFloat('{{i.lon}}');
-                          var pos={lat:lat ,lng:lng};
-                          var k='{{i.bno}}';
-
-                          marker = new google.maps.Marker({
-                            map: map,
-                            icon:img,
-                            position: pos,
-                            url:'http://127.0.0.1:8000/home/Bus-'+'{{i.bno}}',
-                            label:'{{i.bno}}',                      
-                          });
-                          var infowindow = new google.maps.InfoWindow({
-                            content: '<p>Location:' + marker.getPosition() + '</p>'
-                          });
-                          myFunctinForListener(marker, infowindow);
-                          myFunctinForListener1(marker);
-                        {% endfor %}
-                      }
-                    </script>
-                    <script async differ type="text/javascript"
-                      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCclG7w5m1rAyb_KxV8cp2eY4FsTtTm7Bs&libraries=drawing&callback=initMap">
-                    </script>
-                  </div>
+                <div class="card-body z-depth-1-half" style="height: 500px; padding: 0;">
+                
                 </div>
+
               </div>
+            </div>
+          </div>
+
 
               <!-- Popup -->
               <div class="modal fade" id="bus-list" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -375,56 +343,6 @@
                 </div>
               </div>
 
-
-              <!-- Color System -->
-                <div class="col-lg-6 mb-4">
-                  <div class="card bg-primary text-white shadow">
-                    <div class="card-body">
-                      Primary
-                      <div class="text-white-50 small">#4e73df</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                  <div class="card bg-success text-white shadow">
-                    <div class="card-body">
-                      Success
-                      <div class="text-white-50 small">#1cc88a</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                  <div class="card bg-info text-white shadow">
-                    <div class="card-body">
-                      Info
-                      <div class="text-white-50 small">#36b9cc</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                  <div class="card bg-warning text-white shadow">
-                    <div class="card-body">
-                      Warning
-                      <div class="text-white-50 small">#f6c23e</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                  <div class="card bg-danger text-white shadow">
-                    <div class="card-body">
-                      Danger
-                      <div class="text-white-50 small">#e74a3b</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                  <div class="card bg-secondary text-white shadow">
-                    <div class="card-body">
-                      Secondary
-                      <div class="text-white-50 small">#858796</div>
-                    </div>
-                  </div>
-                </div>
       <!-- End of Main Content -->
 
       <!-- Footer -->

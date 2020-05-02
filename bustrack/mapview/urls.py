@@ -21,7 +21,10 @@ urlpatterns = [
 	path('home/',views.index,name='index'),
     #/homepage/
 	path('homepage/',views.homepage,name='homepage'),
-    # /dashboard/Bus-67/
+    #/home/Bus-67/
     re_path(r'^home/Bus-(?P<bno>[0-9]+)/', views.detail, name='detail'),
+    #/home/alerts
+    path('home/alerts',views.alerts,name='alerts'),
+    
     
 ]
