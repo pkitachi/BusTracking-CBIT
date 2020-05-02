@@ -92,7 +92,16 @@ DATABASES = {
         'PORT':'3306',
     }
 }
-
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.mysql',
+#        'NAME': 'gpstrackerdb',
+#        'USER':'admin',
+#        'PASSWORD':'test1234',
+#        'HOST':'http://gpstrackerdb.cgvswcwjh49d.ap-south-1.rds.amazonaws.com/',
+#        'PORT':'3306',
+#    }
+#}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
