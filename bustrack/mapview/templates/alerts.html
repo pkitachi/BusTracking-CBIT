@@ -360,6 +360,22 @@
   </div>
 
 
+  
+  <script>
+    localStorage.setItem('0','42');
+    localStorage.setItem('1','29');
+    localStorage.setItem('2','36');
+    localStorage.setItem('rn','2');
+  </script>
+  <script>
+    var arr = ['','','','','','','','','','','','','','','','','','','',''];
+    var rn=Number(localStorage.getItem('rn'));
+    for (i = 0; i <= rn; i++) {
+      arr[i] = localStorage.getItem(String(i));
+      console.log(arr[i]);
+    }
+  </script>
+
 
   <!-- Bootstrap core JavaScript-->
   <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
