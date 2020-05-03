@@ -12,6 +12,8 @@
 
   <title>CBIT Bus Tracking Dashboard</title>
 
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
   <!-- Custom fonts for this template-->
   <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
@@ -21,8 +23,6 @@
   <!-- Custom styles for this template-->
   <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
 
-  
-  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     
 
 </head>
@@ -47,46 +47,14 @@
       <li class="nav-item active">
         <a class="nav-link" href="/home">
           <i class="fas fa-home"></i>
-          <!--
-                   <img class="img-profile rounded-circle" alt=" "src="{% static 'cbit.png' %}">
-                 -->
-          <span>Home</span></a>
+          <span>Home</span></a> 
       </li>
-
-      <!-- Divider -->
-      <hr class="sidebar-divider">
-
-      <!-- Nav Item - Pages Collapse Menu -->
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-          <i class="fas fa-users"></i>
-          <span>Users</span>
-        </a>
-        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">About Users:</h6>
-            <a class="collapse-item" href="adduser.html">Add </a>
-            <a class="collapse-item" href="userinfo.html">Users</a>
-          </div>
-        </div>
-      </li>
-
-      <!-- Nav Item - Utilities Collapse Menu -->
+      <hr class="sidebar-divider my-0">
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="modal" data-target="#bus-list"  aria-expanded="true" aria-controls="collapseUtilities">
           <i class="fa fa-bus"></i>
           <span>Vehicle</span>
         </a>
-      </li>
-
-      <!-- Divider -->
-      <hr class="sidebar-divider">
-
-      <!-- Nav Item - Charts -->
-       <li class="nav-item">
-        <a class="nav-link" href="tools.html">
-          <i class="fas fa-tools"></i>
-          <span>Tools</span></a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="trackingvehicle.html">
@@ -94,26 +62,66 @@
           <span>Tracking History</span></a>
       </li>
 
-      <!-- Nav Item - Tables -->
-      <li class="nav-item">
-        <a class="nav-link" href="reports.html">
-          <i class="fas fa-fw fa-table"></i>
-          <span>Reports</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="lehend.html">
-          <i class="fas fa-fw fa-chart-area"></i>
-          <span>Legend</span></a>
-      </li>
-       <li class="nav-item">
-        <a class="nav-link" href="binreports">
-          <i class="fas fa-fw fa-table"></i>
-          <span>Bin Reports</span></a>
-      </li>
-       
-
       <!-- Divider -->
-      <hr class="sidebar-divider d-none d-md-block">
+      <hr class="sidebar-divider my-0">
+
+      <li class="nav-item">
+        <a class="nav-link" href="tools.html">
+          <i class="fas fa-map-marker"></i>
+          <span>Clustered View</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          <i class="fas fa-table"></i>
+          <span>Reports</span>
+        </a>
+        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <h6 class="collapse-header">View Reports:</h6>
+            <a class="collapse-item" href="#">Installation</a>
+            <a class="collapse-item" href="#">Device Uptime</a>
+            <a class="collapse-item" href="#">Alerts</a>
+            <a class="collapse-item" href="#">Routes</a>
+            <a class="collapse-item" href="#">Distance</a>
+            <a class="collapse-item" href="#">Speed Violation</a>
+            <a class="collapse-item" href="#">Fleet Summary</a>
+          </div>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+          <i class="fas  fa-tools"></i>
+          <span>Tools</span>
+        </a>
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <h6 class="collapse-header">View Tools:</h6>  
+            <a class="collapse-item" href="#">Replay Tracking</a>
+            <a class="collapse-item" href="#">Add Geo-fence</a>
+            <a class="collapse-item" href="#">View Geo-fence</a>
+            <a class="collapse-item" href="#">Alert Settings</a>
+            <a class="collapse-item" href="#">Data Archieve</a>
+          </div>
+        </div>
+      </li>
+      
+      <!-- Divider -->
+      <hr class="sidebar-divider my-0">
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+          <i class="fas fa-users"></i>
+          <span>Users</span>
+        </a>
+        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <h6 class="collapse-header">About Users:</h6>
+            <a class="collapse-item" href="#">Add </a>
+            <a class="collapse-item" href="#">Users</a>
+          </div>
+        </div>
+      </li>
+    
 
       <!-- Sidebar Toggler (Sidebar) -->
       <div class="text-center d-none d-md-inline">
