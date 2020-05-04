@@ -9,7 +9,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
-
+  <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
   <title>CBIT Bus Tracking Dashboard</title>
 
   <!-- Custom fonts for this template-->
@@ -274,6 +274,7 @@
                     </span>
                     <span class="text">Alert</span>
                   </a>
+                  
                   <a href="#" id="popup-btn" class="btn btn-primary btn-icon-split" data-toggle="modal" data-target="#bus-list" style="margin-right: 20px;">
                     <span class="icon text-white-50">
                       <i class="fas fa-bus"></i>
@@ -508,8 +509,13 @@
       $('.alert').addClass("hide");
     });
   </script>
-
-
+  
+<script>
+document.getElementById("alert-btn").addEventListener("click", function(){  
+                  var audio = new Audio( 
+                  "{% static 'beep.mp3' %}"); 
+                  audio.play();  });
+</script>
   <!-- Bootstrap core JavaScript-->
   <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
   <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
