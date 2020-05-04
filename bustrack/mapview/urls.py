@@ -25,6 +25,8 @@ urlpatterns = [
     re_path(r'^home/Bus-(?P<bno>[0-9]+)/', views.detail, name='detail'),
     #/home/alerts
     path('home/alerts',views.alerts,name='alerts'),
+
+    
     
     
 ]
