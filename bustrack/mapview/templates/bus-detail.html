@@ -10,7 +10,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Bus-{{bus.bno}}</title>
+  <title>Bus-{{bus.routeId}}</title>
 
   <!-- Custom fonts for this template-->
   <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
@@ -366,13 +366,13 @@
             <h6 class="m-1">Online</h6>
             <ul class="list-group mb-3">
               
-              {% for i in locs %}
+              {% for i in busses %}
               <li class="list-group-item d-flex justify-content-between lh-condensed">
                 <div>
-                  <a href="/home/Bus-{{i.bno}}">
-                    <h6 class="my-0 font-weight-bold">Bus - {{i.bno}}</h6>
+                  <a href="/home/Bus-{{i.routeId}}/">
+                    <h6 class="my-0 font-weight-bold">Bus - {{i.routeId}}</h6>
                   </a>
-                  <small class="text-muted">Brief description</small>
+                  <small class="text-muted">{{i.routeName}}</small>
                 </div>
                 <span class="md-2">
                   <i class="fas fa-circle" style="color: #1cc88a;"></i>
@@ -590,7 +590,14 @@
       $('.alert').addClass("hide");
     });
   </script>
-
+    
+    <script>
+      document.getElementById("alert-btn").addEventListener("click", function(){  
+        var audio = new Audio( 
+        "{% static 'beep.mp3' %}"); 
+        audio.play();  });
+    </script>
+    
 
   <!-- Bootstrap core JavaScript-->
   <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
