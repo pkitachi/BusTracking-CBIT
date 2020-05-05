@@ -326,21 +326,29 @@
                         });
                       }
                         img="{% static 'markers/Bus.png' %}"
-                        {% for i in locs %}
-                          var lat = parseFloat('{{i.lat}}');
-                          var lng = parseFloat('{{i.lon}}');
+                         {% for i in track %}
+                          var lat = parseFloat('{{i.latitude}}');
+                          var lng = parseFloat('{{i.longitude}}');
                           var pos={lat:lat ,lng:lng};
-                          var k='{{i.bno}}';
-
+                          var k='{{i.Id}}';
+                          var speed='{{i.speed}}';
                           marker = new google.maps.Marker({
                             map: map,
                             icon:img,
                             position: pos,
-                            url:'http://127.0.0.1:8000/home/Bus-'+'{{i.bno}}',
-                            label:'{{i.bno}}',                      
+                            
+                            label:'{{i.Id}}',                      
                           });
                           var infowindow = new google.maps.InfoWindow({
-                            content: '<p>Location:' + marker.getPosition() + '</p>'
+                            content: '<p>Latitude:' +lat + '</p>'+
+                                      '<p>Longitude'+lng + '</p>'+
+                                      '<p>Speed:' + speed + '</p>'+
+                                      '<p>Altitude:' + '{{i.altitude}}' + '</p>'+
+                                      '<p>Battery:' + '{{i.battery}}' + '</p>'+
+                                      '<p>Fuel:' + '{{i.fuel}}' + '</p>'+
+                                      '<p>Device Time' + '{{i.deviceTime}}' + '</p>'+
+                                      '<p>Alert:' + '{{i.alert}}' + '</p>'
+                                      
                           });
                           myFunctinForListener(marker, infowindow);
                           myFunctinForListener1(marker);
