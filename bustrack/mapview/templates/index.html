@@ -182,33 +182,19 @@
                   Emergency Alerts
                 </h6>
                 <ul id="alert-list" class="list-group mb-3" style="margin: 10px;">
+                  {% for i in track %}
+                  {% if i.alert is not null%}
                   <li class="list-group-item d-flex justify-content-between lh-condensed">
                     <div>
-                      <h6 class="my-0 font-weight-bold">Bus - 29</h6>
+                      <h6 class="my-0 font-weight-bold">Bus - {{ i.Id }}</h6>
                       <small class="text-muted">Brief description</small>
                     </div>
                     <span class="md-2">
                       <i class="fas fa-circle" style="color: #e74a3b;"></i>
                     </span>
                   </li>
-                  <li class="list-group-item d-flex justify-content-between lh-condensed">
-                    <div>
-                      <h6 class="my-0 font-weight-bold">Bus - 44</h6>
-                      <small class="text-muted">Brief description</small>
-                    </div>
-                    <span class="md-2">
-                      <i class="fas fa-circle" style="color: #e74a3b;"></i>
-                    </span>
-                  </li>
-                  <li class="list-group-item d-flex justify-content-between lh-condensed">
-                    <div>
-                      <h6 class="my-0 font-weight-bold">Bus - 65</h6>
-                      <small class="text-muted">Brief description</small>
-                    </div>
-                    <span class="md-2">
-                      <i class="fas fa-circle" style="color: #e74a3b;"></i>
-                    </span>
-                  </li>
+                  {% endif %}
+                  {% endfor %}
                   <a class="pt-3 text-center small text-gray-600 text-decoration-none" href="/home/alerts">Show All Alerts</a>
                 </ul>
               </div>
@@ -326,29 +312,21 @@
                         });
                       }
                         img="{% static 'markers/Bus.png' %}"
-                         {% for i in track %}
-                          var lat = parseFloat('{{i.latitude}}');
-                          var lng = parseFloat('{{i.longitude}}');
+                        {% for i in locs %}
+                          var lat = parseFloat('{{i.lat}}');
+                          var lng = parseFloat('{{i.lon}}');
                           var pos={lat:lat ,lng:lng};
-                          var k='{{i.Id}}';
-                          var speed='{{i.speed}}';
+                          var k='{{i.bno}}';
+
                           marker = new google.maps.Marker({
                             map: map,
                             icon:img,
                             position: pos,
-                            
-                            label:'{{i.Id}}',                      
+                            url:'http://127.0.0.1:8000/home/Bus-'+'{{i.bno}}',
+                            label:'{{i.bno}}',                      
                           });
                           var infowindow = new google.maps.InfoWindow({
-                            content: '<p>Latitude:' +lat + '</p>'+
-                                      '<p>Longitude'+lng + '</p>'+
-                                      '<p>Speed:' + speed + '</p>'+
-                                      '<p>Altitude:' + '{{i.altitude}}' + '</p>'+
-                                      '<p>Battery:' + '{{i.battery}}' + '</p>'+
-                                      '<p>Fuel:' + '{{i.fuel}}' + '</p>'+
-                                      '<p>Device Time' + '{{i.deviceTime}}' + '</p>'+
-                                      '<p>Alert:' + '{{i.alert}}' + '</p>'
-                                      
+                            content: '<p>Location:' + marker.getPosition() + '</p>'
                           });
                           myFunctinForListener(marker, infowindow);
                           myFunctinForListener1(marker);
@@ -503,7 +481,7 @@
   </div>
 
   <script>
-    $('#alert-btn').click(function(){
+    var notification = function(){
       $('.alert').addClass("show");
       $('.alert').removeClass("hide");
       $('.alert').addClass("showAlert");
@@ -512,7 +490,8 @@
         $('.alert').removeClass("show");
         $('.alert').addClass("hide");
       },5000);
-    });
+    }
+    $('#alert-btn').click(notification);
     $('.close-btn').click(function(){
       $('.alert').removeClass("show");
       $('.alert').addClass("hide");

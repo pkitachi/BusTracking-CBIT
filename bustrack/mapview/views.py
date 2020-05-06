@@ -21,10 +21,10 @@ def index(request):
 def detail(request, bno):
     
     locs=Loc.objects.all()
-    for i in busses:
-        if(i['routeId']==int(bno)):
-            return render(request, 'bus-detail.html', { 'bus' : i, 'track':track,'locs' : locs , 'busses': busses})
-    raise Http404("Bus does not exist")
+    for i in track:
+        if(i['Id']==int(bno)):
+            return render(request, 'bus-detail.html', { 'bus' : i ,'locs' : locs , 'busses': busses})
+    # raise Http404("Bus does not exist")
     return render(request, 'bus-detail.html', {'locs' : locs ,'track':track, 'busses': busses})
 
 def alerts(request):
