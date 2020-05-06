@@ -31,3 +31,8 @@ def alerts(request):
 	locs=Loc.objects.all()
 
 	return render(request,'alerts.html',{"locs":locs , 'track':track, 'busses': busses}) 
+
+def apicall(request):
+    urlt='http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking'
+    track=requests.get(urlt).json()
+    return HttpResponse(track)

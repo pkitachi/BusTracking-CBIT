@@ -359,7 +359,6 @@
     </div>
   </div>
 
-
   
   <script>
     localStorage.setItem('0a','42');
@@ -388,32 +387,59 @@
     <div class="close-btn">
       <span class="fas fa-times"></span>
     </div>
-</div>
-
-<script>
-  var notification = function(){
-    $('.alert').addClass("show");
-    $('.alert').removeClass("hide");
-    $('.alert').addClass("showAlert");
-    
-    setTimeout(function(){
+  </div>
+  <p id="#text">text</p>
+  <script>
+    var notification = function(){
+      $('.alert').addClass("show");
+      $('.alert').removeClass("hide");
+      $('.alert').addClass("showAlert");
+      
+      setTimeout(function(){
+        $('.alert').removeClass("show");
+        $('.alert').addClass("hide");
+      },5000);
+    }
+    $('#alert-btn').click(notification);
+    $('.close-btn').click(function(){
       $('.alert').removeClass("show");
       $('.alert').addClass("hide");
-    },5000);
-  }
-  $('#alert-btn').click(notification);
-  $('.close-btn').click(function(){
-    $('.alert').removeClass("show");
-    $('.alert').addClass("hide");
-  });
-</script>
-    
-<script>
-  document.getElementById("alert-btn").addEventListener("click", function(){  
-    var audio = new Audio( 
-    "{% static 'beep.mp3' %}"); 
-    audio.play();  });
-</script>
+    });
+  </script>
+      
+  <script>
+    document.getElementById("alert-btn").addEventListener("click", function(){  
+      var audio = new Audio( 
+      "{% static 'beep.mp3' %}"); 
+      audio.play();  });
+  </script> 
+
+  <script>
+    var track;
+    var i = 0;
+    function myLoop() {
+      setTimeout(function() {
+        if (i < 1) {     
+          refresh();      
+          myLoop();
+        }
+      }, 1000)
+    }
+    myLoop();
+
+    function refresh(){ 
+      $.ajax({
+        type: "POST",
+        url: "{{ 'ajax-refresh/' }}",
+        data: { csrfmiddlewaretoken: '{{ csrf_token }}', text: '' },
+        success: function callback(response){
+          track = response;
+        }
+      });
+    document.getElementById("#text").innerHTML = track;
+    }
+
+  </script>
 
   <!-- Bootstrap core JavaScript-->
   <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>

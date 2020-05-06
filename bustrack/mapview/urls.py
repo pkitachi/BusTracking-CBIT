@@ -26,6 +26,7 @@ urlpatterns = [
     #/home/alerts
     path('home/alerts',views.alerts,name='alerts'),
 
+    path('home/ajax-refresh/', views.apicall),
     
     
     
