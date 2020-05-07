@@ -27,6 +27,8 @@ urlpatterns = [
     path('home/alerts',views.alerts,name='alerts'),
 
     path('home/ajax-refresh/', views.apicall),
+	#/info/<bno>
+    path('info/<bno>',views.info,name='info'),
     
     
     

@@ -1,10 +1,46 @@
 {%extends 'base.html'%}
 {% load static %}
 {%block title%}
-Bus-{{bus.Id}}
+Bus-{{bno}}
 {%endblock%}
+{%block onload%}worker(){%endblock%}
 {%block main%}
-
+<script>
+var latVal={{curRaw.lat}},lonVal={{curRaw.lon}};
+var cbit = {lat:17.3920,lng:78.3194};
+function worker() {
+  $.ajax({
+    url: '/info/{{bno}}', 
+	type: 'GET',
+    success: function(data,textStatus,request) {
+	  latVal=parseFloat(data['latitude']);
+	  lonVal=parseFloat(data['longitude']);
+	  var pos={lat:latVal,lng:lonVal};
+	  var request = {
+		origin: pos,
+		destination: cbit,
+		travelMode: google.maps.TravelMode.DRIVING
+		};
+		directionsService.route(request, function (response, status) {
+		console.log(status);
+		if (status == 'OK') {
+			directionsDisplay.setDirections(response);
+		}
+		});
+	  var latlng = new google.maps.LatLng(latVal, lonVal);
+	  marker.setPosition(latlng);
+	  marker.setTitle("Latitude:"+latVal+" | Longitude:"+lonVal);
+	  document.getElementById("lat").innerHTML="Lat: "+latVal;
+	  document.getElementById("lon").innerHTML="Lng: "+lonVal;
+	  document.getElementById("speed").innerHTML=data['speed']+" KMPH";
+    },
+    complete: function() {
+      // Schedule the next request when the current one's complete
+      setTimeout(worker, 5000);
+    }
+  });
+}
+</script>
         <!-- Begin Page Content -->
         <div class="container-fluid">
 
@@ -46,10 +82,12 @@ Bus-{{bus.Id}}
             <div class="card-body map-container z-depth-1-half" style="height: 500px; padding: 0;">
                 <!--The div element for the map -->
                 <div id="map" style="width: auto; height: 500px;"></div>
-                <script>
+                 <script>
                 // Initialize and add the map
+				var position;
+				var marker;var directionsDisplay,directionsService;
                 function initMap() {
-                    var cbit = {lat:17.3920,lng:78.3194}
+                    var cbit = {lat:17.3920,lng:78.3194};
                     var map = new google.maps.Map(document.getElementById('map'), {
                     zoom: 11,
                     center: cbit
@@ -65,21 +103,23 @@ Bus-{{bus.Id}}
                         aInfoWindow.open(map, aMarker);
                     });
                     }
-                    var lat = parseFloat('{{bus.latitude}}');
-                    var lng = parseFloat('{{bus.longitude}}');
+					var bno={{bno}};
+					var lat=parseFloat(latVal);
+					var lng=parseFloat(lonVal);
                     var pos={lat:lat ,lng:lng};
-                    var k='{{bus.bno}}';
+                    var k='{{bno}}';
                     marker = new google.maps.Marker({
                     map: map,
                     position: pos,
-                    label:'{{bus.bno}}',
+                    label:'{{bno}}',
                     icon:"{% static 'markers/bus.png' %}",                        
                     });
+					marker.setTitle("Latitude:"+latVal+" | Longitude:"+lonVal);
                     var infowindow = new google.maps.InfoWindow({
                     content: '<p>Location:' + marker.getPosition() + '</p>'
                     });
-                    var directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
-                    var directionsService = new google.maps.DirectionsService();
+                    directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
+                    directionsService = new google.maps.DirectionsService();
                     directionsDisplay.setMap(map);
                     var request = {
                         origin: pos,
@@ -190,8 +230,8 @@ Bus-{{bus.Id}}
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
               <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">Location</div>
-              <div class="text-xs mb-0 text-gray-800">Lat: {{bus.latitude}}</div>
-              <div class="text-xs mb-0 text-gray-800">Lng: {{bus.longitude}}</div>
+              <div class="text-xs mb-0 text-gray-800" id="lat">Lat: {{curRaw.lat}}</div>
+              <div class="text-xs mb-0 text-gray-800" id="lon">Lng: {{curRaw.lon}}</div>
             </div>
             <div class="col-auto">
               <i class="fas fa-map-marker fa-2x text-gray-300"></i>
@@ -206,7 +246,7 @@ Bus-{{bus.Id}}
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
               <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Speed</div>
-              <div class="h6 mb-0 font-weight-bold text-gray-800">{{bus.speed}} KMPH</div>
+              <div class="h6 mb-0 font-weight-bold text-gray-800" id="speed">{{prop.speed}} KMPH</div>
             </div>
             <div class="col-auto">
               <i class="fas fa- fa-2x text-gray-300"></i>
@@ -223,11 +263,11 @@ Bus-{{bus.Id}}
               <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Fuel</div>
                 <div class="row no-gutters align-items-center">
                   <div class="col-auto">
-                    <div class="h6 mb-0 mr-3 font-weight-bold text-gray-800">{{bus.fuel}}%</div>
+                    <div class="h6 mb-0 mr-3 font-weight-bold text-gray-800">{{prop.fuel}}%</div>
                   </div>
                   <div class="col">
                     <div class="progress progress-sm mr-1">
-                      <div class="progress-bar bg-primary" role="progressbar" style="width: {{bus.fuel}}%" aria-valuenow="{{bus.fuel}}" aria-valuemin="0" aria-valuemax="100"></div>
+                      <div class="progress-bar bg-primary" role="progressbar" style="width: {{prop.fuel}}%" aria-valuenow="{{prop.fuel}}" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                   </div>
                 </div>
@@ -259,11 +299,11 @@ Bus-{{bus.Id}}
               <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Battery</div>
                 <div class="row no-gutters align-items-center">
                   <div class="col-auto">
-                    <div class="h6 mb-0 mr-3 font-weight-bold text-gray-800">{{bus.battery}}%</div>
+                    <div class="h6 mb-0 mr-3 font-weight-bold text-gray-800">{{prop.battery}}%</div>
                   </div>
                   <div class="col">
                     <div class="progress progress-sm mr-1">
-                      <div class="progress-bar bg-warning" role="progressbar" style="width: {{bus.battery}}%" aria-valuenow="{{bus.battery}}" aria-valuemin="0" aria-valuemax="100"></div>
+                      <div class="progress-bar bg-warning" role="progressbar" style="width: {{prop.battery}}%" aria-valuenow="{{prop.battery}}" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                   </div>
                 </div>
