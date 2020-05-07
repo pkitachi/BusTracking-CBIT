@@ -13,6 +13,7 @@ r = requests.post('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/login'
 p= r.json()['access_token']
 td=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
 busses=td.json()
+track=[]
 
 def homepage(request):
 	locs=Loc.objects.all()

@@ -19,8 +19,6 @@ from . import views
 
 urlpatterns = [
 	path('home/',views.index,name='index'),
-    #/homepage/
-	path('homepage/',views.homepage,name='homepage'),
     #/home/Bus-67/
     re_path(r'^home/Bus-(?P<bno>[0-9]+)/', views.detail, name='detail'),
     #/home/alerts
