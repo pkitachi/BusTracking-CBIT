@@ -28,6 +28,6 @@ urlpatterns = [
 	#/info/<bno>
     path('info/<bno>/',views.info,name='info'),
     
-    
+    path('home/geofence',views.geofence,name='alerts'),
     
 ]

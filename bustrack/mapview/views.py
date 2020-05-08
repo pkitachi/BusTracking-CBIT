@@ -3,7 +3,8 @@ from django.http import Http404
 from django.http import HttpResponse,JsonResponse
 from . models import Loc
 import requests
-
+import ast 
+from django.conf import settings
 
 # url='http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/routes'
 # urlt='http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking'
@@ -85,3 +86,21 @@ def apicall(request):
                     dictr['new'] = 1
                     alertRes.append(dictr)
     return JsonResponse(alertRes,safe=False)
+def geofence(request):
+
+	Out=[{'lat':17.4400,'lng':78.3489,'deviceId':42}
+		]
+	In=[{'lat':17.4058,'lng':78.4032,'deviceId':42}
+		]
+	lines = []
+	url = settings.STATIC_ROOT +'/mapview/static/geofence/42bus.txt'
+	
+	with open(url) as file:
+		for line in file:
+			line = line.rstrip()
+			if(len(line)>1):
+				line=ast.literal_eval(line)
+				lines.append(line)
+			
+	path=lines
+	return render(request,'geofence.html', {"data":In,"path":path } ) 
