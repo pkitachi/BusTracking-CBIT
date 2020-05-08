@@ -38,7 +38,9 @@ Alert History
                 </div>
                 <!-- Card Body -->
                 <div class="card-body z-depth-1-half" style="height: 500px; padding: 0;">
-                
+                  <ul id="alert-body" class="list-group mb-3">
+
+                  </ul>
                 </div>
 
               </div>
@@ -153,9 +155,9 @@ Alert History
       <span class="fas fa-times"></span>
     </div>
   </div>
-  <p id="#text">text</p>
+  <p id="#text"></p>
   <script>
-    var notification = function(){
+    function notification(){
       $('.alert').addClass("show");
       $('.alert').removeClass("hide");
       $('.alert').addClass("showAlert");
@@ -170,16 +172,12 @@ Alert History
       $('.alert').removeClass("show");
       $('.alert').addClass("hide");
     });
-  </script>
-      
-  <script>
     document.getElementById("alert-btn").addEventListener("click", function(){  
       var audio = new Audio( 
       "{% static 'beep.mp3' %}"); 
-      audio.play();  });
-  </script> 
-
-  <script>
+      audio.play();  
+    });
+      
     var track;
     var i = 0;
     function myLoop() {
@@ -188,21 +186,29 @@ Alert History
           refresh();      
           myLoop();
         }
-      }, 1000)
+      }, 100)
     }
     myLoop();
 
-    function refresh(){ 
+    function refresh(){
       $.ajax({
-        type: "POST",
+        type: "GET",
         url: "{{ 'ajax-refresh/' }}",
-        data: { csrfmiddlewaretoken: '{{ csrf_token }}', text: '' },
-        success: function callback(response){
-          track = response;
+        success: function(data,textStatus,request){
+          document.getElementById("#text").innerHTML = parseFloat(data);
+          var str = ''
+          for (var i = 0; i < data.length; i++) {
+            str += "<li class='list-group-item d-flex justify-content-between lh-condensed'><div><h6 class='my-0 font-weight-bold'>Bus - " + data[i]['new'] + "</h6><small class='text-muted'>Brief description</small></div><span class='md-2'><i class='fas fa-circle' style='color: #e74a3b;'></i></span></li>";
+            if(parseFloat(data[i]['new']) == 1){
+              document.getElementById("alert-info").innerHTML = parseFloat(data[i]['IMEI']);
+              setTimeout(notification(),5000);
+            }
+          }
+          document.getElementById("alert-list").innerHTML = str;
+          document.getElementById("alert-body").innerHTML = str;
         }
       });
-    document.getElementById("#text").innerHTML = track;
     }
-
+    
   </script>
 {%endblock%}
