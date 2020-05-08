@@ -27,7 +27,7 @@ def trackhistory(request):
 		temp=date.split('-')
 		temp[0],temp[2]=temp[2],temp[0]
 		date=('-'.join(temp))
-		th=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'rouoteId':bno,'deviceTime':'2020-05-01'})
+		th=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno,'deviceTime':'2020-05-01'})
 		track_his=th.json()
 		runHrs=th.json()[-1]['runHrs']
 		return render(request,'trackhistory.html',{'runHrs':runHrs,'buses':buses,"bno":bno,"date":date,"track_his":track_his}) 
