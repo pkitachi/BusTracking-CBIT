@@ -58,20 +58,6 @@ def apicall(request):
     flag=0
     for i in track:
         if i['alert']==1:
-            if len(alertRes)==0:
-                dictr = dict()
-                dictr['IMEI'] = i['IMEI']
-                dictr['new'] = 1
-                alertRes.append(dictr)
-            else:
-                for j in alertRes:
-                    if i['IMEI'] == j['IMEI']:
-                        j['new'] = 0
-                        flag=1
-                        break
-                if flag==0:
-                    dictr = dict()
-                    dictr['IMEI'] = i['IMEI']
-                    dictr['new'] = 1
-                    alertRes.append(dictr)
+            if i not in alertRes:
+                alertRes.append(i)
     return JsonResponse(alertRes,safe=False)

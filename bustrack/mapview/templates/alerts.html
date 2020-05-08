@@ -79,7 +79,7 @@ Alert History
       setTimeout(function(){
         $('.alert').removeClass("show");
         $('.alert').addClass("hide");
-      },5000);
+      },2000);
     }
     $('#alert-btn').click(notification);
     $('.close-btn').click(function(){
@@ -94,6 +94,7 @@ Alert History
       
     var track;
     var i = 0;
+    var alertList = [];
     function myLoop() {
       setTimeout(function() {
         if (i < 1) {     
@@ -111,14 +112,31 @@ Alert History
         success: function(data,textStatus,request){
           var str = ''
           for (var i = 0; i < data.length; i++) {
-            str += "<li class='list-group-item d-flex justify-content-between lh-condensed'><div><h6 class='my-0 font-weight-bold'>Bus - " + data[i]['IMEI'] + "</h6><small class='text-muted'>Brief description</small></div><span class='md-2'><i class='fas fa-circle' style='color: #e74a3b;'></i></span></li>";
-            if(parseFloat(data[i]['new']) == 1){
+            str+="<li class='list-group-item d-flex justify-content-between lh-condensed'><div><h6 class='my-0 font-weight-bold'>Bus - " + data[i]['IMEI'] + "</h6><small class='text-muted'>Brief description</small></div><span class='md-2'><i class='fas fa-circle' style='color: #e74a3b;'></i></span></li>"
+            if (!alertList.includes(data[i]['IMEI'])){
+              alertList.push(data[i]['IMEI']);
               document.getElementById("alert-info").innerHTML = parseFloat(data[i]['IMEI']);
-              setTimeout(notification(),5000);
+              notification();
             }
+            for (var j = 0; j < alertList.length; j++){
+              
+            }
+            
           }
           document.getElementById("alert-list").innerHTML = str;
           document.getElementById("alert-body").innerHTML = str;
+          for (var j = 0; j < alertList.length; j++){
+            var flag = 0;
+            for (var i = 0; i < data.length; i++){
+              if (alertList[j]==data[i]['IMEI']){
+                flag=1;
+                break;
+              }
+            }
+            if(flag==0){
+              alertList.splice(i,1);
+            }
+          }
         }
       });
     }
