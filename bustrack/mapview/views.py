@@ -24,6 +24,10 @@ def homepage(request):
 	return render(request,'homepage.html',{"locs":locs,'busses': busses}) 
 	
 def index(request):
+	locs=Loc.objects.all()
+	return render(request,'index.html',{"locs":locs,'busses': busses}) 	
+
+def trackhistory(request):
 	if request.method=="POST":
 		bno=int(request.POST.get('busno'))
 		date=request.POST.get('date')
@@ -34,7 +38,6 @@ def index(request):
 		track_his=th.json()
 		runHrs=th.json()[-1]['runHrs']
 		return render(request,'trackhistory.html',{'runHrs':runHrs,'busses':busses,"bno":bno,"date":date,"track_his":track_his}) 
-	return render(request,'index.html',{'busses': busses}) 	
 
 def detail(request, bno):
 	

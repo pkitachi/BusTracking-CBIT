@@ -292,7 +292,7 @@
                         </div>
                         <div class="modal-body" style="padding-bottom: 55px;">
                             <!-- Form code begins -->
-                              <form method='POST'>
+                              <form method='POST' action="{% url 'trackhistory' %}">
                                 {% csrf_token %}
                                   <div class="form-group">
                                       <label for="busno">Bus No.</label>
