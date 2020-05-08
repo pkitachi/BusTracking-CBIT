@@ -1,0 +1,160 @@
+{%extends 'base.html'%}
+{% load static %}
+{%block title%}
+GEOFENCE
+{%endblock%}
+{%block main%}
+<!-- Begin Page Content -->
+        <div class="container-fluid">
+
+          <!-- Content Row -->
+          <div class="row">
+
+            <!-- Map Chart -->
+            <div class="col-xl-12 col-lg-7">
+              <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary" style="flex: 1;">Bus Routes</h6>
+                  <a href="#" id="alert-btn" class="btn btn-danger btn-icon-split" style="margin-right: 20px;">
+                    <span class="icon text-white-50">
+                      <i class="fas fa-bell"></i>
+                    </span>
+                    <span class="text">Alert</span>
+                  </a>
+                  
+                  <a href="#" id="popup-btn" class="btn btn-primary btn-icon-split" data-toggle="modal" data-target="#bus-list" style="margin-right: 20px;">
+                    <span class="icon text-white-50">
+                      <i class="fas fa-bus"></i>
+                    </span>
+                    <span class="text">Busses</span>
+                  </a>
+                  <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                      <div class="dropdown-header">Dropdown Header:</div>
+                      <a class="dropdown-item" href="#">Action</a>
+                      <a class="dropdown-item" href="#">Another action</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                  </div>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body map-container z-depth-1-half" style="height: 500px; padding: 0;">
+                    <!--The div element for the map -->
+                    <div id="map" style="width: auto; height: 500px;"></div>
+                    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"> 
+                    </script>
+ <script>
+    function initMap() {
+                        var location = {lat:17.3920,lng:78.3194}
+                        var map = new google.maps.Map(document.getElementById('map'), {
+                          zoom: 11,
+                          center: location
+                        });
+
+                        var path1=[]
+                        var data1=[]
+                        {% for i in data %}
+                        var lat = parseFloat('{{i.lat}}');
+                        var lng = parseFloat('{{i.lng}}');
+                        data1.push({ lat: lat,lng:lng,deviceId: '{{i.deviceId}}' })
+                        
+                        {% endfor %}
+                        {% for i in path %}
+                        var lat = parseFloat('{{i.lat}}');
+                        var lng = parseFloat('{{i.lng}}');
+                        
+                        path1.push({ lat:lat,lng:lng})
+                        {% endfor %}
+                        
+                        var drawingManager = new google.maps.drawing.DrawingManager({
+                drawingControl: true,
+                drawingControlOptions: {
+
+                    position: google.maps.ControlPosition.TOP_CENTER,
+                    drawingModes: ['polyline']
+                },
+                markerOptions: { icon: 'http://www.ajbsales.com/wp-content/uploads/2015/04/map-marker-50.png' },
+                circleOptions: {
+                    fillColor: 'red',
+                    fillOpacity: 1,
+                    strokeWeight: 5,
+                    clickable: false,
+                    editable: true,
+                    zIndex: 1
+                }
+            });
+            drawingManager.setMap(map);
+
+            
+            var pathBetween1 = new google.maps.Polyline({
+                path: path1,
+                strokeColor: '#E37066',
+                fillColor: 'red',
+                strokeOpacity: 1.0,
+                strokeWeight: 2
+            });
+            pathBetween1.setMap(map);
+            var deviceIds = [];
+
+
+            function addMarker(markerSettings, label) {
+
+
+                if (!insidePolygon(markerSettings)) {
+                    deviceIds.push(markerSettings.deviceId);
+                    alert("Bus "+markerSettings.deviceId+" is out of GEOfence ");
+
+                    var marker = new google.maps.Marker({
+                        position: markerSettings,
+                        map: map,
+                        
+                        label: label
+                    });
+                }
+                else{
+                    var marker = new google.maps.Marker({
+                        position: markerSettings,
+                        map: map,
+                        
+                        label: label,
+                        icon: "http://maps.google.com/mapfiles/ms/micons/blue.png"
+                    });
+                }
+            }
+            function insidePolygon(settings) {
+                return inside([settings.lat, settings.lng], path1);
+            }
+            function inside(point, vs) {
+                var x = point[0],
+                    y = point[1];
+
+                var inside = false;
+                for (var i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+                    var xi = vs[i].lat,
+                        yi = vs[i].lng;
+                    var xj = vs[j].lat,
+                        yj = vs[j].lng;
+
+                    var intersect = ((yi > y) != (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+                    if (intersect) inside = !inside;
+                }
+
+                return inside;
+            };
+
+            for (var i = 0; i < data1.length; i++) {
+                addMarker(data1[i], data1[i].deviceId);
+            }
+                        
+                      }
+  </script>
+  <script async differ type="text/javascript"
+                      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCclG7w5m1rAyb_KxV8cp2eY4FsTtTm7Bs&libraries=drawing&callback=initMap">
+                    </script>
+
+{%endblock%}

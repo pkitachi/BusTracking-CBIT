@@ -101,7 +101,7 @@ Alert History
           refresh();      
           myLoop();
         }
-      }, 100)
+      }, 500)
     }
     myLoop();
 
@@ -111,32 +111,19 @@ Alert History
         url: "{{ '/home/ajax-refresh/' }}",
         success: function(data,textStatus,request){
           var str = ''
+          var newAlertList=[]
           for (var i = 0; i < data.length; i++) {
             str+="<li class='list-group-item d-flex justify-content-between lh-condensed'><div><h6 class='my-0 font-weight-bold'>Bus - " + data[i]['IMEI'] + "</h6><small class='text-muted'>Brief description</small></div><span class='md-2'><i class='fas fa-circle' style='color: #e74a3b;'></i></span></li>"
+            console.log('Alert list', alertList, 'data',data[i]['IMEI']);
             if (!alertList.includes(data[i]['IMEI'])){
-              alertList.push(data[i]['IMEI']);
               document.getElementById("alert-info").innerHTML = parseFloat(data[i]['IMEI']);
               notification();
             }
-            for (var j = 0; j < alertList.length; j++){
-              
-            }
-            
+            newAlertList.push(data[i]['IMEI']);
           }
           document.getElementById("alert-list").innerHTML = str;
-          document.getElementById("alert-body").innerHTML = str;
-          for (var j = 0; j < alertList.length; j++){
-            var flag = 0;
-            for (var i = 0; i < data.length; i++){
-              if (alertList[j]==data[i]['IMEI']){
-                flag=1;
-                break;
-              }
-            }
-            if(flag==0){
-              alertList.splice(i,1);
-            }
-          }
+          document.getElementById("alert-body").innerHTML = str; 
+          alertList = newAlertList
         }
       });
     }
