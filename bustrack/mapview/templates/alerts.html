@@ -48,114 +48,28 @@ Alert History
           </div>
 
 
-              <!-- Popup -->
-              <div class="modal fade" id="bus-list" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="m-0 font-weight-bold text-primary">Busses List</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span class="text">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body" style="padding-bottom: 55px;">
-                      <h6 class="m-1">Online</h6>
-                      <ul class="list-group mb-3">
-                        
-                        {% for i in busses %}
-                        <li class="list-group-item d-flex justify-content-between lh-condensed">
-                          <div>
-                            <a href="/home/Bus-{{i.routeId}}/">
-                              <h6 class="my-0 font-weight-bold">Bus - {{i.routeId}}</h6>
-                            </a>
-                            <small class="text-muted">{{i.routeName}}</small>
-                          </div>
-                          <span class="md-2">
-                            <i class="fas fa-circle" style="color: #1cc88a;"></i>
-                          </span>
-                        </li>
-                        {% endfor %}
-                      </ul>
-                      <a href="#" class="btn btn-primary" data-dismiss="modal" aria-label="Close" style="right: 15px; position: absolute;">
-                        <span class="text">Close</span>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
+              <!--popup-->
       <!-- End of Main Content -->
 
-      <!-- Footer -->
-      <footer class="sticky-footer bg-white col-lg-12 mb-4">
-        <div class="container my-auto">
-          <div class="copyright text-center my-auto">
-            <span>Copyright &copy; Your Website 2020</span>
-          </div>
-        </div>
-      </footer>
-      <!-- End of Footer -->
-
+      
     </div>
     <!-- End of Content Wrapper -->
 
   </div>
   <!-- End of Page Wrapper -->
 
-  <!-- Scroll to Top Button-->
-  <a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-  </a>
-
-  <!-- Logout Modal-->
-  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">×</span>
-          </button>
-        </div>
-        <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-          <a class="btn btn-primary" href="login.html">Logout</a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  
-  <script>
-    localStorage.setItem('0a','42');
-    localStorage.setItem('0b','Accident');
-    localStorage.setItem('1a','29');
-    localStorage.setItem('1b','Accident');
-    localStorage.setItem('2a','36');
-    localStorage.setItem('2b','Accident');
-    localStorage.setItem('rn','2');
-  </script>
-  <script>
-    var arr = ['','','','','','','','','','','','','','','','','','','',''];
-    var rn=Number(localStorage.getItem('rn'));
-    for (i = 0; i <= rn; i++) {
-      arr[i] = localStorage.getItem(String(i)+'a') + ' ' + localStorage.getItem(String(i)+'b');
-      console.log(arr[i]);
-    }
-  </script>
-
 
   <!-- Alert Message -->
   <div class="alert hide">
-    <span class="fas fa-exclamation-circle"></span>
-    <span class="msg font-weight-bold">Alert : </span>
-    <span id="alert-info" class="info font-weight-bold text-gray-800">"Bus-16 Accident"</span>
-    <div class="close-btn">
-      <span class="fas fa-times"></span>
-    </div>
+      <span class="fas fa-exclamation-circle"></span>
+      <span id="alert-info" class="info font-weight-bold text-gray-800">
+        <span class="msg font-weight-bold">Alert : </span>
+        "Bus-16 Accident"
+      </span>
+      <div class="close-btn">
+        <span class="fas fa-times"></span>
+      </div>
   </div>
-  <p id="#text"></p>
   <script>
     function notification(){
       $('.alert').addClass("show");
@@ -211,4 +125,9 @@ Alert History
     }
     
   </script>
+  	  
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
 {%endblock%}
