@@ -28,7 +28,7 @@ urlpatterns = [
 	#/info/<bno>
     path('info/<bno>/',views.info,name='info'),
     #/home/geofence
-    path('home/geofence',views.geofence,name='alerts'),
+    #path('home/geofence',views.geofence,name='alerts'),
 	#/home/trackhistory
 	path('home/trackhistory',views.trackhistory,name='trackhistory'),
     
