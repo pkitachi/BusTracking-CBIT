@@ -27,7 +27,7 @@ CBIT Bus Tracking Dashboard
                     <span class="icon text-white-50">
                       <i class="fas fa-bus"></i>
                     </span>
-                    <span class="text">Busses</span>
+                    <span class="text">Buses</span>
                   </a>
                   <div class="dropdown no-arrow">
                     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -74,7 +74,7 @@ CBIT Bus Tracking Dashboard
                         });
                       }
                         img="{% static 'markers/Bus.png' %}"
-                        {% for i in locs %}
+                        {% for i in buses %}
                           var lat = parseFloat('{{i.lat}}');
                           var lng = parseFloat('{{i.lon}}');
                           var pos={lat:lat ,lng:lng};

@@ -249,7 +249,7 @@
                 <div class="modal-dialog modal-dialog-centered" role="document">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="m-0 font-weight-bold text-primary">Busses List</h5>
+                      <h5 class="m-0 font-weight-bold text-primary">Buses List</h5>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span class="text">&times;</span>
                       </button>
@@ -258,7 +258,7 @@
                       <h6 class="m-1">Online</h6>
                       <ul class="list-group mb-3">
                         
-                        {% for i in busses %}
+                        {% for i in buses %}
                         <li class="list-group-item d-flex justify-content-between lh-condensed">
                           <div>
                             <a href="/home/Bus-{{i.routeId}}/">
@@ -285,7 +285,7 @@
                     <div class="modal-dialog modal-dialog-centered" role="document">
                       <div class="modal-content">
                         <div class="modal-header">
-                          <h5 class="m-0 font-weight-bold text-primary">Busses Tracking History</h5>
+                          <h5 class="m-0 font-weight-bold text-primary">Buses Tracking History</h5>
                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span class="text">&times;</span>
                           </button>
@@ -298,7 +298,7 @@
                                       <label for="busno">Bus No.</label>
                                       <select class="form-control" id="busno" name="busno" required>
                                           <option value="">Choose bus</option>
-                                          {% for i in busses %}
+                                          {% for i in buses %}
                                               <option value={{i.routeId}}>Bus - {{i.routeId}}</option>
                                           {% endfor %}
                                       </select>

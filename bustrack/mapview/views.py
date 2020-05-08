@@ -6,26 +6,19 @@ import requests
 import ast 
 from django.conf import settings
 
-# url='http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/routes'
-# urlt='http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking'
-# busses=requests.get(url).json()
-# track=requests.get(urlt).json()
 r = requests.post('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
 p= r.json()['access_token']
 td=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
-busses=td.json()
-#busses=[{'Id':4,'status':'WORKING','IMEI':'120654'},{'Id':5,'status':'WORKING','IMEI':'65842'},{'Id':6,'status':'WORKING','IMEI':'763425'},{'Id':7,'status':'WORKING','IMEI':'7845642321'}]
-track=[{'IMEI':'120654','alert':None},{'IMEI':'65842','alert':None},{'IMEI':'763425','alert':None},{'IMEI':'7845642321','alert':1}]
+buses=td.json()
+track=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
 alertRes=[]
 
 def homepage(request):
-	locs=Loc.objects.all()
 
-	return render(request,'homepage.html',{"locs":locs,'busses': busses}) 
+	return render(request,'homepage.html',{'buses': buses}) 
 	
 def index(request):
-	locs=Loc.objects.all()
-	return render(request,'index.html',{"locs":locs,'busses': busses}) 	
+	return render(request,'index.html',{'buses': buses}) 	
 
 def trackhistory(request):
 	if request.method=="POST":
@@ -37,21 +30,15 @@ def trackhistory(request):
 		th=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'rouoteId':bno,'deviceTime':'2020-05-01'})
 		track_his=th.json()
 		runHrs=th.json()[-1]['runHrs']
-		return render(request,'trackhistory.html',{'runHrs':runHrs,'busses':busses,"bno":bno,"date":date,"track_his":track_his}) 
+		return render(request,'trackhistory.html',{'runHrs':runHrs,'buses':buses,"bno":bno,"date":date,"track_his":track_his}) 
 
 def detail(request, bno):
-	
-	locs=Loc.objects.all()
 	r = requests.post('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
 	p= r.json()['access_token']
 	td=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno})
 	curRaw={'lat':td.json()[0]['latitude'],'lon':td.json()[0]['longitude']}
-	prop={'speed':td.json()[0]['speed'],'battery':td.json()[0]['battery'],'fuel':td.json()[0]['fuel']};
-	#for i in track:
-	#    if(i['Id']==int(bno)):
-	#        return render(request, 'bus-detail.html', { 'bus' : i ,'locs' : locs , 'busses': busses})
-	# raise Http404("Bus does not exist")
-	return render(request, 'bus-detail.html', {'locs' : locs ,'curRaw':curRaw, 'busses': busses,'bno':bno,'prop':prop})
+	prop={'speed':td.json()[0]['speed'],'battery':td.json()[0]['battery'],'fuel':td.json()[0]['fuel']}
+	return render(request, 'bus-detail.html', {'curRaw':curRaw, 'buses': buses,'bno':bno,'prop':prop})
 
 def info(request,bno):
 	r = requests.post('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
@@ -62,13 +49,13 @@ def info(request,bno):
 	return JsonResponse(curRaw)
 
 def alerts(request):
-	locs=Loc.objects.all()
 
-	return render(request,'alerts.html',{"locs":locs , 'track':track, 'busses': busses}) 
+	return render(request,'alerts.html',{'track':track, 'buses': buses}) 
 
 def apicall(request):
     # urlt='http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking'
-    track=[{'IMEI':'120654','alert':1},{'IMEI':'65842','alert':1},{'IMEI':'763425','alert':1},{'IMEI':'7845642321','alert':1}]
+    track=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
+    track=track.json()
     alertRes = []
     for i in track:
         if i['alert']==1:
