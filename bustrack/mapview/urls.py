@@ -23,8 +23,8 @@ urlpatterns = [
     re_path(r'^home/Bus-(?P<bno>[0-9]+)/$', views.detail, name='detail'),
     #/home/alerts
     path('home/alerts/',views.alerts,name='alerts'),
-
-    path('home/ajax-refresh/', views.apicall),
+    #home/ajax-refresh/
+    path('home/ajax-refresh/', views.apicall,name='apicall'),
 	#/info/<bno>
     path('info/<bno>/',views.info,name='info'),
     

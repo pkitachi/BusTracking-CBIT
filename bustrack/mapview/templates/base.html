@@ -56,7 +56,7 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="trackingvehicle.html">
+        <a class="nav-link collapsed" href="#" data-toggle="modal" data-target="#tracking-list"  aria-expanded="true" aria-controls="collapseUtilities">
           <i class="fas fa-route"></i>
           <span>Tracking History</span></a>
       </li>
@@ -279,7 +279,48 @@
                   </div>
                 </div>
               </div>
-
+			  
+			  <!--Tracking history popup-->
+<div class="modal fade" id="tracking-list" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="m-0 font-weight-bold text-primary">Busses Tracking History</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span class="text">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body" style="padding-bottom: 55px;">
+                            <!-- Form code begins -->
+                              <form method='POST'>
+                                {% csrf_token %}
+                                  <div class="form-group">
+                                      <label for="busno">Bus No.</label>
+                                      <select class="form-control" id="busno" name="busno" required>
+                                          <option value="">Choose bus</option>
+                                          {% for i in busses %}
+                                              <option value={{i.routeId}}>Bus - {{i.routeId}}</option>
+                                          {% endfor %}
+                                      </select>
+                                  </div>
+                                  <div class="form-group ">
+                                      <div class="dates">
+                                          <label class="control-label requiredField" for="date">Date</label>
+                                          <input type="text" class="form-control" id="date" name="date" placeholder="DD-MM-YYYY" required/>
+                                      </div>
+                                  </div>
+                                  <div class="form-group"> <!-- Submit button -->
+                                      <button class="btn btn-primary " name="submit" type="submit">Ok</button>
+                                  </div>
+                              </form>
+                              <a href="#" class="btn btn-primary" data-dismiss="modal" aria-label="Close" style="right: 15px; position: absolute;">
+                                <span class="text">Close</span>
+                              </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+				  
 <!-- Footer -->
       <footer class="sticky-footer bg-white col-lg-12 mb-4">
         <div class="container my-auto">
@@ -313,7 +354,16 @@
       </div>
     </div>
   </div>
-
+    <script>
+	    $(function() {
+			$('.dates #date').datepicker({
+				'format': 'dd-mm-yyyy',
+				'autoclose': true,
+                'endDate': '+0d',
+                'startDate': '-3m'
+			});
+		});
+    </script>
 
   <!-- Bootstrap core JavaScript-->
   <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
@@ -331,6 +381,13 @@
   <!-- Page level custom scripts -->
   <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
   <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
+
+    <!-- Include jQuery -->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+    <!-- Include Date Range Picker -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css"/>
 
 </body>
 
