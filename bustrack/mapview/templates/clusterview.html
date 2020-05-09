@@ -6,23 +6,14 @@ Clustered View
 {%block onload%}{%endblock%}
 {%block main%}
 <script>
-function DeleteMarkers(){
- for(var i=0;i<markers.length;i++)
-  {
-	markers[i].setMap(null);
-  }
-  markers =[];
-}
 function worker() {
   $.ajax({
     url: '/home/clusterinfo', 
 	type: 'GET',
     success: function(data,textStatus,request) {
-	  DeleteMarkers();
-	  //window.alert(data[1]['latitude'])
-	  //request.setResponseHeader("Set-Cookie", "SameSite=None");
+	  markerCluster.clearMarkers();
+	  markers=[];
 	  pos=[];var p;
-	  console.log(data[1]['latitude'])
 	  for(var i=0;i<data.length;i++){
 		p={lat:parseFloat(data[i]['latitude']),lng:parseFloat(data[i]['longitude'])}; 
 		pos.push(p);
@@ -34,8 +25,7 @@ function worker() {
 			icon:"{% static 'markers/Bus.png' %}"
 		  });
 		});
-	  var markerCluster = new MarkerClusterer(map, markers,{imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
-	  //window.alert(data[0]['IMEI'])
+	  markerCluster = new MarkerClusterer(map, markers,{imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
     },
     complete: function() {
       // Schedule the next request when the current one's complete
@@ -89,12 +79,12 @@ function worker() {
                     
                     
                     <script>
-					var buslocs = {};var markers=[];var pos=[];
+					var buslocs = {};var markers=[];var pos=[];var markerCluster ;
 					var map;
                     function initMap() { 
                      var location = {lat:17.3920,lng:78.3194}
                      map = new google.maps.Map(document.getElementById('map'), {
-                        zoom: 9,
+                        zoom: 8,
                         center: location
                       });
                             {%for i in cluster%}
@@ -110,7 +100,7 @@ function worker() {
                                 icon:"{% static 'markers/Bus.png' %}"
                               });
                             });
-                            var markerCluster = new MarkerClusterer(map, markers,{imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+                            markerCluster = new MarkerClusterer(map, markers,{imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
 							worker();
                   }
 					

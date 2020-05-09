@@ -33,7 +33,8 @@ def trackhistory(request):
 		return render(request,'trackhistory.html',{'runHrs':runHrs,'buses':buses,"bno":bno,"date":date,"track_his":track_his}) 
 
 def clusterview(request):
-	cluster=track.json()
+	t=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
+	cluster=t.json()
 	return render(request,'clusterview.html',{'cluster':cluster,'buses': buses})
 	
 def clusterinfo(request):

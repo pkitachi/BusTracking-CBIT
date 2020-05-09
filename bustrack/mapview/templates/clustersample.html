@@ -292,8 +292,8 @@
                         center: location
                       });
                       
-
-                    setInterval(function() { updateMap(map); },5000);
+					updateMap();
+                    //setInterval(function() { updateMap(map); },5000);
                   }
 
                     var markers = [];
@@ -323,17 +323,21 @@
                                 icon:"{% static 'markers/Bus.png' %}"
                               });
                             });
+							
 							//window.alert(markers[0]['position']);
                             var markerCluster = new MarkerClusterer(map, markers,{imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
-                          }
+                            setTimeout(DeleteMarkers,10000);
+						  }
                         }
                      }
                     function DeleteMarkers(){
-                     for(var i=0;i<markers.length;i++)
+                     map.clear();
+					 for(var i=0;i<markers.length;i++)
                       {
                         markers[i].setMap(null);
                       }
                       markers =[];
+					  console.log("Done")
                     }
                         /*
                         var myFunctinForListener = function(aMarker, aInfoWindow) {
