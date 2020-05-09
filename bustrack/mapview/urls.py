@@ -16,6 +16,8 @@ urlpatterns = [
     #path('home/geofence',views.geofence,name='alerts'),
 	#/home/trackhistory
 	path('home/trackhistory',views.trackhistory,name='trackhistory'),
+    #/home/replaytracking
+	path('home/replaytracking',views.replaytracking,name='replaytracking'),
     #/home/clusterview
 	path('home/clusterview',views.clusterview,name='clusterview'),
 	#/home/clusterinfo
