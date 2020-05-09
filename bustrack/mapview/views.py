@@ -13,12 +13,15 @@ buses=td.json()
 track=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
 alertRes=[]
 
-def homepage(request):
-
-	return render(request,'homepage.html',{'buses': buses}) 
 	
+def trackapicall(request):
+	th=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
+	track_liv=th.json()
+	return JsonResponse(track_liv,safe=False)	
 def index(request):
-	return render(request,'index.html',{'buses': buses,'track': track}) 	
+	td=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
+	track_liv=td.json()
+	return render(request,'index.html',{'track_liv':track_liv}) 
 
 def trackhistory(request):
 	if request.method=="POST":

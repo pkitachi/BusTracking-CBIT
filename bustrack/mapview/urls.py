@@ -22,4 +22,6 @@ urlpatterns = [
 	path('home/clusterview',views.clusterview,name='clusterview'),
 	#/home/clusterinfo
 	path('home/clusterinfo',views.clusterinfo,name='clusterinfo'),
+
+    path('home/track-refresh/', views.trackapicall,name='trackapicall'),
 ]

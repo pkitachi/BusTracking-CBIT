@@ -58,6 +58,7 @@ CBIT Bus Tracking Dashboard
                         });
                         var markerc = new google.maps.Marker({
                           map: map,
+                          label:"CBIT",
                           position:location,
                           icon:"{% static 'markers/pin1.png' %}",                   
                         });
@@ -68,31 +69,64 @@ CBIT Bus Tracking Dashboard
                         }
                         var myFunctinForListener1 = function(aMarker) {
                           google.maps.event.addListener(aMarker, 'dblclick', function() {   
-                            window.location.href = this.url;     
+                              
 
                              
                         });
                       }
-                        img="{% static 'markers/Bus.png' %}"
-                        {% for i in buses %}
-                          var lat = parseFloat('{{i.lat}}');
-                          var lng = parseFloat('{{i.lon}}');
-                          var pos={lat:lat ,lng:lng};
-                          var k='{{i.bno}}';
+                       var i = 0;
+                         function myLoop() {
+                  setTimeout(function() {
+                  if (i < 1) {     
+                  refresh();      
+                  myLoop();
+                  }
+                  }, 500)
+                        }
+                myLoop();
 
+        function refresh(){
+        $.ajax({
+        type: "GET",
+        url: "{{ '/home/track-refresh/' }}",
+        success: function(data,textStatus,request){
+          img="{% static 'markers/Bus.png' %}"
+                      
+                         for (var i = 0; i < data.length; i++) {
+                        
+                          var lat = parseFloat(data[i]['latitude']);
+                          var lng = parseFloat(data[i]['longitude']);
+                          var pos={lat:lat ,lng:lng};
+                          var k=data[i]['Id'];
+                          var speed=data[i]['speed'];
                           marker = new google.maps.Marker({
                             map: map,
                             icon:img,
                             position: pos,
-                            url:'http://127.0.0.1:8000/home/Bus-'+'{{i.bno}}',
-                            label:'{{i.bno}}',                      
+                            
+                            label:''+k,                      
                           });
+                          
                           var infowindow = new google.maps.InfoWindow({
-                            content: '<p>Location:' + marker.getPosition() + '</p>'
+                            content: '<p>Bus no:' + k + '</p>'+
+                                      '<p>Latitude:' +lat + '</p>'+
+                                      '<p>Longitude'+lng + '</p>'+
+                                      '<p>Speed:' + speed + '</p>'+
+                                      '<p>Altitude:' + data[i]['altitude'] + '</p>'+
+                                      '<p>Battery:' + data[i]['battery'] + '</p>'+
+                                      '<p>Fuel:' + data[i]['fuel'] + '</p>'+
+                                      '<p>Device Time' + data[i]['deviceTime'] + '</p>'+
+                                      '<p>Alert:' + data[i]['alert'] + '</p>'
+                                      
                           });
                           myFunctinForListener(marker, infowindow);
                           myFunctinForListener1(marker);
-                        {% endfor %}
+                    
+                         }
+          
+        }
+      });
+    }
                       }
                     </script>
                     <script async differ type="text/javascript"
