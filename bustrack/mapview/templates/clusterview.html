@@ -1,0 +1,165 @@
+{%extends 'base.html'%}
+{% load static %}
+{%block title%}
+Clustered View
+{%endblock%}
+{%block onload%}{%endblock%}
+{%block main%}
+<script>
+function worker() {
+  $.ajax({
+    url: '/home/clusterinfo', 
+	type: 'GET',
+    success: function(data,textStatus,request) {
+	  markerCluster.clearMarkers();
+	  markers=[];
+	  pos=[];var p;
+	  for(var i=0;i<data.length;i++){
+		p={lat:parseFloat(data[i]['latitude']),lng:parseFloat(data[i]['longitude'])}; 
+		pos.push(p);
+	  }
+	  markers = pos.map(function(location, i) {
+		  return new google.maps.Marker({
+			position: location,
+			label: "Bus",
+			icon:"{% static 'markers/Bus.png' %}"
+		  });
+		});
+	  markerCluster = new MarkerClusterer(map, markers,{imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+    },
+    complete: function() {
+      // Schedule the next request when the current one's complete
+	  
+      setTimeout(worker, 10000);
+    }
+  });
+}
+</script>
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+          <!-- Page Heading -->
+          <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800"></h1>
+          </div>
+          <!-- Content Row -->
+
+          <div class="row">
+
+            <!-- Map Chart -->
+            <div class="col-xl-12 col-lg-7">
+                <div class="card shadow mb-4">
+                    <!-- Card Header - Dropdown -->
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary" style="flex: 1;">Clustered View</h6>
+                    <a href="#" id="alert-btn" class="btn btn-danger btn-icon-split" style="margin-right: 20px;">
+                      <span class="icon text-white-50">
+                        <i class="fas fa-bell"></i>
+                      </span>
+                      <span class="text">Alert</span>
+                    </a>
+                    <div class="dropdown no-arrow">
+                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                        <div class="dropdown-header">Dropdown Header:</div>
+                        <a id="actn" class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </div>
+            </div>
+        
+                <!-- Card Body -->
+                <div class="card-body map-container z-depth-1-half" style="height: 500px; padding: 0;">
+                    <!--The div element for the map -->
+                    <div id="map" style="width: auto; height: 500px;"></div>
+                    
+                    
+                    <script>
+					var buslocs = {};var markers=[];var pos=[];var markerCluster ;
+					var map;
+                    function initMap() { 
+                     var location = {lat:17.3920,lng:78.3194}
+                     map = new google.maps.Map(document.getElementById('map'), {
+                        zoom: 8,
+                        center: location
+                      });
+                            {%for i in cluster%}
+							  var imei={{i.IMEI}}
+                              buslocs[imei]={lat:parseFloat({{i.latitude}}),lng:parseFloat({{i.longitude}})};
+							  pos.push(buslocs[imei])
+							  
+                            {%endfor%}
+							markers = pos.map(function(location, i) {
+                              return new google.maps.Marker({
+                                position: location,
+                                label: "Bus",
+                                icon:"{% static 'markers/Bus.png' %}"
+                              });
+                            });
+                            markerCluster = new MarkerClusterer(map, markers,{imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+							worker();
+                  }
+					
+                    
+                    </script>
+                    <script src="https://unpkg.com/@google/markerclustererplus@4.0.1/dist/markerclustererplus.min.js"></script>
+                    <script async differ type="text/javascript"
+                      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCclG7w5m1rAyb_KxV8cp2eY4FsTtTm7Bs&libraries=drawing&callback=initMap">
+                    </script>
+                  </div>
+                </div>
+              </div>
+
+
+                
+      <!-- End of Main Content -->
+
+
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+    <!-- Alert Message -->
+    <div class="alert hide">
+      <span class="fas fa-exclamation-circle"></span>
+      <span class="msg font-weight-bold">Alert : </span>
+      <span id="alert-info" class="info font-weight-bold text-gray-800">"Bus-16 Accident"</span>
+      <div class="close-btn">
+        <span class="fas fa-times"></span>
+      </div>
+  </div>
+
+  <script>
+    var notification = function(){
+      $('.alert').addClass("show");
+      $('.alert').removeClass("hide");
+      $('.alert').addClass("showAlert");
+      
+      setTimeout(function(){
+        $('.alert').removeClass("show");
+        $('.alert').addClass("hide");
+      },5000);
+    }
+    $('#alert-btn').click(notification);
+    $('.close-btn').click(function(){
+      $('.alert').removeClass("show");
+      $('.alert').addClass("hide");
+    });
+  </script>
+    
+  <script>
+    document.getElementById("alert-btn").addEventListener("click", function(){  
+      var audio = new Audio( 
+      "{% static 'beep.mp3' %}"); 
+      audio.play();  });
+  </script>
+
+  
+{%endblock%}

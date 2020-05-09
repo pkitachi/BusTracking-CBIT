@@ -1,0 +1,529 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>CBIT Bus Tracking Dashboard</title>
+  
+  <!-- Custom fonts for this template-->
+ 
+    
+  <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/sb-admin-2.min.css' %}">
+  <!-- Custom styles for this template-->
+  <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+
+    <!-- Sidebar -->
+    <ul class="navbar-nav bg-gradient-primary sidebar toggled sidebar-dark accordion" id="accordionSidebar">
+
+      <!-- Sidebar - Brand -->
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="">
+        <div class="sidebar-brand-text mx-3">Menu</div>
+      </a>
+
+      <!-- Divider -->
+      <hr class="sidebar-divider my-0">
+
+      <!-- Nav Item - Dashboard -->
+      <li class="nav-item active">
+        <a class="nav-link" href="">
+          <i class="fas fa-home"></i>
+          <!--
+                   <img class="img-profile rounded-circle" alt=" "src="{% static 'cbit.png' %}">
+                 -->
+          <span>Home</span></a>
+      </li>
+
+      <!-- Divider -->
+      <hr class="sidebar-divider">
+
+      <!-- Nav Item - Pages Collapse Menu -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+          <i class="fas fa-users"></i>
+          <span>Users</span>
+        </a>
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <h6 class="collapse-header">About Users:</h6>
+            <a class="collapse-item" href="adduser.html">Add </a>
+            <a class="collapse-item" href="userinfo.html">Users</a>
+          </div>
+        </div>
+      </li>
+
+      <!-- Nav Item - Utilities Collapse Menu -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="modal" data-target="#bus-list"  aria-expanded="true" aria-controls="collapseUtilities">
+          <i class="fa fa-bus"></i>
+          <span>Vehicle</span>
+        </a>
+      </li>
+
+      <!-- Divider -->
+      <hr class="sidebar-divider">
+
+      <!-- Nav Item - Charts -->
+       <li class="nav-item">
+        <a class="nav-link" href="tools.html">
+          <i class="fas fa-tools"></i>
+          <span>Tools</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="trackingvehicle.html">
+          <i class="fas fa-route"></i>
+          <span>Tracking History</span></a>
+      </li>
+
+      <!-- Nav Item - Tables -->
+      <li class="nav-item">
+        <a class="nav-link" href="reports.html">
+          <i class="fas fa-fw fa-table"></i>
+          <span>Reports</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="lehend.html">
+          <i class="fas fa-fw fa-chart-area"></i>
+          <span>Legend</span></a>
+      </li>
+       <li class="nav-item">
+        <a class="nav-link" href="binreports">
+          <i class="fas fa-fw fa-table"></i>
+          <span>Bin Reports</span></a>
+      </li>
+       
+
+      <!-- Divider -->
+      <hr class="sidebar-divider d-none d-md-block">
+
+      <!-- Sidebar Toggler (Sidebar) -->
+      <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+      </div>
+
+    </ul>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+
+        <!-- Topbar -->
+        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+          <!-- Sidebar Toggle (Topbar) -->
+          <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+            <i class="fa fa-bars"></i>
+          </button>
+          <img class="img-profile rounded-circle" alt=" "src="{% static 'cbit.png' %}" height="40" width="40">
+          <h4 class="m-2 font-weight-bold text-primary">CBIT Bus Tracking</h4>
+
+          <!-- Topbar Navbar -->
+          <ul class="navbar-nav ml-auto">
+
+            <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+            <li class="nav-item dropdown no-arrow d-sm-none">
+              <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-search fa-fw"></i>
+              </a>
+              <!-- Dropdown - Messages -->
+              <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
+                <form class="form-inline mr-auto w-100 navbar-search">
+                  <div class="input-group">
+                    <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                    <div class="input-group-append">
+                      <button class="btn btn-primary" type="button">
+                        <i class="fas fa-search fa-sm"></i>
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </li>
+
+            <!-- Nav Item - Alerts -->
+            <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-bell fa-fw"></i>
+                <!-- Counter - Alerts -->
+                <span class="badge badge-danger badge-counter">3+</span>
+              </a>
+              <!-- Dropdown - Alerts -->
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                <h6 class="dropdown-header">
+                  Emergency Alerts
+                </h6>
+                <ul class="list-group mb-3" style="margin: 10px;">
+                  <li class="list-group-item d-flex justify-content-between lh-condensed">
+                    <div>
+                      <h6 class="my-0 font-weight-bold">Bus - 29</h6>
+                      <small class="text-muted">Brief description</small>
+                    </div>
+                    <span class="md-2">
+                      <i class="fas fa-circle" style="color: #e74a3b;"></i>
+                    </span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between lh-condensed">
+                    <div>
+                      <h6 class="my-0 font-weight-bold">Bus - 44</h6>
+                      <small class="text-muted">Brief description</small>
+                    </div>
+                    <span class="md-2">
+                      <i class="fas fa-circle" style="color: #e74a3b;"></i>
+                    </span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between lh-condensed">
+                    <div>
+                      <h6 class="my-0 font-weight-bold">Bus - 65</h6>
+                      <small class="text-muted">Brief description</small>
+                    </div>
+                    <span class="md-2">
+                      <i class="fas fa-circle" style="color: #e74a3b;"></i>
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </li>
+
+            <div class="topbar-divider d-none d-sm-block"></div>
+
+            <!-- Nav Item - User Information -->
+            <li class="nav-item dropdown no-arrow">
+              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Admin</span>
+                <!--
+                <img class="img-profile rounded-circle" alt=" "src="{% static 'cbit.png' %}">
+              -->
+                <i class="fas fa-user"></i>
+              </a>
+              <!--  Dropdown - User Information -->
+              <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="#">
+                  <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Profile
+                </a>
+                <a class="dropdown-item" href="#">
+                  <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Settings
+                </a>
+                <a class="dropdown-item" href="#">
+                  <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Activity Log
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                  <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Logout
+                </a>
+              </div>
+            </li>
+          </ul>
+
+        </nav>
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+          <!-- Page Heading -->
+          <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800"></h1>
+          </div>
+          <!-- Content Row -->
+
+          <div class="row">
+
+            <!-- Map Chart -->
+            <div class="col-xl-12 col-lg-7">
+              <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary" style="flex: 1;">Bus Routes</h6>
+                  <a href="#" id="popup-btn" class="btn btn-primary btn-icon-split" data-toggle="modal" data-target="#bus-list" style="margin-right: 20px;">
+                    <span class="icon text-white-50">
+                      <i class="fas fa-bus"></i>
+                    </span>
+                    <span class="text">Busses</span>
+                  </a>
+                  <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                      <div class="dropdown-header">Dropdown Header:</div>
+                      <a class="dropdown-item" href="#">Action</a>
+                      <a class="dropdown-item" href="#">Another action</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                  </div>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body map-container z-depth-1-half" style="height: 500px; padding: 0;">
+                    <!--The div element for the map -->
+                    <div id="map" style="width: auto; height: 500px;"></div>
+                    
+                    
+                    <script>
+
+                    function initMap() { 
+                     var location = {lat:17.3920,lng:78.3194}
+                      var map = new google.maps.Map(document.getElementById('map'), {
+                        zoom: 11,
+                        center: location
+                      });
+                      
+					updateMap();
+                    //setInterval(function() { updateMap(map); },5000);
+                  }
+
+                    var markers = [];
+                    function updateMap(map){
+                        DeleteMarkers();
+                        var invocation = new XMLHttpRequest();
+                        var url = 'http://183.82.112.181:3396/tracking';
+                        invocation.open('GET', url, true);
+                        invocation.onreadystatechange = processRequest;
+                        invocation.send(); 
+                        function processRequest(e) {
+                          if (invocation.readyState == 4 && invocation.status == 200) {
+                            var response = JSON.parse(invocation.responseText);
+                            var buslocs = []
+                            for(var i=0;i<response.length;i++)
+                            {
+                              buslocs.push({lat:parseFloat(response[i]["latitude"]),lng:parseFloat(response[i]["longitude"])});
+                            }
+                            for(var i=0;i<response.length-2;i++)
+                            {
+                              buslocs.push({lat:parseFloat(response[i]["latitude"]),lng:parseFloat(response[i]["longitude"])});
+                            }
+                            markers = buslocs.map(function(location, i) {
+                              return new google.maps.Marker({
+                                position: location,
+                                label: "Bus",
+                                icon:"{% static 'markers/Bus.png' %}"
+                              });
+                            });
+							
+							//window.alert(markers[0]['position']);
+                            var markerCluster = new MarkerClusterer(map, markers,{imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+                            setTimeout(DeleteMarkers,10000);
+						  }
+                        }
+                     }
+                    function DeleteMarkers(){
+                     map.clear();
+					 for(var i=0;i<markers.length;i++)
+                      {
+                        markers[i].setMap(null);
+                      }
+                      markers =[];
+					  console.log("Done")
+                    }
+                        /*
+                        var myFunctinForListener = function(aMarker, aInfoWindow) {
+                          google.maps.event.addListener(aMarker, 'click', function() {                          
+                            aInfoWindow.open(map, aMarker);
+                          });
+                        }
+                        var myFunctinForListener1 = function(aMarker) {
+                          google.maps.event.addListener(aMarker, 'dblclick', function() {   
+                            window.location.href = this.url;     
+
+                             
+                        });
+                      }
+                        img="{% static 'markers/Bus.png' %}"
+                        {% for i in locs %}
+                          var lat = parseFloat('{{i.lat}}');
+                          var lng = parseFloat('{{i.lon}}');
+                          var pos={lat:lat ,lng:lng};
+                          var k='{{i.bno}}';
+
+                          marker = new google.maps.Marker({
+                            map: map,
+                            icon:img,
+                            position: pos,
+                            url:'http://127.0.0.1:8000/home/Bus-'+'{{i.bno}}',
+                            label:'{{i.bno}}',                      
+                          });
+                          var infowindow = new google.maps.InfoWindow({
+                            content: '<p>Location:' + marker.getPosition() + '</p>'
+                          });
+                          myFunctinForListener(marker, infowindow);
+                          myFunctinForListener1(marker);
+                        {% endfor %}
+                      }
+                      */
+                    
+                    </script>
+                    <script src="https://unpkg.com/@google/markerclustererplus@4.0.1/dist/markerclustererplus.min.js"></script>
+                    <script async differ type="text/javascript"
+                      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCclG7w5m1rAyb_KxV8cp2eY4FsTtTm7Bs&libraries=drawing&callback=initMap">
+                    </script>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Popup -->
+              <div class="modal fade" id="bus-list" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="m-0 font-weight-bold text-primary">Busses List</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span class="text">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body" style="padding-bottom: 55px;">
+                      <h6 class="m-1">Online</h6>
+                      <ul class="list-group mb-3">
+                        <li class="list-group-item d-flex justify-content-between lh-condensed">
+                          <div>
+                            <h6 class="my-0 font-weight-bold">Bus - 19</h6>
+                            <small class="text-muted">Brief description</small>
+                          </div>
+                          <span class="md-2">
+                            <i class="fas fa-circle" style="color: #1cc88a;"></i>
+                          </span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between lh-condensed">
+                          <div>
+                            <h6 class="my-0 font-weight-bold">Bus - 64</h6>
+                            <small class="text-muted">Brief description</small>
+                          </div>
+                          <span class="md-2">
+                            <i class="fas fa-circle" style="color: #1cc88a;"></i>
+                          </span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between lh-condensed">
+                          <div>
+                            <h6 class="my-0  font-weight-bold">Bus - 15</h6>
+                            <small class="text-muted">Brief description</small>
+                          </div>
+                          <span class="md-2">
+                            <i class="fas fa-circle" style="color: #1cc88a;"></i>
+                          </span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between lh-condensed">
+                          <div>
+                            <h6 class="my-0 font-weight-bold">Bus - 12</h6>
+                            <small class="text-muted">Brief description</small>
+                          </div>
+                          <span class="md-2">
+                            <i class="fas fa-circle" style="color: #1cc88a;"></i>
+                          </span>
+                        </li>
+                      </ul>
+                      <h6 class="m-1">Offline</h6>
+                      <ul class="list-group mb-3">
+                        
+                        <!--{% for i in locs %}
+                        <li class="list-group-item d-flex justify-content-between lh-condensed">
+                          <div>
+                            <a href="/home/Bus-{{i.bno}}/">
+                              <h6 class="my-0 font-weight-bold">Bus - {{i.bno}}</h6>
+                            </a>
+                            <small class="text-muted">Brief description</small>
+                          </div>
+                          <span class="md-2">
+                            <i class="fas fa-circle" style="color: #858796;"></i>
+                          </span>
+                        </li>
+                        {% endfor %}
+                        -->
+                      </ul>
+                      <a href="#" class="btn btn-primary" data-dismiss="modal" aria-label="Close" style="right: 15px; position: absolute;">
+                        <span class="text">Close</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <!-- Color System -->
+                
+      <!-- End of Main Content -->
+
+      <!-- Footer -->
+      <footer class="sticky-footer bg-white col-lg-12 mb-4">
+        <div class="container my-auto">
+          <div class="copyright text-center my-auto">
+            <span>Copyright &copy; Your Website 2020</span>
+          </div>
+        </div>
+      </footer>
+      <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+  <!-- Logout Modal-->
+  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+          <a class="btn btn-primary" href="login.html">Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
+
+  <!-- Page level plugins -->
+  <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
+
+  <!-- Page level custom scripts -->
+  <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
+  <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
+
+</body>
+
+</html>
