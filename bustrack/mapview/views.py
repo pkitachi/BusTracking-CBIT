@@ -18,7 +18,7 @@ def homepage(request):
 	return render(request,'homepage.html',{'buses': buses}) 
 	
 def index(request):
-	return render(request,'index.html',{'buses': buses}) 	
+	return render(request,'index.html',{'buses': buses,'track': track}) 	
 
 def trackhistory(request):
 	if request.method=="POST":
