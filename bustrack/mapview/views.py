@@ -5,6 +5,11 @@ from . models import Loc
 import requests
 import ast 
 from django.conf import settings
+import threading
+from shapely.geometry import Point
+from shapely.geometry.polygon import Polygon
+import numpy as np
+from datetime import datetime,date
 
 r = requests.post('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
 p= r.json()['access_token']
@@ -12,6 +17,36 @@ td=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/routes',
 buses=td.json()
 track=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
 alertRes=[]
+
+def inGeofence(lat,lng):
+	lat = float(lat)
+	lng = float(lng)
+	lons_lats_vect = [(78.321499,17.392993),(78.319181,17.394380),(78.318103,17.393592),(78.317213,17.389937),(78.320316,17.389174)]
+	polygon = Polygon(lons_lats_vect) 
+	point = Point(lng,lat) 
+	#polygon.contains(point)
+	if point.within(polygon):
+		return 1
+	return 0 
+
+bus_in_status = {}
+
+def geofence_check():
+	threading.Timer(10.0, geofence_check).start()
+	track=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
+	tr = track.json()
+	for i in tr:
+		if (bus_in_status.get(i['IMEI']) == None) or (bus_in_status.get(i['IMEI']) != inGeofence(i['latitude'],i['longitude'])):	
+			res = inGeofence(i['latitude'],i['longitude'])
+			gDate = str(date.today())
+			gTime = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+			if(bus_in_status.get(i['IMEI']) != None):
+				requests.post('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/geofence',headers={'Authorization':f'Bearer {p}'},json={'IMEI': i['IMEI'],'gDate':gDate,'gTime':gTime,'status':res})
+			# post into api inGeofence(i['latitude'],i['longitude'])
+			bus_in_status[i['IMEI']] = res
+			# bus_in_status[i['IMEI']] = api result
+geofence_check()      
+
 
 def trackapicall(request):
 	th=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
@@ -82,21 +117,25 @@ def apicall(request):
                 alertRes.append(i)
     return JsonResponse(alertRes,safe=False)
 
-def geofence(request):
+def geofence_report(request):
+	t=track
+	cluster=t.json()
+	geofence_report = None
+	if request.method=="POST":
+		bno=request.POST.get('busno')
+		gDate=request.POST.get('date')
+		temp=gDate.split('-')
+		temp[0],temp[2]=temp[2],temp[0]
+		gDate=('-'.join(temp))
+		if(bno==""):
+			ress=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/geofence',headers={'Authorization':f'Bearer {p}'},data={'gDate':gDate})
+		else:
+			ress=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/geofence',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno,'gDate':gDate})
+		geofence_report=ress.json()
+	return render(request,'geofence_report.html',{'cluster':cluster,'buses': buses,'geofence_report':geofence_report})
 
-	Out=[{'lat':17.4400,'lng':78.3489,'deviceId':42}
-		]
-	In=[{'lat':17.4058,'lng':78.4032,'deviceId':42}
-		]
-	lines = []
-	url = settings.STATIC_ROOT +'/mapview/static/geofence/42bus.txt'
-	
-	with open(url) as file:
-		for line in file:
-			line = line.rstrip()
-			if(len(line)>1):
-				line=ast.literal_eval(line)
-				lines.append(line)
-			
-	path=lines
-	return render(request,'geofence.html', {"data":In,"path":path } ) 
+
+def geofence(request):
+	t=track
+	cluster=t.json()
+	return render(request,'geofence.html',{'cluster':cluster,'buses': buses,'geofence_report':geofence_report})

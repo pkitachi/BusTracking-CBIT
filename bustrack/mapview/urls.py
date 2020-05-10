@@ -24,4 +24,6 @@ urlpatterns = [
 	path('home/clusterinfo',views.clusterinfo,name='clusterinfo'),
 	#home/track-refresh/
 	path('home/track-refresh/', views.trackapicall,name='trackapicall'),
+	path('home/geofence',views.geofence,name='geofence'),
+    path('home/geofence_report',views.geofence_report,name='geofence_report'),
 ]
