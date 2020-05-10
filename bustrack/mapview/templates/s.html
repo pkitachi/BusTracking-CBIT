@@ -3,60 +3,7 @@
 {%block title%}
 CBIT Bus Tracking Dashboard
 {%endblock%}
-{%block onload%}worker(){%endblock%}
 {%block main%}
-<script>
-function worker() {
-  $.ajax({
-    url: '/home/track-refresh/', 
-	type: 'GET',
-    success: function(data,textStatus,request) {
-console.log('ok');
-img="{% static 'markers/Bus.png' %}"
-for(var i=0;i<markers.length;i++){
-markers[i].setMap(null);
-}
-markers=[]
-for (var i = 0; i < data.length; i++) {
-
-var lat = parseFloat(data[i]['latitude']);
-var lng = parseFloat(data[i]['longitude']);
-var pos={lat:lat ,lng:lng};
-var k=data[i]['Id'];
-var speed=data[i]['speed'];
-marker = new google.maps.Marker({
-map: map,
-icon:img,
-position: pos,
-
-label:''+k,                      
-});
-markers.push(marker);
-var infowindow = new google.maps.InfoWindow({
-content: '<p>Bus no:' + k + '</p>'+
-		  '<p>Latitude:' +lat + '</p>'+
-		  '<p>Longitude'+lng + '</p>'+
-		  '<p>Speed:' + speed + '</p>'+
-		  '<p>Altitude:' + data[i]['altitude'] + '</p>'+
-		  '<p>Battery:' + data[i]['battery'] + '</p>'+
-		  '<p>Fuel:' + data[i]['fuel'] + '</p>'+
-		  '<p>Device Time' + data[i]['deviceTime'] + '</p>'+
-		  '<p>Alert:' + data[i]['alert'] + '</p>'
-		  
-});
-myFunctinForListener(marker, infowindow);
-myFunctinForListener1(marker);
-
-}
-
-},
-complete: function() {
-  // Schedule the next request when the current one's complete
-  setTimeout(worker, 5000);
-},
-});
-}
-</script>
         <!-- Begin Page Content -->
         <div class="container-fluid">
 
@@ -103,62 +50,84 @@ complete: function() {
                     </script>
                     <script>
                       // Initialize and add the map
-					  var myFunctinForListener;var myFunctinForListener1;var map;var markers=[];
                       function initMap() {
                         var location = {lat:17.3920,lng:78.3194}
-                        map = new google.maps.Map(document.getElementById('map'), {
+                        var map = new google.maps.Map(document.getElementById('map'), {
                           zoom: 11,
                           center: location
                         });
                         var markerc = new google.maps.Marker({
                           map: map,
+                          label:"CBIT",
                           position:location,
                           icon:"{% static 'markers/pin1.png' %}",                   
                         });
-                        myFunctinForListener = function(aMarker, aInfoWindow) {
+                        var myFunctinForListener = function(aMarker, aInfoWindow) {
                           google.maps.event.addListener(aMarker, 'click', function() {                          
                             aInfoWindow.open(map, aMarker);
                           });
                         }
-                        myFunctinForListener1 = function(aMarker) {
-                          google.maps.event.addListener(aMarker, 'dblclick', function() {
-							var l=this.label
-                            window.location.href = "/home/Bus-"+l;     
+                        var myFunctinForListener1 = function(aMarker) {
+                          google.maps.event.addListener(aMarker, 'dblclick', function() {   
+                              
 
                              
                         });
                       }
-                        img="{% static 'markers/Bus.png' %}"
-                        {% for i in track_liv %}
-                          var lat = parseFloat('{{i.latitude}}');
-                          var lng = parseFloat('{{i.longitude}}');
-					      var pos={lat:lat ,lng:lng};
-                          var k='{{i.routeId}}';
+                       var i = 0;
+                         function myLoop() {
+                  setTimeout(function() {
+                  if (i < 1) {     
+                  refresh();      
+                  myLoop();
+                  }
+                  }, 500)
+                        }
+                myLoop();
 
+        function refresh(){
+        $.ajax({
+        type: "GET",
+        url: "{{ '/home/track-refresh/' }}",
+        success: function(data,textStatus,request){
+		  console.log('ok');
+          img="{% static 'markers/Bus.png' %}"
+                      
+                         for (var i = 0; i < data.length; i++) {
+                        
+                          var lat = parseFloat(data[i]['latitude']);
+                          var lng = parseFloat(data[i]['longitude']);
+                          var pos={lat:lat ,lng:lng};
+                          var k=data[i]['Id'];
+                          var speed=data[i]['speed'];
                           marker = new google.maps.Marker({
                             map: map,
                             icon:img,
                             position: pos,
-                            //url:'http://127.0.0.1:8000/home/Bus-'+'{{i.routeId}}',
-                            label:'{{i.routeId}}',                      
+                            
+                            label:''+k,                      
                           });
-						  markers.push(marker);
+                          
                           var infowindow = new google.maps.InfoWindow({
-content: '<p>Bus no:' + k + '</p>'+
-		  '<p>Latitude:' +lat + '</p>'+
-		  '<p>Longitude'+lng + '</p>'+
-		  '<p>Speed:' + '{{i.speed}}' + '</p>'+
-		  '<p>Altitude:' + '{{i.altitude}}' + '</p>'+
-		  '<p>Battery:' + '{{i.battery}}' + '</p>'+
-		  '<p>Fuel:' + '{{i.fuel}}' + '</p>'+
-		  '<p>Device Time' + '{{i.deviceTime}}' + '</p>'+
-		  '<p>Alert:' + '{{i.alert}}' + '</p>'
-		  
-});
+                            content: '<p>Bus no:' + k + '</p>'+
+                                      '<p>Latitude:' +lat + '</p>'+
+                                      '<p>Longitude'+lng + '</p>'+
+                                      '<p>Speed:' + speed + '</p>'+
+                                      '<p>Altitude:' + data[i]['altitude'] + '</p>'+
+                                      '<p>Battery:' + data[i]['battery'] + '</p>'+
+                                      '<p>Fuel:' + data[i]['fuel'] + '</p>'+
+                                      '<p>Device Time' + data[i]['deviceTime'] + '</p>'+
+                                      '<p>Alert:' + data[i]['alert'] + '</p>'
+                                      
+                          });
                           myFunctinForListener(marker, infowindow);
                           myFunctinForListener1(marker);
-                        {% endfor %}
-						//setTimeout(refresh,10000);
+                    
+                         }
+          
+        }
+      });
+    }
                       }
                     </script>
                     <script async differ type="text/javascript"
