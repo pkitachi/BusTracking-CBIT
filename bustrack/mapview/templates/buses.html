@@ -14,7 +14,7 @@ CBIT Bus Tracking Dashboard
         <div class="card shadow mb-4">
           <!-- Card Header - Dropdown -->
           <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-            <h6 class="m-0 font-weight-bold text-primary" style="flex: 1;">Buses List</h6>
+            <h6 class="m-0 font-weight-bold text-primary" style="flex: 1;">Message</h6>
             <div class="dropdown no-arrow">
               <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
@@ -31,15 +31,28 @@ CBIT Bus Tracking Dashboard
           <!-- Card Body -->
           <div class="card-body z-depth-1-half" style="height: 500px; padding: 0;">
             
+            <div class="col-md-12 mt-3 d-flex justify-content-start align-items-center">
+              <label class="m-0" for="selected-buses" style="width: 100px;padding-right: 10px;">To</label>
+              <input type="text" class="form-control" id="selected-buses" placeholder=" Select Busses From the List" value="" required="" disabled>
+            </div>
+            <div class="col-md-12 mt-3 d-flex justify-content-start align-items-center">
+              <label class="m-0" for="selected-buses" style="width: 100px;padding-right: 10px;">Message</label>
+              <input type="text" class="form-control" id="selected-buses" placeholder=" Your message here..." value="" required="">
+
+            </div>
+            <a href="#" class="btn btn-primary pt-1 pd-1 m-2" style="margin-right: 20px;">
+              <span class="text m-0">Done</span>
+            </a>
+          
           </div>
         </div>
       </div>
       <!-- card 2 -->
       <div class="col-xl-4">
-        <div class="card shadow mb-4">
+        <div class="card shadow mb-4" style="height: 555px;">
           <!-- Card Header - Dropdown -->
           <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-            <h6 class="m-0 font-weight-bold text-primary" style="flex: 1;">Card 2</h6>
+            <h6 class="m-0 font-weight-bold text-primary" style="flex: 1;">Buses List</h6>
             <div class="dropdown no-arrow">
               <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
@@ -59,7 +72,7 @@ CBIT Bus Tracking Dashboard
               <div class='text-muted m-2'>
                 Select All
                 <span class='' style="width: fit-content; float: right;">
-                  <input class="" id="" type="checkbox" name="selected-buses">
+                  <input class="" id="select-all" type="checkbox">
                 </span>
             </div>
             </div>
@@ -71,19 +84,39 @@ CBIT Bus Tracking Dashboard
                   <small class='text-muted'>{{ i.routeName }}</small>
                 </div>
                 <span class=''>
-                  <input class="" id="" type="checkbox" name="selected-buses">
+                  <input class="selected-bus" id="" type="checkbox" name="selected-bus" value=" Bus - {{ i.routeId }}">
                 </span>
               </li>
               {% endfor %}
           </ul>
           </div>
+          <button href="#" class="btn btn-primary pt-1 pd-1 m-2 done-btn" style="margin-right: 20px;">
+            <span class="text m-0">Done</span>
+          </button>
         </div>
       </div>
-      <script>
-        console.log('{{buses}}')
-      </script>
     </div>
     <!-- End of Main Content -->
-
+    <script>
+      $('#select-all').click(function(event) {   
+          if(this.checked) {
+              // Iterate each checkbox
+              $(':checkbox').each(function() {
+                  this.checked = true;                        
+              });
+          } else {
+              $(':checkbox').each(function() {
+                  this.checked = false;                       
+              });
+          }
+      });
+      $(".done-btn").click(function(){
+        var selectedList = [];
+        $.each($("input[name='selected-bus']:checked"), function(){
+          selectedList.push($(this).val());
+        });
+        $("#selected-buses").attr("placeholder", selectedList);
+      });
+    </script>
   </div>
 {%endblock%}
