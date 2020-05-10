@@ -20,4 +20,6 @@ urlpatterns = [
 	path('home/clusterview',views.clusterview,name='clusterview'),
 	#/home/clusterinfo
 	path('home/clusterinfo',views.clusterinfo,name='clusterinfo'),
+    #/home/buses
+    path('home/buses',views.buses,name='buses'),
 ]

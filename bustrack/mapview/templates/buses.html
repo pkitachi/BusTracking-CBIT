@@ -1,0 +1,89 @@
+{%extends 'base.html'%}
+{% load static %}
+{%block title%}
+CBIT Bus Tracking Dashboard
+{%endblock%}
+{%block main%}
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+    <!-- Content Row -->
+    <div class="row">
+      <!-- card 1 -->
+      <div class="col-xl-8">
+        <div class="card shadow mb-4">
+          <!-- Card Header - Dropdown -->
+          <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary" style="flex: 1;">Buses List</h6>
+            <div class="dropdown no-arrow">
+              <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                <div class="dropdown-header">Dropdown Header:</div>
+                <a class="dropdown-item" href="#">Action</a>
+                <a class="dropdown-item" href="#">Another action</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Something else here</a>
+              </div>
+            </div>
+          </div>
+          <!-- Card Body -->
+          <div class="card-body z-depth-1-half" style="height: 500px; padding: 0;">
+            
+          </div>
+        </div>
+      </div>
+      <!-- card 2 -->
+      <div class="col-xl-4">
+        <div class="card shadow mb-4">
+          <!-- Card Header - Dropdown -->
+          <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary" style="flex: 1;">Card 2</h6>
+            <div class="dropdown no-arrow">
+              <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                <div class="dropdown-header">Dropdown Header:</div>
+                <a class="dropdown-item" href="#">Action</a>
+                <a class="dropdown-item" href="#">Another action</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Something else here</a>
+              </div>
+            </div>
+          </div>
+          <!-- Card Body -->
+          <div class="card-body z-depth-1-half" style="height: 500px; padding: 0; overflow: scroll;">
+            <div class='m-2 mt-3'>
+              <div class='text-muted m-2'>
+                Select All
+                <span class='' style="width: fit-content; float: right;">
+                  <input class="" id="" type="checkbox" name="selected-buses">
+                </span>
+            </div>
+            </div>
+            <ul class="m-2 list-group mt-3">
+              {% for i in buses %}
+              <li class='d-flex justify-content-between lh-condensed m-2'>
+                <div>
+                  <h6 class='my-0 font-weight-bold'>Bus - {{ i.routeId }} </h6>
+                  <small class='text-muted'>{{ i.routeName }}</small>
+                </div>
+                <span class=''>
+                  <input class="" id="" type="checkbox" name="selected-buses">
+                </span>
+              </li>
+              {% endfor %}
+          </ul>
+          </div>
+        </div>
+      </div>
+      <script>
+        console.log('{{buses}}')
+      </script>
+    </div>
+    <!-- End of Main Content -->
+
+  </div>
+{%endblock%}

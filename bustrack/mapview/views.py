@@ -85,3 +85,7 @@ def geofence(request):
 			
 	path=lines
 	return render(request,'geofence.html', {"data":In,"path":path } ) 
+def buses(request):
+	b = requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
+	b = b.json()
+	return render(request,'buses.html',{'buses':b}) 

@@ -377,11 +377,15 @@
         $('.alert').removeClass("show");
         $('.alert').addClass("hide");
       });
-      document.getElementById("alert-btn").addEventListener("click", function(){  
-        var audio = new Audio( 
-        "{% static 'beep.mp3' %}"); 
-        audio.play();  
-      });
+      
+      alertBtn = document.getElementById("alert-btn")
+      if(alertBtn!=null){
+        document.getElementById("alert-btn").addEventListener("click", function(){  
+          var audio = new Audio( 
+          "{% static 'beep.mp3' %}"); 
+          audio.play();  
+        });
+      }
         
       var track;
       var i = 0;
@@ -435,10 +439,13 @@
     </script>
       
     <script>
-      document.getElementById("alert-btn").addEventListener("click", function(){  
+      alertBtn = document.getElementById("alert-btn")
+      if(alertBtn!=null){
+        alertBtn.addEventListener("click", function(){  
         var audio = new Audio( 
         "{% static 'beep.mp3' %}"); 
         audio.play();  });
+      }
     </script>
   <!-- Bootstrap core JavaScript-->
   <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
