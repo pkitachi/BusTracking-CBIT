@@ -152,4 +152,4 @@ def buses(request):
 def geofence(request):
 	td=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
 	tracking=td.json()
-	return render(request,'geofence.html',{'tracking':tracking,'buses': buses,'geofence_report':geofence_report})
+	return render(request,'geofence.html',{'tracking':tracking})
