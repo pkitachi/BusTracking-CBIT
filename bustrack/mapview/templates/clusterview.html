@@ -16,15 +16,13 @@ function worker() {
 	  pos=[];var p;
 	  for(var i=0;i<data.length;i++){
 		p={lat:parseFloat(data[i]['latitude']),lng:parseFloat(data[i]['longitude'])}; 
-		pos.push(p);
-	  }
-	  markers = pos.map(function(location, i) {
-		  return new google.maps.Marker({
-			position: location,
-			label: "Bus",
+		marker =new google.maps.Marker({
+			position: p,
+			label: (data[i]['routeId']).toString(),
 			icon:"{% static 'markers/Bus.png' %}"
 		  });
-		});
+		  markers.push(marker);
+	  }
 	  markerCluster = new MarkerClusterer(map, markers,{imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
     },
     complete: function() {
@@ -90,16 +88,13 @@ function worker() {
                             {%for i in cluster%}
 							  var imei={{i.IMEI}}
                               buslocs[imei]={lat:parseFloat({{i.latitude}}),lng:parseFloat({{i.longitude}})};
-							  pos.push(buslocs[imei])
-							  
-                            {%endfor%}
-							markers = pos.map(function(location, i) {
-                              return new google.maps.Marker({
-                                position: location,
-                                label: "Bus",
+							  marker =new google.maps.Marker({
+                                position: buslocs[imei],
+                                label: "{{i.routeId}}",
                                 icon:"{% static 'markers/Bus.png' %}"
                               });
-                            });
+							  markers.push(marker);
+                            {%endfor%}
                             markerCluster = new MarkerClusterer(map, markers,{imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
 							worker();
                   }

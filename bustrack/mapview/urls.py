@@ -16,10 +16,16 @@ urlpatterns = [
     #path('home/geofence',views.geofence,name='alerts'),
 	#/home/trackhistory
 	path('home/trackhistory',views.trackhistory,name='trackhistory'),
+    #/home/replaytracking
+	path('home/replaytracking',views.replaytracking,name='replaytracking'),
     #/home/clusterview
 	path('home/clusterview',views.clusterview,name='clusterview'),
 	#/home/clusterinfo
 	path('home/clusterinfo',views.clusterinfo,name='clusterinfo'),
     #/home/buses
     path('home/buses',views.buses,name='buses'),
+	#home/track-refresh/
+	path('home/track-refresh/', views.trackapicall,name='trackapicall'),
+	path('home/geofence',views.geofence,name='geofence'),
+    path('home/geofence_report',views.geofence_report,name='geofence_report'),
 ]

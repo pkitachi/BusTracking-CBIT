@@ -69,6 +69,11 @@
           <i class="fas fa-location-arrow"></i>
           <span>Clustered View</span></a>
       </li>
+	  <li class="nav-item">
+        <a class="nav-link" href="{%url 'geofence'%}">
+          <i class="fas fa-globe"></i>
+          <span>GeoFence</span></a>
+      </li>
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
           <i class="fas fa-table"></i>
@@ -81,6 +86,7 @@
             <a class="collapse-item" href="#">Device Uptime</a>
             <a class="collapse-item" href="#">Alerts</a>
             <a class="collapse-item" href="#">Routes</a>
+			<a class="collapse-item" href="{%url 'geofence_report'%}">GeoFence Report</a>
             <a class="collapse-item" href="#">Distance</a>
             <a class="collapse-item" href="#">Speed Violation</a>
             <a class="collapse-item" href="#">Fleet Summary</a>
@@ -95,7 +101,7 @@
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">View Tools:</h6>  
-            <a class="collapse-item" href="#">Replay Tracking</a>
+            <a class="collapse-item" href="#" data-toggle="modal" data-target="#replay-tracking">Replay Tracking</a>
             <a class="collapse-item" href="#">Add Geo-fence</a>
             <a class="collapse-item" href="#">View Geo-fence</a>
             <a class="collapse-item" href="#">Alert Settings</a>
@@ -306,7 +312,49 @@
                       </div>
                     </div>
                   </div>
-				  
+      
+                <!--Replay Tracking popup-->
+          <div class="modal fade" id="replay-tracking" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="m-0 font-weight-bold text-primary">Buses Tracking History</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span class="text">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body" style="padding-bottom: 55px;">
+                    <!-- Form code begins -->
+                      <form method='POST' action="{% url 'replaytracking' %}">
+                        {% csrf_token %}
+                          <div class="form-group">
+                              <label for="bno">Bus No.</label>
+                              <select class="form-control" id="bno" name="bno" required>
+                                  <option value="">Choose bus</option>
+                                  {% for i in buses %}
+                                      <option value={{i.routeId}}>Bus - {{i.routeId}}</option>
+                                  {% endfor %}
+                              </select>
+                          </div>
+                          <div class="form-group ">
+                              <div class="dates">
+                                  <label class="control-label requiredField" for="ddate">Date</label>
+                                  <input type="text" class="form-control" id="date" name="ddate" placeholder="DD-MM-YYYY" required/>
+                              </div>
+                          </div>
+                          <div class="form-group"> <!-- Submit button -->
+                              <button class="btn btn-primary " name="submit" type="submit">Ok</button>
+                          </div>
+                      </form>
+                      <a href="#" class="btn btn-primary" data-dismiss="modal" aria-label="Close" style="right: 15px; position: absolute;">
+                        <span class="text">Close</span>
+                      </a>
+                </div>
+              </div>
+            </div>
+          </div>
+              
+
       <!-- Footer -->
       <footer class="sticky-footer bg-white col-lg-12 mb-4">
         <div class="container my-auto">
@@ -415,7 +463,7 @@
             var str = ''
             var newAlertList=[]
             for (var i = 0; i < data.length; i++) {
-              str+="<li class='list-group-item d-flex justify-content-between lh-condensed'><div><h6 class='my-0 font-weight-bold'>Bus - " + data[i]['IMEI'] + "</h6><small class='text-muted'>Brief description</small></div><span class='md-2'><i class='fas fa-circle' style='color: #e74a3b;'></i></span></li>"
+              str+="<li class='list-group-item d-flex justify-content-between lh-condensed'><div><h6 class='my-0 font-weight-bold'>Bus - " + data[i]['routeId'] + "</h6><small class='text-muted'>Brief description</small></div><span class='md-2'><i class='fas fa-circle' style='color: #e74a3b;'></i></span></li>"
               if (!alertList.includes(data[i]['IMEI'])){
                 document.getElementById("alert-info").innerHTML = parseFloat(data[i]['IMEI']);
                 notification();
