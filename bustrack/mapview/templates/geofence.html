@@ -7,17 +7,16 @@ function worker() {
     success: function(data,textStatus,request) {
 console.log('ok');
 img="{% static 'markers/Bus.png' %}"
-for(var i=0;i<markers.length;i++){
-markers[i].setMap(null);
-}
-markers=[]
 for (var i = 0; i < data.length; i++) {
-
+var im=(data[i]['IMEI']).toString();
 var lat = parseFloat(data[i]['latitude']);
 var lng = parseFloat(data[i]['longitude']);
 var pos={lat:lat ,lng:lng};
 var k=data[i]['routeId'];
 var speed=data[i]['speed'];
+var ind=mIMEI.indexOf(im);
+if(ind==-1){
+console.log('new');
 marker = new google.maps.Marker({
 map: map,
 icon:img,
@@ -31,6 +30,28 @@ content: '<p>Latitude:' +lat + '</p>'+
 		  
 });
 myFunctinForListener(marker, infowindow);
+}
+else{
+console.log(JSON.stringify(d[im])==JSON.stringify(pos))
+if(JSON.stringify(d[im])!==JSON.stringify(pos)){
+console.log('update');
+markers[ind].setMap(null)
+marker = new google.maps.Marker({
+map: map,
+icon:img,
+position: pos,
+label:''+k,                      
+});
+d[im]=pos;
+markers[ind]=marker;
+var infowindow = new google.maps.InfoWindow({
+content: '<p>Latitude:' +lat + '</p>'+
+		  '<p>Longitude'+lng + '</p>'
+		  
+});
+myFunctinForListener(marker, infowindow);
+}
+}
 
 }
 
@@ -83,7 +104,7 @@ complete: function() {
                     <div id="map" style="width: auto; height: 500px;"></div>
 
                     <script>
-                        var buslocs = {};var markers=[];var pos=[];var markerCluster ;
+                        var buslocs = {};var markers=[];var pos=[];var d={};var mIMEI=[];
                         					var map;
                                    var path = JSON.parse('[{"lat":17.392993,"lng":78.321499},{"lat":17.394380,"lng":78.319181},{"lat":17.393592,"lng":78.318103},{"lat":17.389937,"lng":78.317213},{"lat":17.389174,"lng":78.320316}]');
 function initMap() {
@@ -103,7 +124,7 @@ function initMap() {
                           });
                         }
                         img="{% static 'markers/Bus.png' %}"
-                        {% for i in track_liv %}
+                        {% for i in tracking %}
 						  var imei='{{i.IMEI}}';
 						  mIMEI.push(imei)
                           var lat = parseFloat('{{i.latitude}}');
@@ -152,12 +173,13 @@ content: '<p>Latitude:' +lat + '</p>'+
                                                 polyarray.push('{"lat":'+polylinePath.getArray()[i].lat() + ', "lng":' + polylinePath.getArray()[i].lng() + '}');
                                               }
                                             });
-                        							worker();
+                        						setTimeout(worker,5000);
                                           }
                     </script>
-                    <script src="https://unpkg.com/@google/markerclustererplus@4.0.1/dist/markerclustererplus.min.js"></script>
-                    <script async differ type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCclG7w5m1rAyb_KxV8cp2eY4FsTtTm7Bs&libraries=drawing&callback=initMap"></script>
-                </div>
+                    <script async differ type="text/javascript"
+                      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCclG7w5m1rAyb_KxV8cp2eY4FsTtTm7Bs&libraries=drawing&callback=initMap">
+                    </script>
+                  </div>
             </div>
         </div>
         <!-- End of Main Content -->

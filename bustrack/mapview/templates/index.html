@@ -13,17 +13,15 @@ function worker() {
     success: function(data,textStatus,request) {
 console.log('ok');
 img="{% static 'markers/Bus.png' %}"
-for(var i=0;i<markers.length;i++){
-markers[i].setMap(null);
-}
-markers=[]
 for (var i = 0; i < data.length; i++) {
-
+var im=(data[i]['IMEI']).toString();
 var lat = parseFloat(data[i]['latitude']);
 var lng = parseFloat(data[i]['longitude']);
 var pos={lat:lat ,lng:lng};
 var k=data[i]['routeId'];
 var speed=data[i]['speed'];
+var ind=mIMEI.indexOf(im);
+if(ind==-1){
 marker = new google.maps.Marker({
 map: map,
 icon:img,
@@ -45,6 +43,34 @@ content: '<p>Bus no:' + k + '</p>'+
 });
 myFunctinForListener(marker, infowindow);
 myFunctinForListener1(marker);
+}
+else{
+if(JSON.stringify(d[im])!==JSON.stringify(pos)){
+console.log('update');
+markers[ind].setMap(null)
+marker = new google.maps.Marker({
+map: map,
+icon:img,
+position: pos,
+label:''+k,                      
+});
+d[im]=pos;
+markers[ind]=marker;
+var infowindow = new google.maps.InfoWindow({
+content: '<p>Bus no:' + k + '</p>'+
+		  '<p>Latitude:' +lat + '</p>'+
+		  '<p>Longitude'+lng + '</p>'+
+		  '<p>Speed:' + speed + '</p>'+
+		  '<p>Altitude:' + data[i]['altitude'] + '</p>'+
+		  '<p>Battery:' + data[i]['battery'] + '</p>'+
+		  '<p>Fuel:' + data[i]['fuel'] + '</p>'+
+		  '<p>Device Time' + data[i]['deviceTime'] + '</p>'+
+		  '<p>Alert:' + data[i]['alert'] + '</p>'
+		  
+});
+myFunctinForListener(marker, infowindow);
+}
+}
 
 }
 

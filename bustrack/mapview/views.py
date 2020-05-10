@@ -118,7 +118,7 @@ def apicall(request):
     return JsonResponse(alertRes,safe=False)
 
 def geofence_report(request):
-	t=track
+	t=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
 	cluster=t.json()
 	geofence_report = None
 	if request.method=="POST":
@@ -150,6 +150,6 @@ def buses(request):
 	return render(request,'buses.html',{'buses':b}) 
 
 def geofence(request):
-	t=track
-	cluster=t.json()
-	return render(request,'geofence.html',{'cluster':cluster,'buses': buses,'geofence_report':geofence_report})
+	td=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
+	tracking=td.json()
+	return render(request,'geofence.html',{'tracking':tracking,'buses': buses,'geofence_report':geofence_report})
