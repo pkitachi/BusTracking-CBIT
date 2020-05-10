@@ -22,7 +22,7 @@ for (var i = 0; i < data.length; i++) {
 var lat = parseFloat(data[i]['latitude']);
 var lng = parseFloat(data[i]['longitude']);
 var pos={lat:lat ,lng:lng};
-var k=data[i]['Id'];
+var k=data[i]['routeId'];
 var speed=data[i]['speed'];
 marker = new google.maps.Marker({
 map: map,
@@ -52,7 +52,7 @@ myFunctinForListener1(marker);
 },
 complete: function() {
   // Schedule the next request when the current one's complete
-  setTimeout(worker, 5000);
+  setTimeout(worker, 10000);
 },
 });
 }
