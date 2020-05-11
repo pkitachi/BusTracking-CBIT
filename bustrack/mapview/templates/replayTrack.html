@@ -82,7 +82,7 @@ TrackHistory-{{bno}}
                     }
                     var lat;
                     var lng; var infowindow;
-                    var pos;
+                    var pos;var speed;
                     var waypts = [];
                     var time,fuel,battery;
                     var k;
@@ -229,13 +229,15 @@ TrackHistory-{{bno}}
                 var speed = 2000; 
                 var index = 0;
                 var markerb=null;
-                var cnt = 0; 
+                var count = 0; 
                 function LoadPB(){
-                    if(cnt==0){
+					console.log(count)
+                    if(count==0){
                         index = 0;
                     }
-                    cnt++;
-                    var myLatlng = new google.maps.LatLng(parseFloat(routPb[index]['lat']), parseFloat(routPb[index]['lon']));
+                    count++;
+                    var myLatlng = {lat:parseFloat(routPb[index]['lat']),lng:parseFloat(routPb[index]['lon'])};
+					console.log(routPb[index]['lat']+" "+ index+" "+speed)
                     if(markerb!=null){
                         markerb.setMap(null);
                     }
@@ -261,6 +263,7 @@ TrackHistory-{{bno}}
                     else{
                         index++;
                     }
+
                 }
                 function playFunc(){
                   var color = document.getElementById('play-btn').style.color;
