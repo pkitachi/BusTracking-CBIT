@@ -21,8 +21,14 @@ TrackHistory-{{bno}}
                 <div class="card shadow mb-4">
                     <!-- Card Header - Dropdown -->
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary" style="flex: 1;">Bus Number {{bus.bno}}</h6>
-                    <a href="#" id="alert-btn" class="btn btn-danger btn-icon-split" style="margin-right: 20px;">
+                    <h6 class="m-0 font-weight-bold text-primary" style="flex: 1;">TrackHistory - {{bno}}</h6>
+                    <a href="#" id="b" class="btn btn-primary btn-icon-split" data-toggle="modal" data-target="#tracking-list" style="margin-right: 20px;">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-bus"></i>
+                        </span>
+                        <span class="text">Get TrackHistory</span>
+                    </a>
+					<a href="#" id="alert-btn" class="btn btn-danger btn-icon-split" style="margin-right: 20px;">
                       <span class="icon text-white-50">
                         <i class="fas fa-bell"></i>
                       </span>
@@ -65,17 +71,19 @@ TrackHistory-{{bno}}
                     var waypts = [];
                     var time;
                     var k;
+					var c=0;
                     {% for i in track_his %}
-                    lat = parseFloat('{{i.latitude}}');
+					lat = parseFloat('{{i.latitude}}');
                     lng = parseFloat('{{i.longitude}}');
+					pos={lat:lat,lng:lng};
                     time = ('{{i.updatedTime}}');
+					if (c%10==0){
 					speed = '{{i.speed}}'+' KMPH';
 					battery = {{i.battery}}+'%';
 					fuel = {{i.fuel}}+ '%';
-                    pos=new google.maps.LatLng(lat, lng);
                     waypts.push({
                         location: pos,
-                        stopover: true
+                        stopover: false,
                     });
                     k='{{bno}}';
                     marker = new google.maps.Marker({
@@ -91,7 +99,21 @@ TrackHistory-{{bno}}
                              '<p>Battery: '+battery + '</p>'
                     });
                     myFunctinForListener(marker, infowindow);
+					}c+=1;
                     {% endfor %}
+					marker = new google.maps.Marker({
+                        map: map,
+                        position: pos,
+                        //icon:"{% static 'markers/pin1.png' %}",                        
+                    });
+					marker.setTitle('Latitude: ' +lat + ' Longitude: '+lng)
+                    var infowindow = new google.maps.InfoWindow({
+                    content: '<p>Time: '+time + '</p>'+
+                             '<p>Speed: '+speed + '</p>'+
+                             '<p>Fuel: '+fuel + '</p>'+
+                             '<p>Battery: '+battery + '</p>'
+                    });
+                    myFunctinForListener(marker, infowindow);
                     var directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
                     var directionsService = new google.maps.DirectionsService();
                     directionsDisplay.setMap(map);
@@ -123,8 +145,8 @@ TrackHistory-{{bno}}
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
               <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Driver Info</div>
-              <div class="h6 mb-1 font-weight-bold text-gray-800">Driver Name</div>
-              <div class="text-xs font-weight-bold text-gray-800">+91 90000 00000</div>
+              <div class="h6 mb-1 font-weight-bold text-gray-800">{{dname}}</div>
+              <div class="text-xs font-weight-bold text-gray-800">{{dphone}}</div>
             </div>
             <div class="col-auto">
               <i class="fas fa-user fa-2x text-gray-300"></i>
