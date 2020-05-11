@@ -69,6 +69,8 @@ TrackHistory-{{bno}}
                 <script>
                 var map;
                 // Initialize and add the map
+				
+				var route_data=[];
                 function initMap() {
                     var cbit = {lat:17.3920,lng:78.3194}
                     map = new google.maps.Map(document.getElementById('map'), {
@@ -89,7 +91,7 @@ TrackHistory-{{bno}}
                     var directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
                     var directionsService = new google.maps.DirectionsService();
                     directionsDisplay.setMap(map);
-                    var request;
+                    var request,rec;
                     var cnt = 0;
                     {% for i in track_replay %}
                     lat = parseFloat('{{i.latitude}}');
@@ -99,6 +101,8 @@ TrackHistory-{{bno}}
 					battery = '{{i.battery}}'+'%';
 					fuel = '{{i.fuel}}'+ '%';
                     pos={lat:lat,lng:lng};
+					rec={lat:lat,lng:lng,time:time};
+					route_data.push(rec);
                     if(cnt%5==0){
                     waypts.push({
                         location: pos,
@@ -151,80 +155,6 @@ TrackHistory-{{bno}}
                     });                       
                                                                          
                 }
-                var routPb = [
-                            {
-                                "id" : 1,
-                                "bno" : 42,
-                                "date" : "2020-05-05",
-                                "time" : "19:12:04.000000",
-                                "lat" : 17.518970,
-                                "lon" : 78.278702
-                            },
-                            {
-                                "id" : 2,
-                                "bno" : 42,
-                                "date" : "2020-05-05",
-                                "time" : "19:12:06.000000",
-                                "lat" : 17.509107,
-                                "lon" : 78.300578
-                            },
-                            {
-                                "id" : 3,
-                                "bno" : 42,
-                                "date" : "2020-05-05",
-                                "time" : "19:12:08.000000",
-                                "lat" : 17.494518,
-                                "lon" : 78.315931
-                            },
-                            {
-                                "id" : 4,
-                                "bno" : 42,
-                                "date" : "2020-05-05",
-                                "time" : "19:12:10.000000",
-                                "lat" : 17.486018,
-                                "lon" : 78.313151
-                            },
-                            {
-                                "id" : 5,
-                                "bno" : 42,
-                                "date" : "2020-05-05",
-                                "time" : "19:12:12.000000",
-                                "lat" : 17.480496,
-                                "lon" : 78.311159
-                            },
-                            {
-                                "id" : 6,
-                                "bno" : 42,
-                                "date" : "2020-05-05",
-                                "time" : "19:12:14.000000",
-                                "lat" : 17.461763,
-                                "lon" : 78.335939
-                            },
-                            {
-                                "id" : 7,
-                                "bno" : 42,
-                                "date" : "2020-05-05",
-                                "time" : "19:12:16.000000",
-                                "lat" : 17.449159,
-                                "lon" : 78.348665
-                            },
-                            {
-                                "id" : 8,
-                                "bno" : 42,
-                                "date" : "2020-05-05",
-                                "time" : "19:12:18.000000",
-                                "lat" : 17.444873,
-                                "lon" : 78.353276
-                            },
-                            {
-                                "id" : 9,
-                                "bno" : 42,
-                                "date" : "2020-05-05",
-                                "time" : "19:12:20.000000",
-                                "lat" : 17.393758,
-                                "lon" : 78.319942
-                            }
-                ]; 
                 var timer = null; // Will hold a reference to the timer
                 var speed = 2000; 
                 var index = 0;
@@ -239,7 +169,7 @@ TrackHistory-{{bno}}
 				if(markerb!=null){
                         markerb.setMap(null);
                     }
-				var myLatlng = {lat:parseFloat(routPb[0]['lat']),lng:parseFloat(routPb[0]['lon'])};
+				var myLatlng = {lat:parseFloat(route_data[0]['lat']),lng:parseFloat(route_data[0]['lng'])};
 				markerb = new google.maps.Marker({
                         map: map,
                         position: myLatlng,
@@ -247,9 +177,9 @@ TrackHistory-{{bno}}
                         icon:"{% static 'markers/Bus.png' %}",                        
                     });
                     var infowindow = new google.maps.InfoWindow({
-                        content: '<p>Latitude: ' + routPb[index]['lat'] + '</p>'+
-                                 '<p>Longitude: '+ routPb[index]['lon'] + '</p>'+
-                                 '<p>Time: '+ routPb[index]['time'] + '</p>'
+                        content: '<p>Latitude: ' + route_data[index]['lat'] + '</p>'+
+                                 '<p>Longitude: '+ route_data[index]['lng'] + '</p>'+
+                                 '<p>Time: '+ route_data[index]['time'] + '</p>'
                     });
                     
                     myFunctinForListener(markerb, infowindow);
@@ -260,8 +190,8 @@ TrackHistory-{{bno}}
                         index = 0;
                     }
                     count++;
-                    var myLatlng = {lat:parseFloat(routPb[index]['lat']),lng:parseFloat(routPb[index]['lon'])};
-					console.log(routPb[index]['lat']+" "+ index+" "+speed)
+                    var myLatlng = {lat:parseFloat(route_data[index]['lat']),lng:parseFloat(route_data[index]['lng'])};
+					console.log(route_data[index]['lat']+" "+ index+" "+speed)
                     if(markerb!=null){
                         markerb.setMap(null);
                     }
@@ -272,13 +202,13 @@ TrackHistory-{{bno}}
                         icon:"{% static 'markers/Bus.png' %}",                        
                     });
                     var infowindow = new google.maps.InfoWindow({
-                        content: '<p>Latitude: ' + routPb[index]['lat'] + '</p>'+
-                                 '<p>Longitude: '+ routPb[index]['lon'] + '</p>'+
-                                 '<p>Time: '+ routPb[index]['time'] + '</p>'
+                        content: '<p>Latitude: ' + route_data[index]['lat'] + '</p>'+
+                                 '<p>Longitude: '+ route_data[index]['lng'] + '</p>'+
+                                 '<p>Time: '+ route_data[index]['time'] + '</p>'
                     });
                     
                     myFunctinForListener(markerb, infowindow);
-                    if(index==(routPb.length)-1){
+                    if(index==(route_data.length)-1){
                         stopFunc();                       
                     }
                     else{
