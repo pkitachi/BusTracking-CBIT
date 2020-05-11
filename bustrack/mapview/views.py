@@ -116,8 +116,8 @@ def alerts(request):
 	return render(request,'alerts.html',{'track':track, 'buses': buses}) 
 
 def apicall(request):
-    track=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
-    track=track.json()
+    tr=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
+    track=tr.json()
     alertRes = []
     for i in track:
         if i['alert']==1:
@@ -126,8 +126,8 @@ def apicall(request):
     return JsonResponse(alertRes,safe=False)
 
 def geofence_report(request):
-	t=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
-	cluster=t.json()
+	track_data=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
+	cluster=track_data.json()
 	geofence_report = None
 	if request.method=="POST":
 		bno=request.POST.get('busno')
@@ -139,19 +139,9 @@ def geofence_report(request):
 			ress=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/geofence',headers={'Authorization':f'Bearer {p}'},data={'gDate':gDate})
 		else:
 			ress=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/geofence',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno,'gDate':gDate})
-		geofence_report=ress.json()
-		Out=[{'lat':17.4400,'lng':78.3489,'deviceId':42}]
-		In=[{'lat':17.4058,'lng':78.4032,'deviceId':42}]
-		lines = []
-		url = settings.STATIC_ROOT +'/mapview/static/geofence/42bus.txt'
-		with open(url) as file:
-			for line in file:
-				line = line.rstrip()
-				if(len(line)>1):
-					line=ast.literal_eval(line)
-					lines.append(line)	
-		path=lines
-		return render(request,'geofence.html', {"data":In,"path":path } ) 
+			geofence_report=ress.json()
+	return render(request,'geofence_report.html',{'cluster':cluster,'buses': buses,'geofence_report':geofence_report})
+
 		
 def buses(request):
 	b = requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
