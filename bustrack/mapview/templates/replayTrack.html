@@ -230,6 +230,30 @@ TrackHistory-{{bno}}
                 var index = 0;
                 var markerb=null;
                 var count = 0; 
+				var myFunctinForListener = function(aMarker, aInfoWindow) {
+                        google.maps.event.addListener(aMarker, 'click', function() {                          
+                            aInfoWindow.open(map, aMarker);
+                        });
+                }
+				function InitPB(){
+				if(markerb!=null){
+                        markerb.setMap(null);
+                    }
+				var myLatlng = {lat:parseFloat(routPb[0]['lat']),lng:parseFloat(routPb[0]['lon'])};
+				markerb = new google.maps.Marker({
+                        map: map,
+                        position: myLatlng,
+						label:'{{bno}}',
+                        icon:"{% static 'markers/Bus.png' %}",                        
+                    });
+                    var infowindow = new google.maps.InfoWindow({
+                        content: '<p>Latitude: ' + routPb[index]['lat'] + '</p>'+
+                                 '<p>Longitude: '+ routPb[index]['lon'] + '</p>'+
+                                 '<p>Time: '+ routPb[index]['time'] + '</p>'
+                    });
+                    
+                    myFunctinForListener(markerb, infowindow);
+				}
                 function LoadPB(){
 					console.log(count)
                     if(count==0){
@@ -252,11 +276,7 @@ TrackHistory-{{bno}}
                                  '<p>Longitude: '+ routPb[index]['lon'] + '</p>'+
                                  '<p>Time: '+ routPb[index]['time'] + '</p>'
                     });
-                    var myFunctinForListener = function(aMarker, aInfoWindow) {
-                        google.maps.event.addListener(aMarker, 'click', function() {                          
-                            aInfoWindow.open(map, aMarker);
-                        });
-                    }
+                    
                     myFunctinForListener(markerb, infowindow);
                     if(index==(routPb.length)-1){
                         stopFunc();                       
@@ -286,7 +306,9 @@ TrackHistory-{{bno}}
                             '<i class="fas fa-play"></i>'+'</span>';
                   document.getElementById('play-btn').style.color="green";    
                   index = 0;
+				  count=0;
                   speed = 2000;
+				  InitPB();
                   clearInterval(timer);
                 }
                 function fwdFunc(){
