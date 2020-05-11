@@ -137,11 +137,11 @@ def geofence_report(request):
 		temp=gDate.split('-')
 		temp[0],temp[2]=temp[2],temp[0]
 		gDate=('-'.join(temp))
-		if(bno==''):
-			ress=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/geofence',headers={'Authorization':f'Bearer {p}'},data={'gDate':gDate})
-		else:
+		if request.POST['busno']:
 			ress=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/geofence',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno,'gDate':gDate})
-			geofence_report=ress.json()
+		else:
+			ress=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/geofence',headers={'Authorization':f'Bearer {p}'},data={'gDate':gDate})
+		geofence_report=ress.json()
 	return render(request,'geofence_report.html',{'cluster':cluster,'buses': buses,'geofence_report':geofence_report})
 
 		
