@@ -13,9 +13,6 @@ from datetime import datetime,date
 
 r = requests.post('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
 p= r.json()['access_token']
-td=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
-buses=td.json()
-track=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
 alertRes=[]
 
 def inGeofence(lat,lng):
@@ -54,11 +51,15 @@ def trackapicall(request):
 	return JsonResponse(track_liv,safe=False)	
 	
 def index(request):
+	t=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/buses',headers={'Authorization':f'Bearer {p}'})
+	buses=t.json()
 	td=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
 	track_liv=td.json()
 	return render(request,'index.html',{'buses':buses,'track_liv':track_liv}) 
 
 def trackhistory(request):
+	t=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/buses',headers={'Authorization':f'Bearer {p}'})
+	buses=t.json()
 	if request.method=="POST":
 		bno=int(request.POST.get('busno'))
 		date=request.POST.get('date')
@@ -71,6 +72,8 @@ def trackhistory(request):
 		return render(request,'trackhistory.html',{'runHrs':runHrs,'buses':buses,"bno":bno,"date":date,"track_his":track_his})
 
 def replaytracking(request):
+	t=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/buses',headers={'Authorization':f'Bearer {p}'})
+	buses=t.json()
 	if request.method=="POST":
 		bno=int(request.POST.get('bno'))
 		date=request.POST.get('ddate')
@@ -83,6 +86,8 @@ def replaytracking(request):
 		return render(request,'replayTrack.html',{'runHrs':runHrs,'buses':buses,"bno":bno,"date":date,"track_his":track_his}) 
 
 def clusterview(request):
+	t=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/buses',headers={'Authorization':f'Bearer {p}'})
+	buses=t.json()
 	t=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
 	cluster=t.json()
 	return render(request,'clusterview.html',{'cluster':cluster,'buses': buses})
@@ -92,6 +97,8 @@ def clusterinfo(request):
 	return JsonResponse(trk.json(),safe=False)
 
 def detail(request, bno):
+	t=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/buses',headers={'Authorization':f'Bearer {p}'})
+	buses=t.json()
 	td=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno})
 	curRaw={'lat':td.json()[0]['latitude'],'lon':td.json()[0]['longitude']}
 	prop={'speed':td.json()[0]['speed'],'battery':td.json()[0]['battery'],'fuel':td.json()[0]['fuel']}
@@ -104,7 +111,8 @@ def info(request,bno):
 	return JsonResponse(curRaw)
 
 def alerts(request):
-
+	t=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/buses',headers={'Authorization':f'Bearer {p}'})
+	buses=t.json()
 	return render(request,'alerts.html',{'track':track, 'buses': buses}) 
 
 def apicall(request):
@@ -144,6 +152,7 @@ def geofence_report(request):
 					lines.append(line)	
 		path=lines
 		return render(request,'geofence.html', {"data":In,"path":path } ) 
+		
 def buses(request):
 	b = requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
 	b = b.json()
