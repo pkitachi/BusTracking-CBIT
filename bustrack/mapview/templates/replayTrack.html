@@ -244,6 +244,7 @@ TrackHistory-{{bno}}
                     markerb = new google.maps.Marker({
                         map: map,
                         position: myLatlng,
+						label:'{{bno}}',
                         icon:"{% static 'markers/Bus.png' %}",                        
                     });
                     var infowindow = new google.maps.InfoWindow({
