@@ -1,35 +1,5 @@
 {%extends 'base.html'%} {% load static %} {%block title%} Geofence Report {%endblock%} {%block onload%}{%endblock%} {%block main%}
-<script>
-    function worker() {
-        $.ajax({
-            url: "/home/clusterinfo",
-            type: "GET",
-            success: function (data, textStatus, request) {
-                markerCluster.clearMarkers();
-                markers = [];
-                pos = [];
-                var p;
-                for (var i = 0; i < data.length; i++) {
-                    p = { lat: parseFloat(data[i]["latitude"]), lng: parseFloat(data[i]["longitude"]) };
-                    pos.push(p);
-                }
-                markers = pos.map(function (location, i) {
-                    return new google.maps.Marker({
-                        position: location,
-                        label: data[i]["routeId"].toString(),
-                        icon: "{% static 'markers/Bus.png' %}",
-                    });
-                });
-                markerCluster = new MarkerClusterer(map, markers, { imagePath: "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m" });
-            },
-            complete: function () {
-                // Schedule the next request when the current one's complete
 
-                setTimeout(worker, 10000);
-            },
-        });
-    }
-</script>
 <!-- Begin Page Content -->
 <div class="container-fluid">
     <!-- Page Heading -->
@@ -44,8 +14,14 @@
             <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary" style="flex: 1;">Reports</h6>
-                    <a href="#" id="alert-btn" class="btn btn-danger btn-icon-split" style="margin-right: 20px;">
+                    <h6 class="m-0 font-weight-bold text-primary" style="flex: 1;">GeoFence Report</h6>
+                    <a href="#" id="a" class="btn btn-primary btn-icon-split" data-toggle="modal" data-target="#geo-report" style="margin-right: 20px;">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-bus"></i>
+                        </span>
+                        <span class="text">Get Report</span>
+                    </a>
+					<a href="#" id="alert-btn" class="btn btn-danger btn-icon-split" style="margin-right: 20px;">
                         <span class="icon text-white-50">
                             <i class="fas fa-bell"></i>
                         </span>
@@ -67,39 +43,11 @@
 
                 <!-- Card Body Geofence Report -->
                 <div class="card-body map-container z-depth-1-half" style="height: 500px; padding: 0;">
-                <h4 class="m-2 font-weight-bold text-primary">Geo Fence Reports</h4>
-                <form method='POST' action="{% url 'geofence_report' %}">
-                  {% csrf_token %}
-                    <div class="form-row">
-                      <div class="column">
-                        <label for="busno">Bus No.</label>
-                      </div>
-                      <div class="column">
-                        <select class="form-control" id="busno" name="busno">
-                          <option value="">Choose bus</option>
-                          {% for i in buses %}
-                            <option value={{i.routeId}}>Bus - {{i.routeId}}</option>
-                          {% endfor %}
-                        </select>
-                      </div>
-                      <div class="column">
-                          <label class="control-label" for="date">Date</label>
-                      </div>
-                      <div class="column">
-                        <div class="dates">
-                          <input type="text" class="form-control" id="date" name="date" placeholder="DD-MM-YYYY" required/>
-                        </div>
-                      </div>
-                      <div class="column"> <!-- Submit button -->
-                        <button class="btn btn-primary " name="submit" type="submit">Get Report</button>
-                      </div>
-                    </div>
-                </form>
-
-                <table class="table">
+                
+				<table class="table">
                   <thead class="thead-dark">
                     <tr>
-                      <th scope="col"># Bus No </th>
+                      <th scope="col"># Bus No</th>
                       <th scope="col"> TIME </th>
                       <th scope="col"> Status </th>
                     </tr>
@@ -118,7 +66,7 @@
                   {% endfor %}
                   </tbody>
                 </table>
-
+			
                 </div>        
             </div>
         </div>

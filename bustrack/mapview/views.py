@@ -51,7 +51,7 @@ def trackapicall(request):
 	return JsonResponse(track_liv,safe=False)	
 	
 def index(request):
-	t=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/buses',headers={'Authorization':f'Bearer {p}'})
+	t=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
 	buses=t.json()
 	td=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
 	track_liv=td.json()
@@ -128,6 +128,8 @@ def apicall(request):
 def geofence_report(request):
 	track_data=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
 	cluster=track_data.json()
+	bus = requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
+	buses = bus.json()
 	geofence_report = None
 	if request.method=="POST":
 		bno=request.POST.get('busno')
@@ -135,7 +137,7 @@ def geofence_report(request):
 		temp=gDate.split('-')
 		temp[0],temp[2]=temp[2],temp[0]
 		gDate=('-'.join(temp))
-		if(bno==""):
+		if(bno==''):
 			ress=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/geofence',headers={'Authorization':f'Bearer {p}'},data={'gDate':gDate})
 		else:
 			ress=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/geofence',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno,'gDate':gDate})

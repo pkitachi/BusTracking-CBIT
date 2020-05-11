@@ -86,7 +86,7 @@
             <a class="collapse-item" href="#">Device Uptime</a>
             <a class="collapse-item" href="#">Alerts</a>
             <a class="collapse-item" href="#">Routes</a>
-			<a class="collapse-item" href="{%url 'geofence_report'%}">GeoFence Report</a>
+			<a class="collapse-item" href="{%url 'geofence_report'%}"  data-toggle="modal" data-target="#geo-report"  aria-expanded="true" aria-controls="collapseUtilities">GeoFence Report</a>
             <a class="collapse-item" href="#">Distance</a>
             <a class="collapse-item" href="#">Speed Violation</a>
             <a class="collapse-item" href="#">Fleet Summary</a>
@@ -273,7 +273,7 @@
               </div>
 			  
 			  <!--Tracking history popup-->
-<div class="modal fade" id="tracking-list" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+				<div class="modal fade" id="tracking-list" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                       <div class="modal-content">
                         <div class="modal-header">
@@ -313,6 +313,48 @@
                     </div>
                   </div>
       
+			<!--Geofence report popup-->
+				<div class="modal fade" id="geo-report" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="m-0 font-weight-bold text-primary">GeoFence Report</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span class="text">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body" style="padding-bottom: 55px;">
+                            <!-- Form code begins -->
+                              <form method='POST' action="{%url 'geofence_report'%}">
+                                {% csrf_token %}
+                                  <div class="form-group">
+                                      <label for="busno">Bus No.</label>
+                                      <select class="form-control" id="geo-busno" name="busno">
+                                          <option value="">Choose bus</option>
+                                          {% for i in buses %}
+                                              <option value={{i.routeId}}>Bus - {{i.routeId}}</option>
+                                          {% endfor %}
+                                      </select>
+                                  </div>
+                                  <div class="form-group ">
+                                      <div class="dates">
+                                          <label class="control-label requiredField" for="date">Date</label>
+                                          <input type="text" class="form-control" id="geo-date" name="date" placeholder="DD-MM-YYYY" required/>
+                                      </div>
+                                  </div>
+                                  <div class="form-group"> <!-- Submit button -->
+                                      <button class="btn btn-primary " name="submit" type="submit">Ok</button>
+                                  </div>
+                              </form>
+                              <a href="#" class="btn btn-primary" data-dismiss="modal" aria-label="Close" style="right: 15px; position: absolute;">
+                                <span class="text">Close</span>
+                              </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+      
+	  
                 <!--Replay Tracking popup-->
           <div class="modal fade" id="replay-tracking" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -391,6 +433,14 @@
     <script>
 	    $(function() {
 			$('.dates #date').datepicker({
+				'format': 'dd-mm-yyyy',
+				'autoclose': true,
+                'endDate': '+0d',
+                'startDate': '-3m'
+			});
+		});
+		$(function() {
+			$('.dates #geo-date').datepicker({
 				'format': 'dd-mm-yyyy',
 				'autoclose': true,
                 'endDate': '+0d',
