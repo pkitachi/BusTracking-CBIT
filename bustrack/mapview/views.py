@@ -86,7 +86,9 @@ def replaytracking(request):
 		th=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno,'deviceTime':date})
 		track_replay=th.json()
 		runHrs=th.json()[-1]['runHrs']
-		return render(request,'replayTrack.html',{'runHrs':runHrs,'buses':buses,"bno":bno,"date":date,"track_replay":track_replay}) 
+		dname=th.json()[0]['driverName']
+		dphone=th.json()[0]['driverPhone']
+		return render(request,'replayTrack.html',{'runHrs':runHrs,'buses':buses,"bno":bno,"date":date,"track_replay":track_replay,"dname":dname,"dphone":dphone}) 
 
 def clusterview(request):
 	t=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/buses',headers={'Authorization':f'Bearer {p}'})
