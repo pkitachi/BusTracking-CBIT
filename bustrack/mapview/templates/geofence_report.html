@@ -58,9 +58,9 @@
                       <th scope="row">{{ i.routeId }}</th>
                       <td>{{ i.gTime }}</td>
                       {% if i.status == 0 %}
-                      <td> OUTGOING </td>
+                      <td> EXIT </td>
                       {% else %}
-                      <td> INCOMING </td>
+                      <td> ENTRY </td>
                       {% endif %}
                     </tr>
                   {% endfor %}

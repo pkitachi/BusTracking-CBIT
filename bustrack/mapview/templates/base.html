@@ -337,9 +337,16 @@
                                       </select>
                                   </div>
                                   <div class="form-group ">
-                                      <div class="dates">
-                                          <label class="control-label requiredField" for="date">Date</label>
-                                          <input type="text" class="form-control" id="geo-date" name="date" placeholder="DD-MM-YYYY" required/>
+                                      <div class="dates1">
+                                          <label class="control-label requiredField" for="date1">From Date</label>
+                                          <input type="text" class="form-control" id="geo-date1" name="date1" placeholder="DD-MM-YYYY" required/>
+								      </div>
+									  </div>
+                                  <div class="form-group ">  
+						
+									  <div class="dates2">
+										  <label class="control-label requiredField" for="date2">To Date</label>
+                                          <input type="text" class="form-control" id="geo-date2" name="date2" placeholder="DD-MM-YYYY" required/>
                                       </div>
                                   </div>
                                   <div class="form-group"> <!-- Submit button -->
@@ -440,11 +447,17 @@
 			});
 		});
 		$(function() {
-			$('.dates #geo-date').datepicker({
+			$('.dates1 #geo-date1').datepicker({
 				'format': 'dd-mm-yyyy',
 				'autoclose': true,
                 'endDate': '+0d',
-                'startDate': '-3m'
+			});
+		});
+		$(function() {
+			$('.dates2 #geo-date2').datepicker({
+				'format': 'dd-mm-yyyy',
+				'autoclose': true,
+                'endDate': '+0d',
 			});
 		});
     </script>

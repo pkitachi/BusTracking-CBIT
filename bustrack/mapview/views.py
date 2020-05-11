@@ -79,7 +79,7 @@ def replaytracking(request):
 	buses=t.json()
 	if request.method=="POST":
 		bno=int(request.POST.get('bno'))
-		date=request.POST.get('ddate')
+		date=request.POST.get('date')
 		temp=date.split('-')
 		temp[0],temp[2]=temp[2],temp[0]
 		date=('-'.join(temp))
@@ -136,7 +136,7 @@ def geofence_report(request):
 	geofence_report = None
 	if request.method=="POST":
 		bno=request.POST.get('busno')
-		gDate=request.POST.get('date')
+		gDate=request.POST.get('date1')
 		temp=gDate.split('-')
 		temp[0],temp[2]=temp[2],temp[0]
 		gDate=('-'.join(temp))
