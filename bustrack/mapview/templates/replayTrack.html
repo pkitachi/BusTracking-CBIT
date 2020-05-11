@@ -22,7 +22,7 @@ TrackHistory-{{bno}}
                     <!-- Card Header - Dropdown -->
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <h6 class="m-0 font-weight-bold text-primary" style="flex: 1;">Bus Number {{bus.bno}}</h6>
-                    <a href="#" id="rew-btn" class="btn btn-info btn-icon-split" style="margin-right: 10px;">
+                    <a href="#" id="rwd-btn" class="btn btn-info btn-icon-split" style="margin-right: 10px;" onclick="rwdFunc()">
                         <span class="icon text-white-50">
                           <i class="fas fa-backward"></i>
                         </span>
@@ -32,7 +32,7 @@ TrackHistory-{{bno}}
                             <i class="fas fa-play"></i>
                           </span>
                     </a>
-                    <a href="#" id="fwd-btn" class="btn btn-info btn-icon-split" style="margin-right: 10px;">
+                    <a href="#" id="fwd-btn" class="btn btn-info btn-icon-split" style="margin-right: 10px;"  onclick="fwdFunc()">
                         <span class="icon text-white-50">
                           <i class="fas fa-forward"></i>
                         </span>
@@ -289,7 +289,7 @@ TrackHistory-{{bno}}
                   speed = 2000;
                   clearInterval(timer);
                 }
-                /*function fwdFunc(){
+                function fwdFunc(){
                   var color = document.getElementById('play-btn').style.color;
                   if(color=="green"){ 
                     document.getElementById('play-btn').innerHTML = '<span class="icon text-white-50">'+
@@ -298,13 +298,29 @@ TrackHistory-{{bno}}
                   }
                   clearInterval(timer);
                   if(speed>=1000){     
-                    speed = speed/2;
+                    speed -=500;
                   }
                   else{
                     document.getElementById('fwd-btn').disabled=true;
                   }
                   timer = setInterval(LoadPB, speed);                   
-                }*/
+                }
+				function rwdFunc(){
+                  var color = document.getElementById('play-btn').style.color;
+                  if(color=="green"){ 
+                    document.getElementById('play-btn').innerHTML = '<span class="icon text-white-50">'+
+                            '<i class="fas fa-pause"></i>'+'</span>';
+                    document.getElementById('play-btn').style.color="orange";
+                  }
+                  clearInterval(timer);
+                  if(speed<=3500){     
+                    speed += 500;
+                  }
+                  else{
+                    document.getElementById('rwd-btn').disabled=true;
+                  }
+                  timer = setInterval(LoadPB, speed);                   
+                }
                 </script>
                 <script async differ type="text/javascript"
                 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCclG7w5m1rAyb_KxV8cp2eY4FsTtTm7Bs&libraries=drawing&callback=initMap">
