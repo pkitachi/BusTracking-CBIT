@@ -75,7 +75,7 @@ def trackhistory(request):
 	return render(request,'trackhistory.html',{'runHrs':runHrs,'buses':buses,"bno":bno,"date":date,"track_his":track_his,"dname":dname,"dphone":dphone})
 
 def replaytracking(request):
-	t=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/buses',headers={'Authorization':f'Bearer {p}'})
+	t=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
 	buses=t.json()
 	if request.method=="POST":
 		bno=int(request.POST.get('bno'))
@@ -84,9 +84,9 @@ def replaytracking(request):
 		temp[0],temp[2]=temp[2],temp[0]
 		date=('-'.join(temp))
 		th=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno,'deviceTime':date})
-		track_his=th.json()
+		track_replay=th.json()
 		runHrs=th.json()[-1]['runHrs']
-		return render(request,'replayTrack.html',{'runHrs':runHrs,'buses':buses,"bno":bno,"date":date,"track_his":track_his}) 
+		return render(request,'replayTrack.html',{'runHrs':runHrs,'buses':buses,"bno":bno,"date":date,"track_replay":track_replay}) 
 
 def clusterview(request):
 	t=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/buses',headers={'Authorization':f'Bearer {p}'})
