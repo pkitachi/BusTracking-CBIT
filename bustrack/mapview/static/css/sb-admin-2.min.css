@@ -13,13 +13,21 @@ html {
     overflow: scroll;
     overflow-x: hidden;
 }
-::-webkit-scrollbar {
-    width: 5px;  /* Remove scrollbar space */
-    background: transparent;  /* Optional: just make scrollbar invisible */
+body::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
 }
-/* Optional: show position indicator in gray*/
+
+::-webkit-scrollbar {
+    width: 5px;
+    background: #ffffff66;
+}
 ::-webkit-scrollbar-thumb {
-    background: #858796;
+    background: #454545;
+    border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #232323;
 }
 
 /* Alert */
