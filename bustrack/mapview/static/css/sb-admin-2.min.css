@@ -13,11 +13,6 @@ html {
     overflow: scroll;
     overflow-x: hidden;
 }
-body::-webkit-scrollbar {
-    width: 0px;
-    background: transparent;
-}
-
 ::-webkit-scrollbar {
     width: 5px;
     background: #ffffff66;
