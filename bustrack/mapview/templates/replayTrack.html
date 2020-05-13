@@ -22,9 +22,9 @@ TrackHistory-{{bno}}
                     <!-- Card Header - Dropdown -->
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <h6 class="m-0 font-weight-bold text-primary" style="flex: 1;">Bus Number {{bus.bno}}</h6>
-                    <a href="#" id="rwd-btn" class="btn btn-info btn-icon-split" style="margin-right: 10px;" onclick="rwdFunc()">
+                    <a href="#" id="rwd-btn" class="btn btn-info btn-icon-split" style="margin-right: 10px;color:blue;" onclick="rwdFunc()">
                         <span class="icon text-white-50">
-                          <i class="fas fa-backward"></i>
+                          <i class="fa fa-fast-forward"></i>
                         </span>
                     </a>
                     <a href="#" id="play-btn" class="btn btn-success btn-icon-split" style="margin-right: 10px;color:green;" onclick="playFunc()">
@@ -32,15 +32,17 @@ TrackHistory-{{bno}}
                             <i class="fas fa-play"></i>
                           </span>
                     </a>
-                    <a href="#" id="fwd-btn" class="btn btn-info btn-icon-split" style="margin-right: 10px;"  onclick="fwdFunc()">
-                        <span class="icon text-white-50">
-                          <i class="fas fa-forward"></i>
-                        </span>
-                    </a>
-                    <a href="#" id="stop-btn" class="btn btn-warning btn-icon-split" style="margin-right: 40px;" onclick="stopFunc()">
+                    <a href="#" id="stop-btn" class="btn btn-success btn-icon-split" style="margin-right: 10px;" onclick="stopFunc()">
                           <span class="icon text-white-50">
                             <i class="fas fa-stop"></i>
                           </span>
+                    </a>
+                    <a href="#" id="fwd-btn" class="btn btn-info btn-icon-split" style="margin-right: 10px;"  onclick="fwdFunc()">
+                      <span class="icon text-white-50">
+                        <i class="fas fa-forward"></i>
+                      </span>
+                    </a>
+                    <a href="#" id="speed-btn" class="btn btn-icon-split" style="margin-right: 40px;" disabled="true">
                     </a>
                     <a href="#" id="alert-btn" class="btn btn-danger btn-icon-split" style="margin-right: 20px;">
                       <span class="icon text-white-50">
@@ -153,7 +155,7 @@ TrackHistory-{{bno}}
                                 directionsDisplay.setDirections(response);
                         }
                     });                       
-                                                                         
+                   InitPB();                                                      
                 }
                 var timer = null; // Will hold a reference to the timer
                 var speed = 2000; 
@@ -183,6 +185,7 @@ TrackHistory-{{bno}}
                     });
                     
                     myFunctinForListener(markerb, infowindow);
+                    document.getElementById('speed-btn').innerHTML = '';
 				}
                 function LoadPB(){
 					console.log(count)
@@ -190,6 +193,22 @@ TrackHistory-{{bno}}
                         index = 0;
                     }
                     count++;
+                    if(document.getElementById('rwd-btn').style.color=="blue"){
+                      if(index==(route_data.length)-1){
+                        stopFunc();                       
+                      }
+                      else{
+                        index++;
+                      }
+                    }
+                    else{
+                      if(index<=0){
+                        stopFunc();                       
+                      }
+                      else{
+                        index--;
+                      }
+                    }
                     var myLatlng = {lat:parseFloat(route_data[index]['lat']),lng:parseFloat(route_data[index]['lng'])};
 					console.log(route_data[index]['lat']+" "+ index+" "+speed)
                     if(markerb!=null){
@@ -208,20 +227,14 @@ TrackHistory-{{bno}}
                     });
                     
                     myFunctinForListener(markerb, infowindow);
-                    if(index==(route_data.length)-1){
-                        stopFunc();                       
-                    }
-                    else{
-                        index++;
-                    }
-
                 }
                 function playFunc(){
                   var color = document.getElementById('play-btn').style.color;
                   if(color=="green"){ 
                     document.getElementById('play-btn').innerHTML = '<span class="icon text-white-50">'+
                             '<i class="fas fa-pause"></i>'+'</span>';
-                    document.getElementById('play-btn').style.color="orange";     
+                    document.getElementById('play-btn').style.color="orange";
+                    speedDisplay();     
                     timer = setInterval(LoadPB, speed);                    
                   }
                   else{
@@ -236,9 +249,12 @@ TrackHistory-{{bno}}
                             '<i class="fas fa-play"></i>'+'</span>';
                   document.getElementById('play-btn').style.color="green";    
                   index = 0;
-				  count=0;
+				          count=0;
                   speed = 2000;
-				  InitPB();
+                  document.getElementById('rwd-btn').innerHTML = '<span class="icon text-white-50">'+
+                          '<i class="fa fa-fast-forward"></i>' + '</span>';
+                  document.getElementById('rwd-btn').style.color="blue";
+				          InitPB();
                   clearInterval(timer);
                 }
                 function fwdFunc(){
@@ -252,12 +268,27 @@ TrackHistory-{{bno}}
                   if(speed>=1000){     
                     speed -=500;
                   }
-                  else{
-                    document.getElementById('fwd-btn').disabled=true;
+                  else{     
+                    speed =2000;
                   }
+                  speedDisplay();
                   timer = setInterval(LoadPB, speed);                   
                 }
-				function rwdFunc(){
+                function speedDisplay(){
+                  var tempText;
+                  switch(speed){
+                    case 2000: tempText = '<span class="text">1x</span>';
+                                break;
+                    case 1500: tempText = '<span class="text">2x</span>';
+                                break;
+                    case 1000: tempText = '<span class="text">3x</span>';
+                                break;
+                    case 500: tempText = '<span class="text">4x</span>';
+                                break;
+                  }
+                  document.getElementById('speed-btn').innerHTML = tempText;
+                }
+				/*function rwdFunc(){
                   var color = document.getElementById('play-btn').style.color;
                   if(color=="green"){ 
                     document.getElementById('play-btn').innerHTML = '<span class="icon text-white-50">'+
@@ -272,6 +303,27 @@ TrackHistory-{{bno}}
                     document.getElementById('rwd-btn').disabled=true;
                   }
                   timer = setInterval(LoadPB, speed);                   
+                }
+              */
+                function rwdFunc(){
+                  var color = document.getElementById('play-btn').style.color;
+                  if(document.getElementById('rwd-btn').style.color=="blue"){
+                    document.getElementById('rwd-btn').innerHTML = '<span class="icon text-white-50">'+
+                          '<i class="fa fa-fast-backward"></i>' + '</span>';
+                    document.getElementById('rwd-btn').style.color="black";
+                  }
+                  else{
+                    document.getElementById('rwd-btn').innerHTML = '<span class="icon text-white-50">'+
+                          '<i class="fa fa-fast-forward"></i>' + '</span>';
+                    document.getElementById('rwd-btn').style.color="blue";
+                  }
+                  if(color=="green"){ 
+                    document.getElementById('play-btn').innerHTML = '<span class="icon text-white-50">'+
+                            '<i class="fas fa-pause"></i>'+'</span>';
+                    document.getElementById('play-btn').style.color="orange";
+                  }
+                  clearInterval(timer);
+                  timer = setInterval(LoadPB, speed);
                 }
                 </script>
                 <script async differ type="text/javascript"
