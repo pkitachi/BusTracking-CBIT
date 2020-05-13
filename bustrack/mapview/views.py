@@ -135,7 +135,7 @@ def clusterinfo(request):
 	return JsonResponse(trk.json(),safe=False)
 
 def detail(request, bno):
-	t=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/buses',headers={'Authorization':f'Bearer {p}'})
+	t=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
 	buses=t.json()
 	td=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno})
 	curRaw={'lat':td.json()[0]['latitude'],'lon':td.json()[0]['longitude']}

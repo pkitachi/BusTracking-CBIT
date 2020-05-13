@@ -1,30 +1,6 @@
 {%extends 'base.html'%} {% load static %} {%block title%} Add GeoFence {%endblock%} {%block onload%}{%endblock%}
 {%block main%}
-<!DOCTYPE html>
-<html>
 
-<head>
-    <title>Drawing Tools</title>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-    <meta charset="utf-8">
-    <style>
-        /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
-        #map {
-            height: 75%;
-        }
-
-        /* Optional: Makes the sample page fill the window. */
-        html,
-        body {
-            height: 75%;
-            margin: 0;
-            padding: 0;
-        }
-    </style>
-</head>
-
-<body>
         <!-- Begin Page Content -->
         <div class="container-fluid">
 
@@ -42,7 +18,10 @@
                     <!-- Card Header - Dropdown -->
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <h6 class="m-0 font-weight-bold text-primary" style="flex: 1;">Add GeoFence - {{busnum}}</h6>
-                    <button id="savecoord" class="btn btn-primary btn-icon-split" style="margin-right: 20px;"onclick="sendCoordinates()">
+                    <button id="savecoord" class="btn btn-primary btn-icon-split" style="margin-right: 20px;"onclick="undoPath()">
+                        <span class="text">Undo</span>
+                    </button>
+					<button id="savecoord" class="btn btn-primary btn-icon-split" style="margin-right: 20px;"onclick="sendCoordinates()">
                         <span class="text">Save</span>
                     </button>
 					<a href="#" id="alert-btn" class="btn btn-danger btn-icon-split" style="margin-right: 20px;">
@@ -57,9 +36,8 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
                         <div class="dropdown-header">Actions:</div>
-                        <a id="actn" class="dropdown-item" href="#" id="new" data-toggle="modal" data-target="#add_geofence_list">New</a>
-                        <button class="dropdown-item" onclick="undoPath()" >Undo</button>
-                    </div>
+                        <a class="dropdown-item" href="#"  id="add" data-toggle="modal" data-target="#add_geofence_list">Add Another GeoFence</a>
+						</div>
                 </div>
             </div>
         
@@ -146,12 +124,56 @@
     <script
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCclG7w5m1rAyb_KxV8cp2eY4FsTtTm7Bs&libraries=drawing&callback=initMap"
         async defer></script>
-	<div>
-	</div>
-	   </div>
+</div>
         </div>
     </div>
-</body>
 
-</html>
+    <!-- End of Main Content -->
+
+      <!-- Footer was here-->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+
+    <!-- Alert Message -->
+    <div class="alert hide">
+      <span class="fas fa-exclamation-circle"></span>
+      <span class="msg font-weight-bold">Alert : </span>
+      <span id="alert-info" class="info font-weight-bold text-gray-800">"Bus-16 Accident"</span>
+      <div class="close-btn">
+        <span class="fas fa-times"></span>
+      </div>
+  </div>
+
+  <script>
+    var notification = function(){
+      $('.alert').addClass("show");
+      $('.alert').removeClass("hide");
+      $('.alert').addClass("showAlert");
+      
+      setTimeout(function(){
+        $('.alert').removeClass("show");
+        $('.alert').addClass("hide");
+      },5000);
+    }
+    $('#alert-btn').click(notification);
+    $('.close-btn').click(function(){
+      $('.alert').removeClass("show");
+      $('.alert').addClass("hide");
+    });
+  </script>
+    
+  <script>
+    document.getElementById("alert-btn").addEventListener("click", function(){  
+      var audio = new Audio( 
+      "{% static 'beep.mp3' %}"); 
+      audio.play();  });
+  </script>
+
+  
+    
 {%endblock%}

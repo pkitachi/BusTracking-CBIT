@@ -102,8 +102,8 @@
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">View Tools:</h6>  
             <a class="collapse-item" href="#" data-toggle="modal" data-target="#replay-tracking">Replay Tracking</a>
-            <a class="collapse-item" href="{% url 'add_geofence' %}" data-toggle="modal" data-target="#add_geofence_list">Add Geo-fence</a>
-            <a class="collapse-item" href="{% url 'view_geofence' %}" data-toggle="modal" data-target="#view_geofence_list">View Geo-fence</a>
+            <a class="collapse-item" href="{% url 'add_geofence' %}" data-toggle="modal" data-target="#add_geofence_list" aria-expanded="true" aria-controls="collapseUtilities">Add Geo-fence</a>
+            <a class="collapse-item" href="{% url 'view_geofence' %}" data-toggle="modal" data-target="#view_geofence_list" aria-expanded="true" aria-controls="collapseUtilities">View Geo-fence</a>
             <a class="collapse-item" href="#">Alert Settings</a>
             <a class="collapse-item" href="#">Data Archieve</a>
           </div>
@@ -487,6 +487,7 @@
             </div>
           </div>
         </div>
+		
       <!-- Footer -->
       <footer class="sticky-footer bg-white col-lg-12 mb-4">
         <div class="container my-auto">
