@@ -11,6 +11,8 @@ from shapely.geometry.polygon import Polygon
 import numpy as np
 from datetime import datetime,date
 from pytz import timezone
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 r = requests.post('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
 p= r.json()['access_token']
@@ -27,13 +29,41 @@ def inGeofence(lat,lng):
 		return 1
 	return 0 
 
+def inBusGeofence(lat,lng,lats_lngs):
+	lat = float(lat)
+	lng = float(lng)
+	lats_lngs = [ (float(i[0]),float(i[1])) for i in lats_lngs]
+	polygon = Polygon(lats_lngs) 
+	point = Point(lng,lat) 
+	if point.within(polygon):
+		return True
+	return False 
+
 bus_in_status = {}
+bus_indi_status = {}
+bus_res = None
 
 def geofence_check():
 	threading.Timer(10.0, geofence_check).start()
 	track=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
 	tr = track.json()
+
+	# get api request for individual geofence
+	bus_geofence_response = requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/busgeofence',headers={'Authorization':f'Bearer {p}'})
+	bus_res = bus_geofence_response.json()
+
 	for i in tr:
+
+		# check if bus is in its geofence
+		routeIds = str(i['routeId'])
+		if(bus_res.get(routeIds) != None):
+			check_res = inBusGeofence(i['latitude'],i['longitude'],bus_res[routeIds])
+			if(not check_res and bus_indi_status.get(routeIds) != None and bus_indi_status.get(routeIds)):
+
+				# if bus moves out of geofence.. raise alert
+				print("Should Raise Alert Here")
+			bus_indi_status[routeIds] = check_res
+
 		if (bus_in_status.get(i['IMEI']) == None) or (bus_in_status.get(i['IMEI']) != inGeofence(i['latitude'],i['longitude'])):	
 			res = inGeofence(i['latitude'],i['longitude'])
 			gDate = str(date.today())
@@ -43,8 +73,7 @@ def geofence_check():
 			# post into api inGeofence(i['latitude'],i['longitude'])
 			bus_in_status[i['IMEI']] = res
 			# bus_in_status[i['IMEI']] = api result
-geofence_check()      
-
+geofence_check()  
 
 def trackapicall(request):
 	th=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
@@ -178,3 +207,33 @@ def geofence(request):
 	rt=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
 	buses=rt.json()
 	return render(request,'geofence.html',{'buses':buses,'tracking':tracking})
+
+@csrf_exempt
+def add_geofence(request):
+	b1=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
+	buses=b1.json()
+	if request.method == "POST":
+		busnum = request.POST.get('busno')
+		if 'polyarray' in request.POST:
+			polyarray = request.POST['polyarray']
+			busno = request.POST['bno']
+			obj = eval(polyarray)
+			pno = 1
+			requests.delete('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/busgeofence',headers={'Authorization':f'Bearer {p}'},json={'routeId': busno})
+			for i in obj:
+				print(i)
+				requests.post('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/busgeofence',headers={'Authorization':f'Bearer {p}'},json={'routeId': busno,'latitude':i[0],'longitude':i[1],'pointNum':pno})
+				pno += 1
+	return render(request, 'add_geofence.html', {'buses':buses,'busnum': busnum})
+
+@csrf_exempt
+def view_geofence(request):
+	bs=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
+	buses=bs.json()
+	busnum = None
+	td=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/busgeofence',headers={'Authorization':f'Bearer {p}'})
+	bus_res=td.json()
+	if request.method == "POST":
+		busnum = request.POST.get('busno')
+	bus_res = [ {'lat':float(i[1]),'lng':float(i[0])} for i in bus_res[busnum]]
+	return render(request,'bus_geofence.html',{'buses':buses,'bus_co':bus_res,'busnum':busnum})

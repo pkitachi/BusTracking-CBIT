@@ -1,0 +1,118 @@
+{%extends 'base.html'%} {% load static %} {%block title%} Add Geo-Fence {%endblock%} {%block onload%}{%endblock%}
+{%block main%}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Drawing Tools</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+        /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+        #map {
+            height: 75%;
+        }
+
+        /* Optional: Makes the sample page fill the window. */
+        html,
+        body {
+            height: 75%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="map"></div>
+    <center>
+    <button class="mt-4 btn btn-primary " onclick="sendCoordinates()"> Save Geofence </button>
+    <button class="mt-4 btn btn-primary " onclick="undoPath()"> Undo </button>
+    </center>
+    <script>
+        var URL = "{% url 'add_geofence' %}";
+        // This example requires the Drawing library. Include the libraries=drawing
+        // parameter when you first load the API. For example:
+        // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=drawing">
+        var polyarray = [];
+        var polylinePath;
+        function initMap() {
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 17.3850, lng: 78.4867 },
+                zoom: 12
+            });
+
+            var drawingManager = new google.maps.drawing.DrawingManager({
+                drawingMode: google.maps.drawing.OverlayType.MARKER,
+                drawingControl: true,
+                drawingControlOptions: {
+                    position: google.maps.ControlPosition.TOP_CENTER,
+                    drawingModes: ['polyline']
+                },
+                markerOptions: { icon: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png' },
+                circleOptions: {
+
+                    clickable: false,
+                    editable: true,
+                    zIndex: 1,
+                    strokeColor: '#4E73DF',
+                    fillColor: '#4E73DF',
+                    strokeOpacity: 0.8,
+                    strokeWeight: 3,
+                    fillOpacity: 0.2
+                }
+            });
+            drawingManager.setMap(map);
+            google.maps.event.addListener(drawingManager, 'overlaycomplete', function (event) {
+                if (event.type == 'polyline') {
+                    polylinePath = event.overlay.getPath();
+
+                }
+                for (var i = 0; i < polylinePath.getArray().length; i++) {
+                    var temp = [];
+                    temp.push(polylinePath.getArray()[i].lat())
+                    temp.push(polylinePath.getArray()[i].lng())
+                    polyarray.push(temp);
+             }
+            });
+        }
+
+        function sendCoordinates()
+            {
+                var myJSONText = JSON.stringify(polyarray);
+                $.ajax({
+                    type: "POST",
+                    url: "{%url 'add_geofence'%}",
+                    data: { polyarray: myJSONText, bno: "{{ busnum}}" },
+                    success: function () {
+                        alert("Geo-Fence Saved");
+                    }
+                });
+            }
+        
+        function undoPath()
+        {
+            len = polyarray.length
+            polyarray.pop();
+            polylinePath.setAt(len-1, polyarray[len - 1]);
+            polylinePath.removeAt(len-1);
+        }
+
+        function updatePieFact() {
+            var data = { 'pieFact': pieFact };
+            $.post(URL, data, function (response) {
+                if (response === 'success') { alert('Yay!'); }
+                else { alert('Error! :('); }
+            });
+        }
+    </script>
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCclG7w5m1rAyb_KxV8cp2eY4FsTtTm7Bs&libraries=drawing&callback=initMap"
+        async defer></script>
+
+</body>
+
+</html>
+{%endblock%}

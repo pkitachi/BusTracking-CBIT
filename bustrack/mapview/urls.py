@@ -28,4 +28,6 @@ urlpatterns = [
 	path('home/track-refresh/', views.trackapicall,name='trackapicall'),
 	path('home/geofence',views.geofence,name='geofence'),
     path('home/geofence_report',views.geofence_report,name='geofence_report'),
+	path('home/add_geofence', views.add_geofence, name='add_geofence'),
+    path('home/view_geofence', views.view_geofence, name='view_geofence'),
 ]
