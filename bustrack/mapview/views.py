@@ -120,6 +120,8 @@ def info(request,bno):
 	return JsonResponse(curRaw)
 
 def alerts(request):
+	tr=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
+	track=tr.json()
 	t=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/buses',headers={'Authorization':f'Bearer {p}'})
 	buses=t.json()
 	return render(request,'alerts.html',{'track':track, 'buses': buses}) 
