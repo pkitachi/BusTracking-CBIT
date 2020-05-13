@@ -76,7 +76,7 @@ TrackHistory-{{bno}}
 					lat = parseFloat('{{i.latitude}}');
                     lng = parseFloat('{{i.longitude}}');
 					pos={lat:lat,lng:lng};
-                    time = ('{{i.updatedTime}}');
+                    time = (new Date('{{i.updatedTime}}')).toLocaleString();
 					if (c%10==0){
 					speed = '{{i.speed}}'+' KMPH';
 					battery = {{i.battery}}+'%';
