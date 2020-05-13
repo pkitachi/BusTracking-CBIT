@@ -1,7 +1,7 @@
 {%extends 'base.html'%}
 {% load static %}
 {%block title%}
-TrackHistory-{{bno}}
+Replay Tracking-{{bno}}
 {%endblock%}
 {%block main%}
 
@@ -21,7 +21,7 @@ TrackHistory-{{bno}}
                 <div class="card shadow mb-4">
                     <!-- Card Header - Dropdown -->
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary" style="flex: 1;">Bus Number {{bus.bno}}</h6>
+                    <h6 class="m-0 font-weight-bold text-primary" style="flex: 1;">Replay Tracking-{{bno}}</h6>
                     <a href="#" id="rwd-btn" class="btn btn-info btn-icon-split" style="margin-right: 10px;color:blue;" onclick="rwdFunc()">
                         <span class="icon text-white-50">
                           <i class="fa fa-fast-forward"></i>
@@ -98,7 +98,9 @@ TrackHistory-{{bno}}
                     {% for i in track_replay %}
                     lat = parseFloat('{{i.latitude}}');
                     lng = parseFloat('{{i.longitude}}');
-                    time = ('{{i.updatedTime}}');
+                    time = new Date('{{i.updatedTime}}');
+					time=time.toLocaleString()
+					console.log(time)
 					speed = '{{i.speed}}'+' KMPH';
 					battery = '{{i.battery}}'+'%';
 					fuel = '{{i.fuel}}'+ '%';
@@ -181,7 +183,7 @@ TrackHistory-{{bno}}
                     var infowindow = new google.maps.InfoWindow({
                         content: '<p>Latitude: ' + route_data[index]['lat'] + '</p>'+
                                  '<p>Longitude: '+ route_data[index]['lng'] + '</p>'+
-                                 '<p>Time: '+ route_data[index]['time'] + '</p>'
+                                 '<p>Time: '+ (new Date(route_data[index]['time']).toLocaleString("en-IN",{timeZone:'Asia/Kolkata'})) + '</p>'
                     });
                     
                     myFunctinForListener(markerb, infowindow);
@@ -223,7 +225,7 @@ TrackHistory-{{bno}}
                     var infowindow = new google.maps.InfoWindow({
                         content: '<p>Latitude: ' + route_data[index]['lat'] + '</p>'+
                                  '<p>Longitude: '+ route_data[index]['lng'] + '</p>'+
-                                 '<p>Time: '+ route_data[index]['time'] + '</p>'
+                                 '<p>Time: '+ (new Date(route_data[index]['time']).toLocaleString("en-IN",{timeZone:'Asia/Kolkata'})) + '</p>'
                     });
                     
                     myFunctinForListener(markerb, infowindow);

@@ -10,6 +10,7 @@ from shapely.geometry import Point
 from shapely.geometry.polygon import Polygon
 import numpy as np
 from datetime import datetime,date
+from pytz import timezone
 
 r = requests.post('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
 p= r.json()['access_token']
