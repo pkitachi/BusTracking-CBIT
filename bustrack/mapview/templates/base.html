@@ -337,12 +337,12 @@
                                           {% endfor %}
                                       </select></label>
 									  </span class="dir">
-									  <label for="busno">Directions
+									  <label for="dir">Directions
                                       <select class="form-control" id="geo-dir" name="dir">
                                           <option value="">Choose Direction</option>
-                                              <option value="ENTRY">ENTRY</option>
-											  <option value="EXIT">EXIT</option>
-											  <option value="BOTH">BOTH</option>
+                                              <option value="1">ENTRY</option>
+											  <option value="0">EXIT</option>
+											  <option value="-1">BOTH</option>
                                       </select></label>
 									  </span>
                                   </div>
@@ -514,7 +514,7 @@
       else{
         console.log(alertList);
       }
-      
+      refresh()
       function myLoop() {
         setTimeout(function() {
           if (i < 1) {     

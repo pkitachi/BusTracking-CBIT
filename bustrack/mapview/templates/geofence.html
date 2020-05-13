@@ -148,14 +148,6 @@ content: '<p>Latitude:' +lat + '</p>'+
                           myFunctinForListener(marker, infowindow);
                         {% endfor %}
                                       //Fence
-                                      var drawingManager = new google.maps.drawing.DrawingManager({
-                                              drawingControl: true,
-                                              drawingControlOptions: {
-                                                position: google.maps.ControlPosition.TOP_CENTER,
-                                                drawingModes: ['polyline']
-                                              }
-                                             });
-                                             drawingManager.setMap(map);
                                             var pathBetween1 = new google.maps.Polygon({
                                               path: path,
                                               strokeColor: '#4E73DF',

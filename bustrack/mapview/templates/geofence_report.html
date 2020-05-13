@@ -56,7 +56,7 @@
                   {% for i in geofence_report %}
                     <tr>
                       <th scope="row">{{ i.routeId }}</th>
-                      <td>{{ i.gTime }}</td>
+                      <td><script>document.write((new Date('{{ i.gTime }}').toLocaleString()))</script></td>
                       {% if i.status == 0 %}
                       <td> EXIT </td>
                       {% else %}
