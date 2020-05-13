@@ -1,4 +1,4 @@
-{%extends 'base.html'%} {% load static %} {%block title%} Add Geo-Fence {%endblock%} {%block onload%}{%endblock%}
+{%extends 'base.html'%} {% load static %} {%block title%} Add GeoFence {%endblock%} {%block onload%}{%endblock%}
 {%block main%}
 <!DOCTYPE html>
 <html>
@@ -25,12 +25,47 @@
 </head>
 
 <body>
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
 
-    <div id="map"></div>
-    <center>
-    <button class="mt-4 btn btn-primary " onclick="sendCoordinates()"> Save Geofence </button>
-    <button class="mt-4 btn btn-primary " onclick="undoPath()"> Undo </button>
-    </center>
+        <!-- Page Heading -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800"></h1>
+        </div>
+        <!-- Content Row -->
+
+        <div class="row">
+
+            <!-- Map -->
+            <div class="col-xl-12 col-lg-7">
+                <div class="card shadow mb-4">
+                    <!-- Card Header - Dropdown -->
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary" style="flex: 1;">Add GeoFence - {{busnum}}</h6>
+                    <button id="savecoord" class="btn btn-primary btn-icon-split" style="margin-right: 20px;"onclick="sendCoordinates()">
+                        <span class="text">Save</span>
+                    </button>
+					<a href="#" id="alert-btn" class="btn btn-danger btn-icon-split" style="margin-right: 20px;">
+                      <span class="icon text-white-50">
+                        <i class="fas fa-bell"></i>
+                      </span>
+                      <span class="text">Alert</span>
+                    </a>
+                    <div class="dropdown no-arrow">
+                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                        <div class="dropdown-header">Actions:</div>
+                        <a id="actn" class="dropdown-item" href="#" id="new" data-toggle="modal" data-target="#add_geofence_list">New</a>
+                        <button class="dropdown-item" onclick="undoPath()" >Undo</button>
+                    </div>
+                </div>
+            </div>
+        
+		<div class="card-body map-container z-depth-1-half" style="height: 500px; padding: 0;">
+                <!--The div element for the map -->
+                <div id="map" style="width: auto; height: 500px;"></div>
     <script>
         var URL = "{% url 'add_geofence' %}";
         // This example requires the Drawing library. Include the libraries=drawing
@@ -111,7 +146,11 @@
     <script
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCclG7w5m1rAyb_KxV8cp2eY4FsTtTm7Bs&libraries=drawing&callback=initMap"
         async defer></script>
-
+	<div>
+	</div>
+	   </div>
+        </div>
+    </div>
 </body>
 
 </html>
