@@ -43,19 +43,19 @@
       <hr class="sidebar-divider my-0">
 
       <!-- Nav Item - Dashboard -->
-      <li class="nav-item active">
+      <li class="nav-item {%block home%}{%endblock%}">
         <a class="nav-link" href="/home">
           <i class="fas fa-home"></i>
           <span>Home</span></a> 
       </li>
       <hr class="sidebar-divider my-0">
-      <li class="nav-item">
+      <li class="nav-item {%block veh%}{%endblock%}">
         <a class="nav-link collapsed" href="#" data-toggle="modal" data-target="#bus-list"  aria-expanded="true" aria-controls="collapseUtilities">
           <i class="fa fa-bus"></i>
           <span>Vehicle</span>
         </a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item {%block trackhis%}{%endblock%}">
         <a class="nav-link collapsed" href="{%url 'trackhistory'%}"   data-toggle="modal" data-target="#tracking-list"  aria-expanded="true" aria-controls="collapseUtilities">
 		  <i class="fas fa-route"></i>
           <span>Tracking History</span></a>
@@ -64,17 +64,17 @@
       <!-- Divider -->
       <hr class="sidebar-divider my-0">
 
-      <li class="nav-item">
+      <li class="nav-item {%block clus%}{%endblock%}">
         <a class="nav-link" href="{%url 'clusterview'%}">
           <i class="fas fa-location-arrow"></i>
           <span>Clustered View</span></a>
       </li>
-	  <li class="nav-item">
+	  <li class="nav-item {%block geo%}{%endblock%}">
         <a class="nav-link" href="{%url 'geofence'%}">
           <i class="fas fa-globe"></i>
           <span>GeoFence</span></a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item {%block rep%}{%endblock%}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
           <i class="fas fa-table"></i>
           <span>Reports</span>
@@ -93,7 +93,7 @@
           </div>
         </div>
       </li>
-      <li class="nav-item">
+      <li class="nav-item {%block tools%}{%endblock%}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
           <i class="fas  fa-tools"></i>
           <span>Tools</span>
@@ -113,7 +113,7 @@
       <!-- Divider -->
       <hr class="sidebar-divider my-0">
 
-      <li class="nav-item">
+      <li class="nav-item {%block users%}{%endblock%}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
           <i class="fas fa-users"></i>
           <span>Users</span>
