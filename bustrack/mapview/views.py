@@ -15,6 +15,7 @@ from datetime import datetime,date
 from pytz import timezone
 from django.views.decorators.csrf import csrf_exempt
 import json
+import datetime as dt
 
 r = requests.post('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
 p= r.json()['access_token']
@@ -83,12 +84,19 @@ def geofence_check():
 
 		# check if bus is in its geofence
 		routeIds = str(i['routeId'])
+		t=str(i['updatedTime'])
+		format = '%a, %d %b %Y %H:%M:%S GMT' ;ds = str(dt.datetime.strptime(t, format));
 		if(bus_res.get(routeIds) != None):
 			check_res = inBusGeofence(i['latitude'],i['longitude'],bus_res[routeIds])
 			if(not check_res and bus_indi_status.get(routeIds) != None and bus_indi_status.get(routeIds)):
 
 				# if bus moves out of geofence.. raise alert
 				print("Should Raise Alert Here")
+				outalert = requests.post('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/alerts',headers={'Authorization':f'Bearer {p}','Content-Type':'application/json'},json={'smsStatus':0,'routeId':i['routeId'],'alertDate':str(i['deviceTime']),'alertTime':ds,'alertCode':'100'});
+			elif(check_res and bus_indi_status.get(routeIds) !=None and not bus_indi_status.get(routeIds)):
+				# bus coming back into the geofence..... raise alert
+				print("Should Raise an incoming alert here")
+				inalert = requests.post('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/alerts',headers={'Authorization':f'Bearer {p}','Content-Type':'application/json'},json={'smsStatus':0,'routeId':i['routeId'],'alertDate':str(i['deviceTime']),'alertTime':ds,'alertCode':'200'});
 			bus_indi_status[routeIds] = check_res
 
 		if (bus_in_status.get(i['IMEI']) == None) or (bus_in_status.get(i['IMEI']) != inGeofence(i['latitude'],i['longitude'])):	

@@ -87,11 +87,22 @@ TrackHistory-{{bno}}
                         stopover: false,
                     });
                     k='{{bno}}';
+					if (c==0){
                     marker = new google.maps.Marker({
                         map: map,
                         position: pos,
-                        //icon:"{% static 'markers/pin1.png' %}",                        
+						label:'START',
+                        //icon:"http://maps.google.com/mapfiles/ms/icons/green-dot.png",                        
                     });
+					}
+					else{
+					marker = new google.maps.Marker({
+                        map: map,
+                        position: pos,
+						label:' ',
+                        icon:"http://maps.google.com/mapfiles/kml/pal3/icon61.png",                        
+                    });
+					}
                     var infowindow = new google.maps.InfoWindow({
                     content: '<p>Time: '+time + '</p>'+
                              '<p>Latitude: '+lat + '</p>'+
@@ -106,6 +117,7 @@ TrackHistory-{{bno}}
 					marker = new google.maps.Marker({
                         map: map,
                         position: pos,
+						label:'END',
                         //icon:"{% static 'markers/pin1.png' %}",                        
                     });
                     var infowindow = new google.maps.InfoWindow({
