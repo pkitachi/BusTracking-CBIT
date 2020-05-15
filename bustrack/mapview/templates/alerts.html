@@ -15,7 +15,6 @@ function myFunction() {
       <!-- Content Row -->
       <div class="row">
 
-        <!-- Map Chart -->
         <div class="col-xl-12 col-lg-7">
           <div class="card shadow mb-4">
             <!-- Card Header - Dropdown -->
@@ -26,13 +25,7 @@ function myFunction() {
                             <i class="fas fa-envelope"></i>
                         </span>
                         <span class="text">Resolve</span>
-                    </a>
-              <a href="#" id="alert-btn" class="btn btn-danger btn-icon-split" style="margin-right: 20px;">
-                <span class="icon text-white-50">
-                  <i class="fas fa-bell"></i>
-                </span>
-                <span class="text">Alert</span>
-              </a>
+                </a>
               <div class="dropdown no-arrow">
                 <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
@@ -48,7 +41,11 @@ function myFunction() {
             </div>
             <!-- Card Body -->
             <div class="card-body z-depth-1-half" style="height: 500px; padding: 0;">
-              <ul id="alert-body" class="list-group m-3">
+              <div class="col-md-12 p-3 d-flex justify-content-start align-items-center">
+                <label class="m-0" for="selected-buses" style="padding-right: 10px;">Date</label>
+                <input id='alert-date' type="text" class="form-control alert-datepk" placeholder=" Select a Date..." value="" required="" onchange="getHistory()">
+              </div>
+              <ul id="alert-body" class="list-group mx-3" style="max-height: 400px; overflow-y: scroll;">
                 
               </ul>
             </div>
@@ -106,6 +103,36 @@ function myFunction() {
                       </div>
                     </div>
                   </div>
-  
+  <script>
+		$(function() {
+			$('.alert-datepk').datepicker({
+				'format': 'yyyy-mm-dd',
+				'autoclose': true,
+        'endDate': '+0d',
+			}).datepicker("setDate",'+0d');
+		});
+  </script>
+  <script>
+    function getHistory(){
+      var date = document.getElementById('alert-date').value
+      console.log(date)
+      var str=''
+      $.ajax({
+          type: "GET",
+          url: "{{ '/home/alert-call/"+ date +"' }}",
+          success: function(data,textStatus,request){
+            console.log(data);
+            var len = data.length;
+            if(len==0){
+              str+="<div class='text-center'> No Alerts </div>"
+            }
+            for (var i = 0; i < len; i++) {
+              str="<li class='list-group-item d-flex justify-content-between lh-condensed'><div><h6 class='my-0 font-weight-bold'>Bus - " + data[i]['routeId'] + "</h6><small class='text-muted'>" + data[i]['description'] + "</small></div><span class='md-2'><small class='text-muted'>" + data[i]['alertTime'] + "</small></span></li>"+str
+            }
+            document.getElementById("alert-body").innerHTML = str;
+          }
+      });
+    }
+  </script>
       
 {%endblock%}

@@ -212,10 +212,18 @@ def apicall(request):
     track=tr.json()
     alertRes = []
     for i in track:
-        if i['alert']==1 or i['speed']>=50:
+        if i['alert']=='Bus went out of geofence':
             if i not in alertRes:
                 alertRes.append(i)
+        # if i['speed']>=50:
+        #     i['alert'] = 'Over Speeding'
+        #     if i not in alertRes:
+        #         alertRes.append(i)
     return JsonResponse(alertRes,safe=False)
+def alertcall(request, date):
+    tr=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/alerts',headers={'Authorization':f'Bearer {p}'}, data={'alertDate':date})
+    track=tr.json()
+    return JsonResponse(track,safe=False)
 
 def geofence_report(request):
 	track_data=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})

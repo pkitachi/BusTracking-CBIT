@@ -619,9 +619,9 @@
               newAlertList.push(data[i]['IMEI']);
             }
             document.getElementById("alert-list").innerHTML = str;
-            var alertBody =document.getElementById("alert-body"); 
-            if(alertBody!=null)
-            alertBody.innerHTML = str;
+            // var alertBody =document.getElementById("alert-body"); 
+            // if(alertBody!=null)
+            // alertBody.innerHTML = str;
             alertList = newAlertList;
             window.localStorage.setItem('alertList',alertList);
             var alertCount = data.length;
