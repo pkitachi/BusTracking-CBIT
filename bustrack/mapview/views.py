@@ -18,6 +18,15 @@ r = requests.post('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/login'
 p= r.json()['access_token']
 alertRes=[]
 
+def login(request):
+	
+	return render(request,'login.html') 
+def signup(request):
+	
+	return render(request,'register.html') 
+def forgotpwd(request):
+
+	return render(request,'forgot-password.html') 
 def inGeofence(lat,lng):
 	lat = float(lat)
 	lng = float(lng)

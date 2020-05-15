@@ -3,6 +3,13 @@ from django.urls import path,include,re_path
 from . import views
 
 urlpatterns = [
+    #/
+    path('',views.login,name='login'),
+    #/signup
+    path('signup',views.signup,name='signup'),
+    #/forgotpwd
+    path('forgot-password',views.forgotpwd,name='forgotpwd'),
+    #/home/
 	path('home/',views.index,name='index'),
     #/home/Bus-67/
     re_path(r'^home/Bus-(?P<bno>[0-9]+)/$', views.detail, name='detail'),

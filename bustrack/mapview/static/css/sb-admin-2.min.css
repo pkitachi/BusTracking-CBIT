@@ -15,7 +15,7 @@ html {
 }
 ::-webkit-scrollbar {
     width: 5px;
-    background: #ffffff66;
+    background: transparent;
 }
 ::-webkit-scrollbar-thumb {
     background: #454545;
