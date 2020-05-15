@@ -1,5 +1,7 @@
 from django.shortcuts import render,redirect
 from django.http import Http404 
+import smtplib
+from django.http import HttpResponseRedirect
 from django.http import HttpResponse,JsonResponse
 from . models import Loc
 import requests
@@ -182,8 +184,21 @@ def alerts(request):
 	track=tr.json()
 	t=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/buses',headers={'Authorization':f'Bearer {p}'})
 	buses=t.json()
-	return render(request,'alerts.html',{'track':track, 'buses': buses}) 
-
+	if (request.method)=="POST":
+		gmailaddress =request.POST['smail']
+		gmailpassword=request.POST['pass']
+		mailto=request.POST['rmail']
+		msg=request.POST['comment']
+		mailServer = smtplib.SMTP('smtp.gmail.com' , 587)
+		mailServer.starttls()
+		mailServer.login(gmailaddress , gmailpassword)
+		mailServer.sendmail(gmailaddress, mailto , msg)
+		print(" \n Sent!")
+		mailServer.quit()
+		return HttpResponseRedirect(request.path_info)
+	else:
+		return render(request,'alerts.html',{'track':track, 'buses': buses}) 
+	
 def apicall(request):
     tr=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
     track=tr.json()
