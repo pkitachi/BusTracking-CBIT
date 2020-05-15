@@ -22,6 +22,12 @@ function worker() {
 			label: (data[i]['routeId']).toString(),
 			icon:"{% static 'markers/Bus.png' %}"
 		  });
+		 var infowindow = new google.maps.InfoWindow({
+content: '<p>Latitude: ' +parseFloat(data[i]['latitude']) + '</p>'+
+		  '<p>Longitude: '+parseFloat(data[i]['longitude'])+ '</p>'
+		  
+});
+myFunctinForListener(marker, infowindow);
 		  markers.push(marker);
 	  }
 	  markerCluster = new MarkerClusterer(map, markers,{imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
@@ -86,6 +92,11 @@ function worker() {
                         zoom: 8,
                         center: location
                       });
+					  myFunctinForListener = function(aMarker, aInfoWindow) {
+                          google.maps.event.addListener(aMarker, 'click', function() {                          
+                            aInfoWindow.open(map, aMarker);
+                          });
+                        }
                             {%for i in cluster%}
 							  var imei={{i.IMEI}}
                               buslocs[imei]={lat:parseFloat({{i.latitude}}),lng:parseFloat({{i.longitude}})};
@@ -94,6 +105,12 @@ function worker() {
                                 label: "{{i.routeId}}",
                                 icon:"{% static 'markers/Bus.png' %}"
                               });
+							  var infowindow = new google.maps.InfoWindow({
+content: '<p>Latitude: ' +{{i.latitude}} + '</p>'+
+		  '<p>Longitude: '+{{i.longitude}}+ '</p>'
+		  
+});
+                          myFunctinForListener(marker, infowindow);
 							  markers.push(marker);
                             {%endfor%}
                             markerCluster = new MarkerClusterer(map, markers,{imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});

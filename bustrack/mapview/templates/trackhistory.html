@@ -92,11 +92,12 @@ TrackHistory-{{bno}}
                         position: pos,
                         //icon:"{% static 'markers/pin1.png' %}",                        
                     });
-					marker.setTitle('Latitude: ' +lat + ' Longitude: '+lng)
                     var infowindow = new google.maps.InfoWindow({
                     content: '<p>Time: '+time + '</p>'+
+                             '<p>Latitude: '+lat + '</p>'+
+                             '<p>Longitude: '+lng + '</p>'+
                              '<p>Speed: '+speed + '</p>'+
-                             '<p>Fuel: '+fuel + '</p>'+
+							 '<p>Fuel: '+fuel + '</p>'+
                              '<p>Battery: '+battery + '</p>'
                     });
                     myFunctinForListener(marker, infowindow);
@@ -107,11 +108,12 @@ TrackHistory-{{bno}}
                         position: pos,
                         //icon:"{% static 'markers/pin1.png' %}",                        
                     });
-					marker.setTitle('Latitude: ' +lat + ' Longitude: '+lng)
                     var infowindow = new google.maps.InfoWindow({
                     content: '<p>Time: '+time + '</p>'+
+                             '<p>Latitude: '+lat + '</p>'+
+                             '<p>Longitude: '+lng + '</p>'+
                              '<p>Speed: '+speed + '</p>'+
-                             '<p>Fuel: '+fuel + '</p>'+
+							 '<p>Fuel: '+fuel + '</p>'+
                              '<p>Battery: '+battery + '</p>'
                     });
                     myFunctinForListener(marker, infowindow);

@@ -30,7 +30,7 @@ function worker() {
 		});
 	  var latlng = new google.maps.LatLng(latVal, lonVal);
 	  marker.setPosition(latlng);
-	  marker.setTitle("Latitude:"+latVal+" | Longitude:"+lonVal);
+	  marker.setTitle("Latitude:"+latVal+"  Longitude:"+lonVal);
 	  document.getElementById("lat").innerHTML="Lat: "+latVal;
 	  document.getElementById("lon").innerHTML="Lng: "+lonVal;
 	  document.getElementById("speed").innerHTML=data['speed']+" KMPH";
