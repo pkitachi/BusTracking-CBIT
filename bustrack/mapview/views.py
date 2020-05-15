@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import Http404 
 from django.http import HttpResponse,JsonResponse
 from . models import Loc
@@ -17,16 +17,32 @@ import json
 r = requests.post('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
 p= r.json()['access_token']
 alertRes=[]
-
+auth = 0
 def login(request):
-	
-	return render(request,'login.html') 
+
+	if(request.method)=='POST':
+		username=request.POST['username']
+		password=request.POST['password']
+		r = requests.post('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/login',data={'username':username,'password':password})
+		if('access_token' in r.json().keys()):
+			global auth
+			auth+=1
+			return redirect('/home')
+		else:
+			return redirect('/')
+	else:
+		return render(request,'login.html')
 def signup(request):
 	
 	return render(request,'register.html') 
 def forgotpwd(request):
 
-	return render(request,'forgot-password.html') 
+	return render(request,'forgot-password.html')
+def logout(request):
+	global auth
+	auth=0
+	return redirect('/')
+
 def inGeofence(lat,lng):
 	lat = float(lat)
 	lng = float(lng)
@@ -90,6 +106,8 @@ def trackapicall(request):
 	return JsonResponse(track_liv,safe=False)	
 	
 def index(request):
+	if(auth==0):
+		return redirect('/')
 	t=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
 	buses=t.json()
 	td=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
@@ -149,9 +167,7 @@ def detail(request, bno):
 	td=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno})
 	curRaw={'lat':td.json()[0]['latitude'],'lon':td.json()[0]['longitude']}
 	prop={'speed':td.json()[0]['speed'],'battery':td.json()[0]['battery'],'fuel':td.json()[0]['fuel']}
-	dname=td.json()[0]['driverName']
-	dphone=td.json()[0]['driverPhone']
-	return render(request, 'bus-detail.html', {'curRaw':curRaw, 'buses': buses,'bno':bno,'prop':prop,"dname":dname,"dphone":dphone})
+	return render(request, 'bus-detail.html', {'curRaw':curRaw, 'buses': buses,'bno':bno,'prop':prop})
 
 def info(request,bno):
 	td=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno})
@@ -160,6 +176,8 @@ def info(request,bno):
 	return JsonResponse(curRaw)
 
 def alerts(request):
+	if(auth==0):
+		return redirect('/')
 	tr=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
 	track=tr.json()
 	t=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/buses',headers={'Authorization':f'Bearer {p}'})
@@ -208,11 +226,15 @@ def geofence_report(request):
 
 		
 def buses(request):
+	if(auth==0):
+		return redirect('/')
 	b = requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
 	b = b.json()
 	return render(request,'buses.html',{'buses':b}) 
 
 def geofence(request):
+	if(auth==0):
+		return redirect('/')
 	td=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
 	tracking=td.json()
 	rt=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})

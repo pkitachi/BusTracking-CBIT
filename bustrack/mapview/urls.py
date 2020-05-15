@@ -9,6 +9,8 @@ urlpatterns = [
     path('signup',views.signup,name='signup'),
     #/forgotpwd
     path('forgot-password',views.forgotpwd,name='forgotpwd'),
+    #/logout
+    path('logout',views.logout,name='logout'),
     #/home/
 	path('home/',views.index,name='index'),
     #/home/Bus-67/
