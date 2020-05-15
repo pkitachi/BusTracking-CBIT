@@ -189,7 +189,7 @@ def apicall(request):
     track=tr.json()
     alertRes = []
     for i in track:
-        if i['alert']==1:
+        if i['alert']==1 or i['speed']>=50:
             if i not in alertRes:
                 alertRes.append(i)
     return JsonResponse(alertRes,safe=False)
