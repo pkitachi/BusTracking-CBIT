@@ -177,6 +177,11 @@
 
             <!-- Nav Item - Alerts -->
             <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link" href="{%url 'buses'%}" role="button">
+                <i class="fas fa-comment-alt fa-fw"></i>
+              </a>
+            </li>
+            <li class="nav-item dropdown no-arrow mx-1">
               <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-bell fa-fw"></i>
                 <!-- Counter - Alerts -->
@@ -187,10 +192,10 @@
                 <h6 class="dropdown-header">
                   Emergency Alerts
                 </h6>
-                <ul id="alert-list" class="list-group" style="margin: 10px;max-height:350px;overflow: scroll;">
+                <ul id="alert-list" class="list-group mb-0" style="margin: 10px;max-height:350px;overflow: scroll;">
                 </ul>
-                <ul class="list-group mb-3" style="margin: 10px;">
-                  <a class="pt-3 text-center small text-gray-600 text-decoration-none" href="/home/alerts">Show All Alerts</a>
+                <ul class="list-group mb-3 mt-0" style="">
+                  <a class="pt-0 mt-0 text-center small text-gray-600 text-decoration-none" href="{%url 'alerts'%}">Show All Alerts</a>
                 </ul>
               </div>
               <script>
@@ -549,8 +554,7 @@
     <div class="alert hide">
       <span class="fas fa-exclamation-circle"></span>
       <span class="msg font-weight-bold">Alert : </span>
-      <span id="alert-info" class="info font-weight-bold text-gray-800">  
-        "Bus-16 Accident"
+      <span id="alert-info" class="info font-weight-bold text-gray-800">
       </span>
       <div class="close-btn">
         <span class="fas fa-times"></span>

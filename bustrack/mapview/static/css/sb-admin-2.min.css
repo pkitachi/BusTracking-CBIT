@@ -18,7 +18,7 @@ html {
     background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-    background: #454545;
+    background: #858796;
     border-radius: 5px;
 }
 ::-webkit-scrollbar-thumb:hover {
