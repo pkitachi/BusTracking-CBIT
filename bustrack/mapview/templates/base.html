@@ -613,7 +613,7 @@
             for (var i = 0; i < data.length; i++) {
               str+="<li class='list-group-item d-flex justify-content-between lh-condensed'><div><h6 class='my-0 font-weight-bold'>Bus - " + data[i]['routeId'] + "</h6><small class='text-muted'>Brief description</small></div><span class='md-2'><i class='fas fa-circle' style='color: #e74a3b;'></i></span></li>"
               if (!alertList.includes(data[i]['IMEI'])){
-                document.getElementById("alert-info").innerHTML = parseFloat(data[i]['IMEI']);
+                document.getElementById("alert-info").innerHTML = "Bus No "+parseFloat(data[i]['routeId'])+" Alert";
                 notification();
               }
               newAlertList.push(data[i]['IMEI']);
