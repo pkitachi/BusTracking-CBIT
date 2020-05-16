@@ -22,14 +22,22 @@ p= r.json()['access_token']
 alertRes=[]
 auth = 0
 def login(request):
-
+	global auth
 	if(request.method)=='POST':
 		username=request.POST['username']
 		password=request.POST['password']
+		rme=request.POST['rememberme']
 		r = requests.post('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/login',data={'username':username,'password':password})
 		if('access_token' in r.json().keys()):
-			global auth
+			
 			auth+=1
+			if(rme=='1'):
+				# dicti = {'username' : username, 'password' : password}
+				# dictj = json.dumps(dicti)
+				# f = open("dict.json","w")
+				# f.write(dictj)
+				# f.close()
+				return redirect('/home/alerts')
 			return redirect('/home')
 		else:
 			return redirect('/')

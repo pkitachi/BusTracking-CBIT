@@ -57,11 +57,14 @@
                     </div>
                     <div class="form-group">
                       <div class="custom-control custom-checkbox small">
-                        <input type="checkbox" class="custom-control-input" id="customCheck">
+                        <input type="checkbox" class="custom-control-input" id="customCheck" onchange="chkbx()">
                         <label class="custom-control-label" for="customCheck">Remember Me</label>
                       </div>
                     </div>
-                    <input type="submit" class="btn btn-primary btn-user btn-block" value="Login">
+                    <div class="form-group">
+                      <input type="hidden" name='rememberme' id='rememberme'>
+                    </div>
+                    <input type="submit" class="btn btn-primary btn-user btn-block" id='login' onclick="loginn()" value="Login">
                   </form>
                   <hr>
                   <div class="text-center">
@@ -75,7 +78,35 @@
             </div>
           </div>
         </div>
-
+        <script>
+          document.getElementById('rememberme').value = 0;
+          function chkbx(){
+            if(document.getElementById('rememberme').value == 1){
+              console.log(document.getElementById('rememberme').value)
+              document.getElementById('rememberme').value = 0;
+            }
+            else{
+              console.log(document.getElementById('rememberme').value)
+              document.getElementById('rememberme').value = 1;
+            }
+          }
+          var unm = localStorage.getItem('username')
+          var pwd = localStorage.getItem('password')
+          console.log(unm)
+          if(unm!=null & pwd!=null){
+            document.getElementById('username').setAttribute('value',unm)
+            document.getElementById('password').setAttribute('value',pwd)
+            document.getElementById('login').click()
+          }
+          function loginn(){
+            if(document.getElementById('rememberme').value == 1){
+              var unm = document.getElementById('username').value
+              var pwd = document.getElementById('password').value
+              localStorage.setItem('username',unm)
+              localStorage.setItem('password',pwd)
+            }
+          }
+        </script>
       </div>
 
     </div>
