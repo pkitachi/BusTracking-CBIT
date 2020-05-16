@@ -297,40 +297,7 @@ function worker() {
   <!-- End of Page Wrapper -->
 
 
-    <!-- Alert Message -->
-    <div class="alert hide">
-      <span class="fas fa-exclamation-circle"></span>
-      <span class="msg font-weight-bold">Alert : </span>
-      <span id="alert-info" class="info font-weight-bold text-gray-800">"Bus-16 Accident"</span>
-      <div class="close-btn">
-        <span class="fas fa-times"></span>
-      </div>
-  </div>
-
-  <script>
-    var notification = function(){
-      $('.alert').addClass("show");
-      $('.alert').removeClass("hide");
-      $('.alert').addClass("showAlert");
-      
-      setTimeout(function(){
-        $('.alert').removeClass("show");
-        $('.alert').addClass("hide");
-      },5000);
-    }
-    $('#alert-btn').click(notification);
-    $('.close-btn').click(function(){
-      $('.alert').removeClass("show");
-      $('.alert').addClass("hide");
-    });
-  </script>
     
-  <script>
-    document.getElementById("alert-btn").addEventListener("click", function(){  
-      var audio = new Audio( 
-      "{% static 'beep.mp3' %}"); 
-      audio.play();  });
-  </script>
 
   
     

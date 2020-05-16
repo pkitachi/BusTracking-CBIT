@@ -610,10 +610,19 @@
           success: function(data,textStatus,request){
             var str = ''
             var newAlertList=[]
-            for (var i = 0; i < data.length; i++) {
-              str+="<li class='list-group-item d-flex justify-content-between lh-condensed'><div><h6 class='my-0 font-weight-bold'>Bus - " + data[i]['routeId'] + "</h6><small class='text-muted'>Brief description</small></div><span class='md-2'><i class='fas fa-circle' style='color: #e74a3b;'></i></span></li>"
+            for (var i = data.length-1; i >=0; i--) {
+              str+="<li class='list-group-item d-flex justify-content-between lh-condensed'><div><h6 class='my-0 font-weight-bold'>Bus - " + data[i]['routeId'] + "</h6><small class='text-muted'>"+data[i]['alert']+"</small></div><span class='md-2'><i class='fas fa-circle' style='color: #e74a3b;'></i></span></li>"
               if (!alertList.includes(data[i]['IMEI'])){
-                document.getElementById("alert-info").innerHTML = "Bus No "+parseFloat(data[i]['routeId'])+" Alert";
+				var a='',b,c=0;
+				for(var j=0;j<data[i]['alert'].length;j++){
+				a+=data[i]['alert'][j];
+				if (data[i]['alert'][j]==' ' && c==0){
+				b=a;
+				a='';
+				c+=1;
+				}
+				}
+                document.getElementById("alert-info").innerHTML = b+" - "+parseInt(data[i]['routeId']) + " "+a;
                 notification();
               }
               newAlertList.push(data[i]['IMEI']);
