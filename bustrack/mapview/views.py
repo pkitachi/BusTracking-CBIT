@@ -31,13 +31,6 @@ def login(request):
 		if('access_token' in r.json().keys()):
 			
 			auth+=1
-			if(rme=='1'):
-				# dicti = {'username' : username, 'password' : password}
-				# dictj = json.dumps(dicti)
-				# f = open("dict.json","w")
-				# f.write(dictj)
-				# f.close()
-				return redirect('/home/alerts')
 			return redirect('/home')
 		else:
 			return redirect('/')
