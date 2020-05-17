@@ -183,7 +183,7 @@ def detail(request, bno):
 	try:
 		bus_co = [{'lat': float(i[1]), 'lng': float(i[0])} for i in bus_res[bno]]
 	except:
-		bus_co=None
+		bus_co=[]
 	return render(request, 'bus-detail.html', {'curRaw':curRaw, 'buses': buses,'bno':bno,'prop':td.json()[0],'bus_co':bus_co})
 	
 def info(request,bno):
