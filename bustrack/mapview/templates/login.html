@@ -109,15 +109,16 @@
                 window.open("{%url 'index'%}","_self")
                 accessToken = data['access_token']
                 localStorage.setItem('access','valid')
+				
+            if(document.getElementById('rememberme').value == 1){
+              localStorage.setItem('accessToken',accessToken)
+            }
               },
 			  error:function(httpObj, textStatus) {       
                 if(httpObj.status==401){
 				document.getElementById("msgg").innerHTML="Incorrect username or password"}
             },
             });
-            if(document.getElementById('rememberme').value == 1){
-              localStorage.setItem('accessToken',accessToken)
-            }
           }
         </script>
       </div>
