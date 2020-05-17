@@ -53,7 +53,7 @@
                     <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                   </div> -->
                   <div class="user">
-				  <center><div id="msgg"> </div></center>
+        				  <center><div id="msgg" class="text-danger m-2"> </div></center>
                     <div class="form-group">
                       <input type="text" class="form-control form-control-user" id="username" name="username" placeholder="Enter Username...">
                     </div>
@@ -108,18 +108,34 @@
               success: function(data,textStatus,request){
                 window.open("{%url 'index'%}","_self")
                 accessToken = data['access_token']
-                localStorage.setItem('access','valid')
-				
-            if(document.getElementById('rememberme').value == 1){
-              localStorage.setItem('accessToken',accessToken)
-            }
+                sessionStorage.setItem('access','valid')
+                if(document.getElementById('rememberme').value == 1){
+                  localStorage.setItem('access','valid')
+                }
               },
-			  error:function(httpObj, textStatus) {       
+              error:function(httpObj, textStatus) {       
                 if(httpObj.status==401){
-				document.getElementById("msgg").innerHTML="Incorrect username or password"}
-            },
+                  document.getElementById("msgg").innerHTML="<i class='fas fa-exclamation-triangle'></i>  Incorrect username or password"
+                }
+              },
             });
           }
+        </script>
+        <script>
+          var pwdField = document.getElementById("password");
+          var unmField = document.getElementById("username");
+          pwdField.addEventListener("keyup", function(event) {
+            if (event.keyCode === 13) {
+              event.preventDefault();
+              document.getElementById("login").click();
+            }
+          });
+          unmField.addEventListener("keyup", function(event) {
+            if (event.keyCode === 13) {
+              event.preventDefault();
+              document.getElementById("password").focus();
+            }
+          });
         </script>
       </div>
 
