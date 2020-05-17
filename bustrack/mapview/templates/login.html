@@ -53,6 +53,7 @@
                     <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                   </div> -->
                   <div class="user">
+				  <center><div id="msgg"> </div></center>
                     <div class="form-group">
                       <input type="text" class="form-control form-control-user" id="username" name="username" placeholder="Enter Username...">
                     </div>
@@ -99,6 +100,7 @@
             var data = {}
             data.username = document.getElementById('username').value
             data.password = document.getElementById('password').value
+			
             $.ajax({
               type: "POST",
               data: data,
@@ -108,6 +110,10 @@
                 accessToken = data['access_token']
                 localStorage.setItem('access','valid')
               },
+			  error:function(httpObj, textStatus) {       
+                if(httpObj.status==401){
+				document.getElementById("msgg").innerHTML="Incorrect username or password"}
+            },
             });
             if(document.getElementById('rememberme').value == 1){
               localStorage.setItem('accessToken',accessToken)
