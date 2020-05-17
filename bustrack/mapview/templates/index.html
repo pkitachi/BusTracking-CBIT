@@ -39,11 +39,11 @@ content: '<p>Bus no:' + k + '</p>'+
 		  '<p>Battery:' + data[i]['battery'] + '</p>'+
 		  '<p>Fuel:' + data[i]['fuel'] + '</p>'+
 		  '<p>Device Time' + data[i]['deviceTime'] + '</p>'+
-		  '<p>Alert:' + data[i]['alert'] + '</p>'
-		  
+		  '<p>Alert:' + data[i]['alert'] + '</p>'+
+		  '<a href = "/home/Bus-'+ k +'">Live Tracking </a>'
 });
 myFunctinForListener(marker, infowindow);
-myFunctinForListener1(marker);
+
 }
 else{
 if(JSON.stringify(d[im])!==JSON.stringify(pos)){
@@ -66,8 +66,8 @@ content: '<p>Bus no:' + k + '</p>'+
 		  '<p>Battery:' + data[i]['battery'] + '</p>'+
 		  '<p>Fuel:' + data[i]['fuel'] + '</p>'+
 		  '<p>Device Time' + data[i]['deviceTime'] + '</p>'+
-		  '<p>Alert:' + data[i]['alert'] + '</p>'
-		  
+		  '<p>Alert:' + data[i]['alert'] + '</p>'+
+		  '<a href = "/home/Bus-'+ k +'">Live Tracking </a>'
 });
 myFunctinForListener(marker, infowindow);
 }
@@ -180,11 +180,11 @@ content: '<p>Bus no:' + k + '</p>'+
 		  '<p>Battery:' + '{{i.battery}}' + '</p>'+
 		  '<p>Fuel:' + '{{i.fuel}}' + '</p>'+
 		  '<p>Device Time' + '{{i.deviceTime}}' + '</p>'+
-		  '<p>Alert:' + '{{i.alert}}' + '</p>'
-		  
+		  '<p>Alert:' + '{{i.alert}}' + '</p>'+
+		  '<a href = "/home/Bus-'+ k +'">Live Tracking </a>'
 });
                           myFunctinForListener(marker, infowindow);
-                          myFunctinForListener1(marker);
+                         
                         {% endfor %}
 						//setTimeout(refresh,10000);
                       }

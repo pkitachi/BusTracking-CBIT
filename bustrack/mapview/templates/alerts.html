@@ -76,19 +76,19 @@ function myFunction() {
                               {% csrf_token %}
                               <div class="form-group ">
                       <label for="smail"> E-mail: </label><br>
-                      <input id="smail-id" type="mail" id="smail-id" name="smail" ><br>
+                      <input id="smail-id" type="mail" id="smail-id" name="smail" required=""><br>
                     </div>
                     <div class="form-group ">
                      <label for="pass"> Password: </label><br>
-                    <input id="pass-id" type="password" id="pass-id" name="pass" ><br>
+                    <input id="pass-id" type="password" id="pass-id" name="pass" required="" ><br>
                   </div>
                   <div class="form-group ">
                     <label for="rmail">Recepient E-mail: </label><br>
-                    <input id="rmail-id" type="mail" id="rmail-id" name="rmail" ><br>
+                    <input id="rmail-id" type="mail" id="rmail-id" name="rmail" required="" ><br>
                   </div>
                   <div class="form-group ">
                     <label for="comment">Message: </label><br>
-                    <input id="comment-id" type="text" size="50" id="comment-id" name="comment">
+                    <input id="comment-id" type="text" size="50" id="comment-id" name="comment" required="">
                   </div>
                   <div class="form-group ">
                    <button class="btn btn-primary " onclick="myFunction()" type="button">Send</button>
