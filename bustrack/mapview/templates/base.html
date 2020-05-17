@@ -255,10 +255,10 @@
                     </div>
                     <div class="modal-body" style="padding-bottom: 55px;">
                       <h6 class="m-1">Online</h6>
-                      <ul class="list-group mb-3" style="overflow-y: scroll;height: 450px;">
+                      <ul class="list-group mb-3 px-2" style="overflow-y: scroll;height: 450px;">
                         
                         {% for i in buses %}
-                        <li class="list-group-item d-flex justify-content-between lh-condensed">
+                        <li class="px-4 list-group-item d-flex justify-content-between lh-condensed" style="padding-top: 12px;padding-bottom: 0;">
                           <div>
                             <a href="/home/Bus-{{i.routeId}}/">
                               <h6 class="my-0 font-weight-bold">Bus - {{i.routeId}}</h6>
