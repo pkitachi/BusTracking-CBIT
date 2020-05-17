@@ -22,7 +22,11 @@
   <!-- Custom styles for this template-->
   <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-
+  <script>
+    if(localStorage.getItem('accessToken') != null){
+              window.open("{%url 'index'%}","_self")
+          }
+  </script>
     
 
 </head>
@@ -48,8 +52,7 @@
                   <!-- <div class="text-center">
                     <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                   </div> -->
-                  <form class="user" action="" method="POST">
-                    {% csrf_token %}
+                  <div class="user">
                     <div class="form-group">
                       <input type="text" class="form-control form-control-user" id="username" name="username" placeholder="Enter Username...">
                     </div>
@@ -66,7 +69,7 @@
                       <input type="hidden" name='rememberme' id='rememberme'>
                     </div>
                     <input type="submit" class="btn btn-primary btn-user btn-block" id='login' onclick="loginn()" value="Login">
-                  </form>
+                  </div>
                   <hr>
                   <div class="text-center">
                     <a class="small" href="/forgot-password">Forgot Password?</a>
@@ -91,20 +94,23 @@
               document.getElementById('rememberme').value = 1;
             }
           }
-          var unm = localStorage.getItem('username')
-          var pwd = localStorage.getItem('password')
-          console.log(unm)
-          if(unm!=null & pwd!=null){
-            document.getElementById('username').setAttribute('value',unm)
-            document.getElementById('password').setAttribute('value',pwd)
-            document.getElementById('login').click()
-          }
           function loginn(){
+            var accessToken = ''
+            var data = {}
+            data.username = document.getElementById('username').value
+            data.password = document.getElementById('password').value
+            $.ajax({
+              type: "POST",
+              data: data,
+              url: 'http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/login',
+              success: function(data,textStatus,request){
+                window.open("{%url 'index'%}","_self")
+                accessToken = data['access_token']
+                localStorage.setItem('access','valid')
+              },
+            });
             if(document.getElementById('rememberme').value == 1){
-              var unm = document.getElementById('username').value
-              var pwd = document.getElementById('password').value
-              localStorage.setItem('username',unm)
-              localStorage.setItem('password',pwd)
+              localStorage.setItem('accessToken',accessToken)
             }
           }
         </script>

@@ -20,22 +20,9 @@ import datetime as dt
 r = requests.post('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
 p= r.json()['access_token']
 alertRes=[]
-auth = 0
 def login(request):
-	global auth
-	if(request.method)=='POST':
-		username=request.POST['username']
-		password=request.POST['password']
-		rme=request.POST['rememberme']
-		r = requests.post('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/login',data={'username':username,'password':password})
-		if('access_token' in r.json().keys()):
-			
-			auth+=1
-			return redirect('/home')
-		else:
-			return redirect('/')
-	else:
-		return render(request,'login.html')
+
+	return render(request,'login.html')
 def signup(request):
 	
 	return render(request,'register.html') 
@@ -43,8 +30,6 @@ def forgotpwd(request):
 
 	return render(request,'forgot-password.html')
 def logout(request):
-	global auth
-	auth=0
 	return redirect('/')
 
 def inGeofence(lat,lng):
@@ -117,8 +102,6 @@ def trackapicall(request):
 	return JsonResponse(track_liv,safe=False)	
 	
 def index(request):
-	if(auth==0):
-		return redirect('/')
 	t=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
 	buses=t.json()
 	td=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
@@ -187,8 +170,6 @@ def info(request,bno):
 	return JsonResponse(curRaw)
 
 def alerts(request):
-	if(auth==0):
-		return redirect('/')
 	tr=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
 	track=tr.json()
 	t=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/buses',headers={'Authorization':f'Bearer {p}'})
@@ -257,8 +238,6 @@ def geofence_report(request):
 
 		
 def buses(request):
-	if(auth==0):
-		return redirect('/')
 	b = requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
 	b = b.json()
 	drv = requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/sms',headers={'Authorization':f'Bearer {p}'})
@@ -276,8 +255,6 @@ def buses(request):
 		return render(request,'buses.html',{'buses':b}) 
 
 def geofence(request):
-	if(auth==0):
-		return redirect('/')
 	td=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
 	tracking=td.json()
 	rt=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
