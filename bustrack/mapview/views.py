@@ -202,7 +202,6 @@ def alerts(request):
 		mailServer.starttls()
 		mailServer.login(gmailaddress , gmailpassword)
 		mailServer.sendmail(gmailaddress, mailto , msg)
-		print(" \n Sent!")
 		mailServer.quit()
 		return HttpResponseRedirect(request.path_info)
 	else:
@@ -262,7 +261,19 @@ def buses(request):
 		return redirect('/')
 	b = requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
 	b = b.json()
-	return render(request,'buses.html',{'buses':b}) 
+	drv = requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/sms',headers={'Authorization':f'Bearer {p}'})
+	drv = drv.json()
+	if (request.method)=="POST":
+		lis=request.POST.get('lis')
+		message=request.POST['mess']
+		l1=list(map(str,lis.strip().split(',')))
+		num=[]
+		for i in range(len(l1)-1):
+			num.append(int(l1[i].replace('Bus - ','')))
+		print(num)
+		return HttpResponseRedirect(request.path_info)
+	else:
+		return render(request,'buses.html',{'buses':b}) 
 
 def geofence(request):
 	if(auth==0):

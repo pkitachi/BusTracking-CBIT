@@ -75,21 +75,24 @@ CBIT Bus Tracking Dashboard
           </div>
           <!-- Card Body -->
           <div class="card-body z-depth-1-half" style="height: 500px; padding: 0;">
-            
+            <form method="post" id="myForm" action="{%url 'buses'%}">
+                              {% csrf_token %}
             <div class="col-md-12 mt-3 d-flex justify-content-start align-items-center">
               <label class="m-0" for="selected-buses" style="width: 100px;padding-right: 10px;">To</label>
-              <input type="text" id="selected-buses" class="form-control" placeholder=" Select Busses From the List" value="" required="" disabled>
+              <input type="text" name="lis" id="selected-buses" class="form-control" placeholder=" Select Busses From the List"   required="" >
             </div>
             <div class="col-md-12 mt-3 d-flex justify-content-start align-items-center">
               <label class="m-0" for="selected-buses" style="width: 100px;padding-right: 10px;">Message</label>
-              <input type="text" class="form-control" placeholder=" Your message here..." value="" required="">
+              <input type="text" name="mess" class="form-control" placeholder=" Your message here..."  required="">
 
             </div>
             <div class="col-md-12 mt-3 d-flex justify-content-end align-items-center">  
-              <button class="btn btn-primary m-2" style="margin-right: 20px;">
+              <button class="btn btn-primary m-2" onclick="display()" type="submit" style="margin-right: 20px;">
                 <span class="text m-0">Send</span>
               </button>
+              
             </div>
+          </form>
           </div>
         </div>
       </div>
@@ -97,16 +100,23 @@ CBIT Bus Tracking Dashboard
     </div>
     <!-- End of Main Content -->
     <script>
+      var id = new Set(); 
       $('#select-all').click(function(event) {   
           if(this.checked) {
               // Iterate each checkbox
               $(':checkbox').each(function() {
-                  this.checked = true;                        
+                  this.checked = true;      
+
+                                   
               });
               document.getElementById('selected-buses').setAttribute("placeholder", "All Busses")
-          } else {
+
+          }
+           else {
               $(':checkbox').each(function() {
-                  this.checked = false;                       
+
+                  this.checked = false;   
+                                 
               });
               document.getElementById('selected-buses').setAttribute("placeholder", " Select Busses From the List")
           }
@@ -115,6 +125,8 @@ CBIT Bus Tracking Dashboard
         var selectedList = [];
         $.each($("input[name='selected-bus']:checked"), function(){
           selectedList.push($(this).val());
+
+          
         });
         if(selectedList.length == 0){
           document.getElementById('selected-buses').setAttribute("placeholder", " Select Busses From the List")
@@ -124,6 +136,37 @@ CBIT Bus Tracking Dashboard
           document.getElementById('selected-buses').setAttribute("placeholder", selectedList)
         }
       });
+
+function display() {
+  
+  $(':checkbox').each(function() {
+
+                  if(this.checked ==true)      
+                       {
+                        if($(this).val()!='on' )
+                        {id.add($(this).val());
+                    }
+                      }           
+              });
+  var i;
+  var text="";
+      id.forEach(function display(value,id)   
+{  
+  
+text+= value+',';
+})  
+
+
+document.getElementById("selected-buses").value =text ;
+  
+}
+
+
+      
     </script>
+    
+    
+    
+
   </div>
 {%endblock%}
