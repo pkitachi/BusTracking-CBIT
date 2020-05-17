@@ -91,7 +91,7 @@ function worker() {
                 <div id="map" style="width: auto; height: 500px;"></div>
                  <script>
                 // Initialize and add the map
-				var position;
+				var position;var path = {{ bus_co|safe }};
 				var marker;var directionsDisplay,directionsService;
                 function initMap() {
                     var cbit = {lat:17.3920,lng:78.3194};
@@ -139,7 +139,31 @@ function worker() {
                             directionsDisplay.setDirections(response);
                         }
                     });
-                
+                var drawingManager = new google.maps.drawing.DrawingManager({
+				  drawingControl: true,
+				  drawingControlOptions: {
+					position: google.maps.ControlPosition.TOP_CENTER,
+					drawingModes: ['polyline']
+				  }
+				 });
+				 //drawingManager.setMap(map);
+				var pathBetween1 = new google.maps.Polygon({
+				  path: path,
+				  strokeColor: '#4E73DF',
+				  fillColor: '#4E73DF',
+				  strokeOpacity: 0.8,
+				  strokeWeight: 3,
+				  fillOpacity: 0.2
+				});
+				pathBetween1.setMap(map);
+				var polylines = [];
+				google.maps.event.addListener(drawingManager, 'polylinecomplete', function(polyline) {
+				  polylines.push(polyline);
+				  var polylinePath = polyline.getPath();
+				  for (var i = 0; i < polylinePath.getArray().length; i++) {
+					polyarray.push('{"lat":'+polylinePath.getArray()[i].lat() + ', "lng":' + polylinePath.getArray()[i].lng() + '}');
+				  }
+				});
                 }
                 </script>
                 <script async differ type="text/javascript"

@@ -78,6 +78,7 @@ def geofence_check():
 	tr = track.json()
 
 	# get api request for individual geofence
+	global bus_res
 	bus_geofence_response = requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/busgeofence',headers={'Authorization':f'Bearer {p}'})
 	bus_res = bus_geofence_response.json()
 
@@ -178,8 +179,13 @@ def detail(request, bno):
 	td=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno})
 	curRaw={'lat':td.json()[0]['latitude'],'lon':td.json()[0]['longitude']}
 	prop={'speed':td.json()[0]['speed'],'battery':td.json()[0]['battery'],'fuel':td.json()[0]['fuel'],}
-	return render(request, 'bus-detail.html', {'curRaw':curRaw, 'buses': buses,'bno':bno,'prop':td.json()[0]})
-
+	global bus_res
+	try:
+		bus_co = [{'lat': float(i[1]), 'lng': float(i[0])} for i in bus_res[bno]]
+	except:
+		bus_co=None
+	return render(request, 'bus-detail.html', {'curRaw':curRaw, 'buses': buses,'bno':bno,'prop':td.json()[0],'bus_co':bus_co})
+	
 def info(request,bno):
 	td=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno})
 	curRaw=td.json()[0]
