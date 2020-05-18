@@ -209,7 +209,7 @@ def apicall(request):
     return JsonResponse(alertRes,safe=False)
 def alertcall(request, date):
     tr=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/alerts',headers={'Authorization':f'Bearer {p}'}, data={'alertDate':date})
-    track=tr.json()
+    track=tr.json();
     return JsonResponse(track,safe=False)
 
 def geofence_report(request):
