@@ -210,7 +210,7 @@ def apicall(request):
     track=tr.json()
     alertRes = []
     for i in track:
-        if i['alert']=='Bus went out of geofence':
+        if i['alert']=='Bus went out of geofence.':
             if i not in alertRes:
                 alertRes.append(i)
         # if i['speed']>=50:
