@@ -121,7 +121,6 @@ function myFunction() {
           type: "GET",
           url: "{{ '/home/alert-call/"+ date +"' }}",
           success: function(data,textStatus,request){
-            console.log(data);
             var len = data.length;
             if(len==0){
               str+="<div class='text-center'> No Alerts </div>"
