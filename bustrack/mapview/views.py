@@ -107,7 +107,18 @@ def index(request):
 	buses=t.json()
 	td=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
 	track_liv=td.json()
-	return render(request,'index.html',{'buses':buses,'track_liv':track_liv}) 
+	ress=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/geofence',headers={'Authorization':f'Bearer {p}'},data={'fromDate':'2020-05-18','toDate':'2020-05-18','status':1})
+	b=ress.json()
+	for i in buses:
+		if i['routeId']==b[0]['routeId']:
+			buses.remove(i);
+			rem=i
+			break
+	for i in track_liv:
+		if i['routeId']==b[0]['routeId']:
+			track_liv.remove(i);
+			break
+	return render(request,'index.html',{'buses':buses,'track_liv':track_liv,'rem':rem}) 
 
 def trackhistory(request):
 	t=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
