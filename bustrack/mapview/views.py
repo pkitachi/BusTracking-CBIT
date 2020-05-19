@@ -212,36 +212,6 @@ def alertcall(request, date):
     track=tr.json();
     return JsonResponse(track,safe=False)
 
-def geofence_report(request):
-	track_data=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
-	cluster=track_data.json()
-	bus = requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
-	buses = bus.json()
-	geofence_report = None
-	if request.method=="POST":
-		bno=request.POST.get('busno')
-		gDate=request.POST.get('date1')
-		gDate1=request.POST.get('date2')
-		dir=int(request.POST.get('dir'))
-		temp=gDate.split('-')
-		temp[0],temp[2]=temp[2],temp[0]
-		gDate=('-'.join(temp))
-		temp1=gDate1.split('-')
-		temp1[0],temp1[2]=temp1[2],temp1[0]
-		gDate1=('-'.join(temp1))
-		if request.POST['busno']:
-			if dir>=0:
-				ress=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/geofence',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno,'fromDate':gDate,'toDate':gDate1,'status':dir})
-			else:
-				ress=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/geofence',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno,'fromDate':gDate,'toDate':gDate1})
-		else:
-			if dir>=0:
-				ress=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/geofence',headers={'Authorization':f'Bearer {p}'},data={'fromDate':gDate,'toDate':gDate1,'status':dir})
-			else:
-				ress=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/geofence',headers={'Authorization':f'Bearer {p}'},data={'fromDate':gDate,'toDate':gDate1})
-		geofence_report=ress.json()
-	return render(request,'geofence_report.html',{'cluster':cluster,'buses': buses,'geofence_report':geofence_report})
-
 		
 def buses(request):
 	b = requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
@@ -296,3 +266,75 @@ def view_geofence(request):
 		busnum = request.POST.get('busno')
 	bus_res = [ {'lat':float(i[1]),'lng':float(i[0])} for i in bus_res[busnum]]
 	return render(request,'bus_geofence.html',{'buses':buses,'bus_co':bus_res,'busnum':busnum})
+
+#Reports_Section
+    
+def r_deviceuptime(request):
+    context={
+        'title':'Device Uptime Reports'
+    }
+
+    return render(request,  'reports/deviceUptime.html',context)
+
+
+def r_alerts(request):
+    context = {
+        'title':'Alert Reports'
+    }
+    return render(request, 'reports/alerts.html', context)
+
+def r_fleetsummary(request):
+    context ={
+        'title':'FleetSummary Reports'
+    }
+    return render(request, 'reports/fleetsummary.html', context)
+
+def r_speedviolation(request):
+    context = {
+        'title':'Speed Violation Reports'
+    }
+    return render(request, 'reports/speedviolation.html',context)
+
+def r_distance(request):
+    context = {
+        'title':'Distance Reports'
+    }
+    return render(request, 'reports/distance.html',context)
+
+
+def r_routes(request):
+    context={
+        'title':'Route Reports'
+    }
+    return render(request, 'reports/routes.html',context)
+	
+
+def geofence_report(request):
+	track_data=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
+	cluster=track_data.json()
+	bus = requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
+	buses = bus.json()
+	geofence_report = None
+	if request.method=="POST":
+		bno=request.POST.get('busno')
+		gDate=request.POST.get('date1')
+		gDate1=request.POST.get('date2')
+		dir=int(request.POST.get('dir'))
+		temp=gDate.split('-')
+		temp[0],temp[2]=temp[2],temp[0]
+		gDate=('-'.join(temp))
+		temp1=gDate1.split('-')
+		temp1[0],temp1[2]=temp1[2],temp1[0]
+		gDate1=('-'.join(temp1))
+		if request.POST['busno']:
+			if dir>=0:
+				ress=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/geofence',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno,'fromDate':gDate,'toDate':gDate1,'status':dir})
+			else:
+				ress=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/geofence',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno,'fromDate':gDate,'toDate':gDate1})
+		else:
+			if dir>=0:
+				ress=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/geofence',headers={'Authorization':f'Bearer {p}'},data={'fromDate':gDate,'toDate':gDate1,'status':dir})
+			else:
+				ress=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/geofence',headers={'Authorization':f'Bearer {p}'},data={'fromDate':gDate,'toDate':gDate1})
+		geofence_report=ress.json()
+	return render(request,'reports/geofence_report.html',{'cluster':cluster,'buses': buses,'geofence_report':geofence_report})

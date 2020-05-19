@@ -38,7 +38,15 @@ urlpatterns = [
 	#home/track-refresh/
 	path('home/track-refresh/', views.trackapicall,name='trackapicall'),
 	path('home/geofence',views.geofence,name='geofence'),
-    path('home/geofence_report',views.geofence_report,name='geofence_report'),
 	path('home/add_geofence', views.add_geofence, name='add_geofence'),
     path('home/view_geofence', views.view_geofence, name='view_geofence'),
+	#Reports_Section
+    path('home/reports/deviceuptime', views.r_deviceuptime, name='deviceuptime'),
+	path('home/reports/geofence_report',views.geofence_report,name='geofence_report'),
+    path('home/reports/alerts', views.r_alerts, name='r_alerts'),
+    path('home/reports/fleetsummary', views.r_fleetsummary, name = 'fleetsummary'),
+    path('home/reports/speedviolation', views.r_speedviolation, name='speedviolation'),
+    path('home/reports/distance',views.r_distance,name='distance'),
+    path('home/reports/routes',views.r_routes,name="routes")
+	
 ]
