@@ -90,7 +90,7 @@
             <h6 class="collapse-header">View Reports:</h6>
             <a class="collapse-item" href="#">Installation</a>
             <a class="collapse-item" href="{%url 'deviceuptime'%}">Device Uptime</a>
-            <a class="collapse-item" href="{%url 'r_alerts'%}">Alerts</a>
+            <a class="collapse-item" href="{%url 'r_alerts'%}"   data-toggle="modal" data-target="#alert-report"  aria-expanded="true" aria-controls="collapseUtilities">Alerts</a>
             <a class="collapse-item" href="{%url 'routes'%}">Routes</a>
 			<a class="collapse-item" href="{%url 'geofence_report'%}"  data-toggle="modal" data-target="#geo-report"  aria-expanded="true" aria-controls="collapseUtilities">GeoFence Report</a>
             <a class="collapse-item" href="{%url 'distance'%}">Distance</a>
@@ -380,6 +380,37 @@
                     </div>
                   </div>
       
+	  <!--Alert Report popup-->
+          <div class="modal fade" id="alert-report" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="m-0 font-weight-bold text-primary">Alert Reports</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span class="text">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body" style="padding-bottom: 55px;">
+                    <!-- Form code begins -->
+                      <form method='POST' action="{% url 'r_alerts' %}">
+                        {% csrf_token %}
+                          <div class="form-group ">
+                              <div class="dates">
+                                  <label class="control-label requiredField" for="ddate">Date</label>
+                                  <input type="text" class="form-control" id="date" name="ddate" placeholder="DD-MM-YYYY" required/>
+                              </div>
+                          </div>
+                          <div class="form-group"> <!-- Submit button -->
+                              <button class="btn btn-primary " name="submit" type="submit">Ok</button>
+                          </div>
+                      </form>
+                      <a href="#" class="btn btn-primary" data-dismiss="modal" aria-label="Close" style="right: 15px; position: absolute;">
+                        <span class="text">Close</span>
+                      </a>
+                </div>
+              </div>
+            </div>
+          </div>
 	  
                 <!--Replay Tracking popup-->
           <div class="modal fade" id="replay-tracking" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
