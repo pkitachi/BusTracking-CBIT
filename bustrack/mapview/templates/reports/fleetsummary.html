@@ -1,0 +1,60 @@
+{% extends 'reports/base2.html' %}
+{% load static %}
+{% block head %}
+{% load static %}
+<script src="{% static 'reports/js/fleetsummary.js'%}"></script>
+<link rel = "stylesheet" type="text/css" href = "{% static 'reports/css/fleetsummary.css' %}">
+{% endblock head %}
+{% block content %}
+ <div class="container">
+  <div id="error-msg" class="alert alert-danger" role="alert">
+  ! Dates Cannot be Empty
+</div>
+    <div>
+    <h2 style="color: #4e73df;">Fleet Summary </h2>
+    </div>
+
+    <div class="row">
+        <div class="col-sm">
+            <div class="input-group ">
+                <div class="input-group-prepend">
+                     <span class="input-group-text" id="basic-addon1" style="background-color: #4e73df; color:white">Bus No</span>
+                </div>
+                <input id="bus_id"type="text" class="form-control" placeholder="busno" aria-label="Username" aria-describedby="basic-addon1">
+            </div>
+            
+        </div>
+
+        
+        
+    </div>
+
+        <div class="row">
+        
+        <button type="button" id="user-search-btn" class="btn btn-block"
+        style="background-color: #4e73df; color:white" >Search</button>
+        </div>
+
+        <div class="row">
+            <table id="example" class="table" style="width:100%" >
+        <thead>
+            <tr>
+                <th scope="row" >Date</th>
+                <th scope="row" >Speed</th>
+                <th scope="row" >latitude</th>
+                <th scope="row" >longitude</th>
+                <th scope="row" >BatteryStatus</th>
+                <th scope="row" >Ignition</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        </tbody>
+    </table>
+        </div>
+
+
+
+</div>
+
+{% endblock content %}

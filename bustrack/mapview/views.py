@@ -296,3 +296,47 @@ def view_geofence(request):
 		busnum = request.POST.get('busno')
 	bus_res = [ {'lat':float(i[1]),'lng':float(i[0])} for i in bus_res[busnum]]
 	return render(request,'bus_geofence.html',{'buses':buses,'bus_co':bus_res,'busnum':busnum})
+
+#Reports_Section
+
+def r_reports(request):
+    return render(request, 'reports/reports.html')
+    
+def r_deviceuptime(request):
+    context={
+        'title':'Device Uptime'
+    }
+
+    return render(request,  'reports/deviceUptime.html',context)
+
+
+def r_alerts(request):
+    context = {
+        'title':'Alerts'
+    }
+    return render(request, 'reports/alerts.html', context)
+
+def r_fleetsummary(request):
+    context ={
+        'title':'FleetSummary'
+    }
+    return render(request, 'reports/fleetsummary.html', context)
+
+def r_fleetreports(request):
+    context = {
+        'title':'FleetReports'
+    }
+    return render(request, 'reports/fleetreports.html',context)
+
+def r_distance(request):
+    context = {
+        'title':'DistanceReports'
+    }
+    return render(request, 'reports/distance.html',context)
+
+
+def r_routes(request):
+    context={
+        'title':'RouteReport'
+    }
+    return render(request, 'reports/routes.html',context)

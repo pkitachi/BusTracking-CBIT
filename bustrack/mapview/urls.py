@@ -41,4 +41,13 @@ urlpatterns = [
     path('home/geofence_report',views.geofence_report,name='geofence_report'),
 	path('home/add_geofence', views.add_geofence, name='add_geofence'),
     path('home/view_geofence', views.view_geofence, name='view_geofence'),
+
+    #Reports_Section
+    path('home/reports',views.r_reports ,name = 'All-Reports'),
+    path('home/reports/deviceuptime', views.r_deviceuptime, name='deviceuptime'),
+    path('home/reports/alerts', views.r_alerts, name='r_alerts'),
+    path('home/reports/fleetsummary', views.r_fleetsummary, name = 'fleetsummary'),
+    path('home/reports/fleetreports', views.r_fleetreports, name='fleetreports'),
+    path('home/reports/distance',views.r_distance,name='distance'),
+    path('home/reports/routes',views.r_routes,name="routes")
 ]

@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope&display=swap');
+
+th {
+    text-align: left;
+}
+
+.row {
+    padding-bottom: .5rem;
+}
+
+.input-group {
+    padding-bottom: 2rem;
+}
+
+#searchBus {
+    max-width: 20rem;
+    margin: auto;
+
+}
+
+.container {
+    padding-bottom: 3rem;
+}
+
+.btn-secondary {
+    background-color: #4e73df;
+    color: white
+}
