@@ -1,0 +1,13 @@
+{%extends 'login.html'%}
+{% load static %}
+{%block title%}
+CBIT Bus Tracking 
+{%endblock%}
+
+{%block main%}
+<center><div id="msgg" class="text-danger m-2"> <i class='fas fa-exclamation-triangle'></i>  Incorrect username or password</div>
+<center><div > {{data.num}} Attempts remaining</div></center>
+</center>
+
+
+{%endblock%}

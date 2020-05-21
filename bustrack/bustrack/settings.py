@@ -148,3 +148,15 @@ USE_TZ = True
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.abspath(os.path.join(PROJECT_ROOT, os.pardir))
+
+REST_FRAMEWORK = {
+
+    'DEFAULT_THROTTLE_CLASSES': (
+        'rest_framework.throttling.UserRateThrottle',
+
+    ),
+    'DEFAULT_THROTTLE_RATES': {
+        'loginAttempts': '20/hr',
+        'user': '1000/min',
+    }
+}

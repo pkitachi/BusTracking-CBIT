@@ -16,13 +16,57 @@ from pytz import timezone
 from django.views.decorators.csrf import csrf_exempt
 import json
 import datetime as dt
+from .prevent import UserLoginRateThrottle
 
-r = requests.post('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
-p= r.json()['access_token']
+
+
 alertRes=[]
-def login(request):
 
-	return render(request,'login.html')
+r=None
+p=None
+td=None
+def login(request):
+	if (request.method)=="POST":
+		throttle_classes = UserLoginRateThrottle()
+		uname=request.POST['username']
+		pas=request.POST['password']
+		try:
+			global r 
+			global p
+			global td
+			r = requests.post('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/login',data={'username':uname,'password':pas})
+			p= r.json()['access_token']
+			accept,num=throttle_classes.allow_request(uname,1)
+			if accept:
+				t=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
+				buses=t.json()
+				td=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
+				track_liv=td.json()
+				geofence_check()
+				return render(request,'index.html',{'buses':buses,'track_liv':track_liv})	
+			else:
+				s1="user "+uname+" is blocked"
+				s={'status':s1}
+				return render(request,'login.html',{'data':s})
+
+		except KeyError:
+			accept,num=throttle_classes.allow_request(uname,0)
+			if accept==True:
+				num1=3-(num//2)
+				s={'num':num1,'status':''}
+				return render(request,'incorrect_login.html',{'data':s})
+			else:
+				s1="user "+uname+" is blocked"
+				s={'status':s1}
+				return render(request,'login.html',{'data':s})
+
+			
+	else:
+		s={'status':''}
+		return render(request,'login.html',{'data':s})
+def resp():
+	s={'status':'1'}
+	return JsonResponse(s,safe=False)
 def signup(request):
 	
 	return render(request,'register.html') 
@@ -68,8 +112,7 @@ def geofence_check():
 	bus_res = bus_geofence_response.json()
 
 	for i in tr:
-
-		# check if bus is in its geofence
+# check if bus is in its geofence
 		routeIds = str(i['routeId'])
 		t=str(i['updatedTime'])
 		format = '%a, %d %b %Y %H:%M:%S GMT' ;ds = str(dt.datetime.strptime(t, format));
@@ -95,7 +138,6 @@ def geofence_check():
 			# post into api inGeofence(i['latitude'],i['longitude'])
 			bus_in_status[i['IMEI']] = res
 			# bus_in_status[i['IMEI']] = api result
-geofence_check()  
 
 def trackapicall(request):
 	th=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
@@ -193,24 +235,20 @@ def alerts(request):
 		return HttpResponseRedirect(request.path_info)
 	else:
 		return render(request,'alerts.html',{'track':track, 'buses': buses}) 
-	
 def apicall(request):
-    tr=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
-    track=tr.json()
-    alertRes = []
-    for i in track:
-        if i['alert']=='Bus went out of geofence.':
-            if i not in alertRes:
-                alertRes.append(i)
-        # if i['speed']>=50:
-        #     i['alert'] = 'Over Speeding'
-        #     if i not in alertRes:
-        #         alertRes.append(i)
-    return JsonResponse(alertRes,safe=False)
+	tr=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
+	track=tr.json()
+	alertRes=[]
+	for i in track:
+		if i['alert']=='Bus went out of geofence.':
+			if i not in alertRes:
+				alertRes.append(i)
+	return JsonResponse(alertRes,safe=False)
+
 def alertcall(request, date):
-    tr=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/alerts',headers={'Authorization':f'Bearer {p}'}, data={'alertDate':date})
-    track=tr.json();
-    return JsonResponse(track,safe=False)
+	tr=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/alerts',headers={'Authorization':f'Bearer {p}'}, data={'alertDate':date})
+	track=tr.json()
+	return JsonResponse(track,safe=False)
 
 def geofence_report(request):
 	track_data=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
