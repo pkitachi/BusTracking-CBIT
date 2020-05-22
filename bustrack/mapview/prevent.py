@@ -31,29 +31,16 @@ class UserLoginRateThrottle(SimpleRateThrottle):
         self.history = self.cache.get(self.key, [])
         self.now = self.timer()
         
-        while self.history and self.history[-1] <= self.now - self.duration:
-            self.history.pop()
-
-        if (len(self.history))//2 >= self.num_requests:
-            return False,None
-        if k==1 and len(self.history) < 3:
+        if (k==1 and (len(self.history) <=2)):
             return True,None
-        elif len(self.history) >= 3:
-            data = Counter(self.history)
-            for key, value in data.items():
-                if value == 2:
-                    return False,None
         else:
-            return self.throttle_success(uname)
+            if(len(self.history)<4):
+                self.history.insert(0, uname)
+                self.cache.set(self.key, self.history, self.duration)
+            if (len(self.history)) >2:
+                return False,None
+            else:
+                return True,len(self.history)
+    
 
-    def throttle_success(self,uname):
-        """
-        Inserts the current request's timestamp along with the key
-        into the cache.
-        """
-        username=uname
-        self.history.insert(0, self.now)
-        self.history.insert(0, username)
         
-        self.cache.set(self.key, self.history, self.duration)
-        return True,len(self.history)
