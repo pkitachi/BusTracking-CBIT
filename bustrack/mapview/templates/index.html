@@ -198,7 +198,12 @@ content: '<p>Latitude:' +lat + '</p>'+
 
     </div>
     <!-- End of Content Wrapper -->
-
+    <script>
+      sessionStorage.setItem('access','true')
+      if(String({{rme}})!=''){
+        localStorage.setItem('rme','{{rme}}')
+      }
+    </script>
   </div>
   <!-- End of Page Wrapper -->
 

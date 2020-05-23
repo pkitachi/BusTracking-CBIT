@@ -3,7 +3,11 @@
 <html lang="en">
 
 <head>
-
+  <script>
+    if(sessionStorage.getItem('access')!='true' && localStorage.getItem('rme')=='0'){
+      window.open("{%url 'login'%}",'_self')
+    }
+  </script>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">

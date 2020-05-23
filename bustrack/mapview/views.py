@@ -30,6 +30,7 @@ def login(request):
 		throttle_classes = UserLoginRateThrottle()
 		uname=request.POST['username']
 		pas=request.POST['password']
+		rme=request.POST['rememberme']
 		clientkey=request.POST['g-recaptcha-response']
 		secretkey='6LcREvsUAAAAACGXJ7JnpN7lb3D6m8FcPOnmxous'
 		captchaData={
@@ -53,7 +54,7 @@ def login(request):
 					buses=t.json()
 					td=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
 					track_liv=td.json()
-					return redirect("index")	
+					return index(request,rme)	
 				else:
 					s1="user "+uname+" is blocked"
 					s={'status':s1}
@@ -89,6 +90,8 @@ def forgotpwd(request):
 
 	return render(request,'forgot-password.html')
 def logout(request):
+	global p
+	p=None
 	return redirect('/')
 
 def inGeofence(lat,lng):
@@ -159,13 +162,13 @@ def trackapicall(request):
 	track_liv=th.json()
 	return JsonResponse(track_liv,safe=False)	
 	
-def index(request):
+def index(request, rme = ''):
 	if(p!=None):
 		t=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
 		buses=t.json()
 		td=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
 		track_liv=td.json()
-		return render(request,'index.html',{'buses':buses,'track_liv':track_liv}) 
+		return render(request,'index.html',{'buses':buses,'track_liv':track_liv,'rme':rme}) 
 	else:
 		s={'status':''}
 		return redirect('/')
