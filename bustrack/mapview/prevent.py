@@ -31,16 +31,21 @@ class UserLoginRateThrottle(SimpleRateThrottle):
         self.history = self.cache.get(self.key, [])
         self.now = self.timer()
         
-        if (k==1 and (len(self.history) <=2)):
+        while self.history and self.history[-1] <= self.now - self.duration:
+            self.history.pop()
+
+        if (k==1 and (len(self.history) <=4)):
             return True,None
         else:
-            if(len(self.history)<4):
+            if(len(self.history)<8):
+                self.history.insert(0, self.now)
                 self.history.insert(0, uname)
+                
                 self.cache.set(self.key, self.history, self.duration)
-            if (len(self.history)) >2:
+            if (len(self.history)) >4:
                 return False,None
             else:
-                return True,len(self.history)
+                return True,len(self.history)//2
     
 
         

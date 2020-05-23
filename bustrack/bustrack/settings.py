@@ -156,7 +156,7 @@ REST_FRAMEWORK = {
 
     ),
     'DEFAULT_THROTTLE_RATES': {
-        'loginAttempts': '20/hr',
+        'loginAttempts': '1000/day',
         'user': '1000/min',
     }
 }

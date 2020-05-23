@@ -40,7 +40,6 @@ def login(request):
 		}
 		a=requests.post('https://www.google.com/recaptcha/api/siteverify',data=captchaData)
 		res=a.json()
-		print(res['success'])
 		if(res['success']):
 			try:
 				global r 
