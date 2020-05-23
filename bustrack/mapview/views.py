@@ -207,6 +207,13 @@ def eta(request, bno):
 		bus_co=[]
 	bStops = [
 		{
+			"Id" : 0,
+			"routeId" : 48,
+			"busStopName" : "Patancheru",
+			"latitude" : 17.53334,
+			"longitude" : 78.2645
+		},
+		{
 			"Id" : 1,
 			"routeId" : 48,
 			"busStopName" : "Beeramguda",
@@ -249,7 +256,7 @@ def eta(request, bno):
 			"longitude" : 78.33713800
 		}
 	]
-	return render(request, 'busStopsEta.html', {'curRaw':curRaw, 'buses': buses,'bno':bno,'prop':td.json()[0],'bus_co':bus_co, 'bStops':bStops})
+	return render(request, 'stop.html', {'curRaw':curRaw, 'buses': buses,'bno':bno,'prop':td.json()[0],'bus_co':bus_co, 'bStops':bStops})
 		
 		
 def replaytracking(request):
