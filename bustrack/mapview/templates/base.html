@@ -58,6 +58,12 @@
           <span>Vehicle</span>
         </a>
       </li>
+	  <li class="nav-item {%block eta%}{%endblock%}">
+        <a class="nav-link collapsed" href="#" data-toggle="modal" data-target="#busstop-list"  aria-expanded="true" aria-controls="collapseUtilities">
+          <i class="far fa-clock"></i>
+          <span>Get ETA</span>
+        </a>
+      </li>
       <li class="nav-item {%block trackhis%}{%endblock%}">
         <a class="nav-link collapsed" href="{%url 'trackhistory'%}"   data-toggle="modal" data-target="#tracking-list"  aria-expanded="true" aria-controls="collapseUtilities">
 		  <i class="fas fa-route"></i>
@@ -377,6 +383,43 @@
                     </div>
                   </div>
       
+	  <!--ETA popup-->
+        <div class="modal fade popup" id="busstop-list" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="m-0 font-weight-bold text-primary">Buses List</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span class="text">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body" style="padding-bottom: 55px;">
+                <h6 class="m-1">Online</h6>
+                <ul class="list-group mb-3 px-2" style="overflow-y: scroll;height: 450px;">
+                  
+                  {% for i in buses %}
+                  <li class="px-4 list-group-item d-flex justify-content-between lh-condensed" style="padding-top: 12px;padding-bottom: 0;">
+                    <div>
+                      <a href="/home/BusStopsETA-{{i.routeId}}/">
+                        <h6 class="my-0 font-weight-bold">Bus - {{i.routeId}}</h6>
+                      </a>
+                      <small class="text-muted">{{i.routeName}}</small>
+                    </div>
+                    <span class="md-2">
+                      <i class="fas fa-circle" style="color: #1cc88a;"></i>
+                    </span>
+                  </li>
+                  {% endfor %}
+                </ul>
+      
+                <a href="#" class="btn btn-primary" data-dismiss="modal" aria-label="Close" style="right: 15px; position: absolute;">
+                  <span class="text">Close</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
 	  
                 <!--Replay Tracking popup-->
           <div class="modal fade" id="replay-tracking" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">

@@ -15,6 +15,8 @@ urlpatterns = [
 	path('home/',views.index,name='index'),
     #/home/Bus-67/
     re_path(r'^home/Bus-(?P<bno>[0-9]+)/$', views.detail, name='detail'),
+	#/home/BusStopsETA-67/
+    re_path(r'^home/BusStopsETA-(?P<bno>[0-9]+)/$', views.eta, name='eta'),
     #/home/alerts
     path('home/alerts/',views.alerts,name='alerts'),
     #home/ajax-refresh/
