@@ -205,58 +205,8 @@ def eta(request, bno):
 		bus_co = [{'lat': float(i[1]), 'lng': float(i[0])} for i in bus_res[bno]]
 	except:
 		bus_co=[]
-	bStops = [
-		{
-			"Id" : 0,
-			"routeId" : 48,
-			"busStopName" : "Patancheru",
-			"latitude" : 17.53334,
-			"longitude" : 78.2645
-		},
-		{
-			"Id" : 1,
-			"routeId" : 48,
-			"busStopName" : "Beeramguda",
-			"latitude" : 17.50721900,
-			"longitude" : 78.30465800
-		},
-		{
-			"Id" : 2,
-			"routeId" : 48,
-			"busStopName" : "Lingampally",
-			"latitude" : 17.48693300,
-			"longitude" : 78.31332200
-		},
-		{
-			"Id" : 3,
-			"routeId" : 48,
-			"busStopName" : "Gulmohar Park",
-			"latitude" : 17.47880100,
-			"longitude" : 78.31994200
-		},
-		{
-			"Id" : 4,
-			"routeId" : 48,
-			"busStopName" : "HCU",
-			"latitude" : 17.46320200,
-			"longitude" : 78.33501800
-		},
-		{
-			"Id" : 5,
-			"routeId" : 48,
-			"busStopName" : "Gachibowli ORR",
-			"latitude" : 17.44140000,
-			"longitude" : 78.35976300
-		},
-		{
-			"Id" : 6,
-			"routeId" : 48,
-			"busStopName" : "Sandwicho",
-			"latitude" : 17.38666200,
-			"longitude" : 78.33713800
-		}
-	]
-	return render(request, 'stop.html', {'curRaw':curRaw, 'buses': buses,'bno':bno,'prop':td.json()[0],'bus_co':bus_co, 'bStops':bStops})
+	bStops = requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/busstops',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno})
+	return render(request, 'stop.html', {'curRaw':curRaw, 'buses': buses,'bno':bno,'prop':td.json()[0],'bus_co':bus_co, 'bStops':bStops.json()})
 		
 		
 def replaytracking(request):
