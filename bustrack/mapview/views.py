@@ -53,7 +53,7 @@ def login(request):
 					buses=t.json()
 					td=requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
 					track_liv=td.json()
-					return redirect('index')	
+					return redirect("index")	
 				else:
 					s1="user "+uname+" is blocked"
 					s={'status':s1}

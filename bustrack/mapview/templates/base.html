@@ -11,11 +11,7 @@
   <meta name="author" content="">
   <link rel="shortcut icon" type="image/png" href="{% static 'cbit.png' %}"/>
   <title>{%block title%}{%endblock%}</title>
-  <script>
-    if(sessionStorage.getItem('access') == null & localStorage.getItem('access') == null){
-              window.open("{%url 'login'%}","_self")
-          }
-  </script>
+
   
   <!-- Custom fonts for this template-->
   <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
