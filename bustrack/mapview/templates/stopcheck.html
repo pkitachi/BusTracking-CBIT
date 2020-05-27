@@ -1,10 +1,10 @@
 {%extends 'base.html'%}
 {% load static %}
 {%block title%}
-Bus-{{bno}}
+BusStops -{{bno}}
 {%endblock%}
-{%block veh%}active{%endblock%}
-{%block onload%}worker(){%endblock%}
+{%block eta%}active{%endblock%}
+{%block onload%}{%endblock%}
 {%block main%}
 <script>
 var latVal={{curRaw.lat}},lonVal={{curRaw.lon}};
@@ -14,12 +14,72 @@ function worker() {
     url: '/info/{{bno}}', 
 	type: 'GET',
     success: function(data,textStatus,request) {
-	  latVal=parseFloat(data['latitude']);
-	  lonVal=parseFloat(data['longitude']);
+	  latVal=17.43675500//parseFloat(data['latitude']);//17.46320200,78.33501800
+	  lonVal=78.36257900//parseFloat(data['longitude']);
+	  busLoc[0]=(latVal+","+lonVal); 
+	  matrixOptions = {
+				origins: stops, // current bus location
+				destinations: new Array(busLoc[0]), // bus stops locations
+				travelMode: 'DRIVING',
+				unitSystem: google.maps.UnitSystem.METRIC
+			  };
+			  
+			  service.getDistanceMatrix(matrixOptions, function (response, status){
+				if (status !== "OK") {
+				  console.log("Error with distance b/w bus and stops matrix");
+				  return;
+				}
+				var k=0;
+				{% for i in bStops %}
+				stpbus[k]=parseFloat(response.rows[k].elements[0].distance.text.substring(0,response.rows[k].elements[0].distance.text.indexOf('k')));
+				k++;
+				{%endfor%}
+				})
+	  	  matrixOptions = {
+				origins: new Array(busLoc[0]), // current bus location
+				destinations: stops, // bus stops locations
+				travelMode: 'DRIVING',
+				unitSystem: google.maps.UnitSystem.METRIC
+			  };
+			  var k = 0;
+			  service.getDistanceMatrix(matrixOptions, function (response, status){
+				if (status !== "OK") {
+				  console.log("Error with distance b/w bus and stops matrix");
+				  return;
+				}
+				var k=0;
+				{% for i in bStops %}
+				if(response.rows[0].elements[k].distance.value==0){
+				setDis(k,0);
+				  
+				}
+				else{
+				
+				  setDis(k,response.rows[0].elements[k].distance.text.substring(0,response.rows[0].elements[k].distance.text.indexOf('k')));
+				  }
+				  var val=response.rows[0].elements[k].duration.value;
+				  if (val<=50){val=0+" mins"}
+				  else{val=response.rows[0].elements[k].duration.text}
+				  if(stops.length-k<=w){
+				  
+				  document.getElementById("{{i.busStopNum}}").innerHTML = "ETA  " + val;
+				  document.getElementById("{{i.busStopNum}}-sty").style.color="#1cc88a";
+				  }
+				  else{
+				  document.getElementById("{{i.busStopNum}}").innerHTML = "Already passed";
+				  document.getElementById("{{i.busStopNum}}-sty").style.color="gray";
+				  }k++;
+				 
+				{% endfor %}
+				})
+				//console.log(dis)
 	  var pos={lat:latVal,lng:lonVal};
+	  getWay(pos,stops,dis,cbp,stpsdis)
+	  var w=waypts.length;
 	  var request = {
 		origin: pos,
 		destination: cbit,
+		waypoints:waypts,
 		travelMode: google.maps.TravelMode.DRIVING
 		};
 		directionsService.route(request, function (response, status) {
@@ -27,6 +87,7 @@ function worker() {
 		if (status == 'OK') {
 			directionsDisplay.setDirections(response);
 		}
+		//console.log(google.maps.geometry.poly.isLocationOnEdge(p,response.routes[0].overview_polyline.points))
 		});
 	  var latlng = new google.maps.LatLng(latVal, lonVal);
 	  marker.setPosition(latlng);
@@ -34,6 +95,7 @@ function worker() {
 	  document.getElementById("lat").innerHTML="Lat: "+latVal;
 	  document.getElementById("lon").innerHTML="Lng: "+lonVal;
 	  document.getElementById("speed").innerHTML=data['speed']+" KMPH";
+
     },
     complete: function() {
       // Schedule the next request when the current one's complete
@@ -43,7 +105,7 @@ function worker() {
 }
 </script>
         <!-- Begin Page Content -->
-        <div class="container-fluid">
+       <div class="container-fluid">
 
         <!-- Page Heading -->
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -54,23 +116,12 @@ function worker() {
         <div class="row">
 
             <!-- Map -->
-            <div class="col-xl-12 col-lg-7">
+            <div class="col-xl-8">
                 <div class="card shadow mb-4">
                     <!-- Card Header - Dropdown -->
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <h6 class="m-0 font-weight-bold text-primary" style="flex: 1;">Bus Number {{bno}}</h6>
-                    <a href="#" id="b" class="btn btn-primary btn-icon-split" data-toggle="modal" data-target="#bus-list" style="margin-right: 20px;">
-                        <span class="icon text-white-50">
-                            <i class="fas fa-bus"></i>
-                        </span>
-                        <span class="text">Vehicle</span>
-                    </a>
-					          <!-- <a href="#" id="alert-btn" class="btn btn-danger btn-icon-split" style="margin-right: 20px;">
-                      <span class="icon text-white-50">
-                        <i class="fas fa-bell"></i>
-                      </span>
-                      <span class="text">Alert</span>
-                    </a> -->
+                    
                     <div class="dropdown no-arrow">
                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
@@ -81,20 +132,80 @@ function worker() {
                         <a class="dropdown-item" href="#">Another action</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="#">Something else here</a>
+                        </div>
                     </div>
-                </div>
-            </div>
+                    </div>
         
-            <!-- Card Body -->
-            <div class="card-body map-container z-depth-1-half" style="height: 500px; padding: 0;">
-                <!--The div element for the map -->
-                <div id="map" style="width: auto; height: 500px;"></div>
-                 <script>
-                // Initialize and add the map
+                <!-- Card Body -->
+                <div class="card-body map-container z-depth-1-half" style="height: 500px; padding: 0;">
+                    <!--The div element for the map -->
+                    <div id="map" style="width: auto; height: 500px;"></div>
+                    <script>
+                // Initialize and add the map 
+				var stops=[];var service; var matrixOptions;var dis;var stpsdis=[];var cbp=[];var waypts=[];var r;var stpbus=[];
 				var position;var path = {{ bus_co|safe }};
 				var marker;var directionsDisplay,directionsService;
+				function getWay(pos,stops,dis,cbp,stpsdis){
+					waypts=[]
+					var wayp=[];
+					var c=-1;
+					var i;
+					if(dis.indexOf(0)!=-1){
+					c=dis.indexOf(0)
+					}
+					for(i=0;i<stops.length;i++){
+						if (c>=0 && i>=c){
+						waypts.push({
+						location: stops[i],
+						stopover: false,
+						}); 
+						}
+						else{
+							
+							if(i==0){
+							if(dis[0]<cbp[0] && dis[0]<dis[1]){
+							c=0;
+							waypts.push({
+						location: stops[i],
+						stopover: false,
+						}); 
+							}
+							}
+							else if(i>0){//else if(dis[i]>dis[i-1] && Math.abs(parseFloat(dis[i])-parseFloat(dis[i-1]))==stpsdis[i]){}
+								
+							console.log(i,parseFloat(dis[i]),stpbus[i-1],stpsdis[i],stpbus[i])
+							if(parseFloat(dis[i])+parseFloat(stpbus[i-1])<=stpsdis[i] && parseFloat(dis[i])<stpbus[i]){
+							c=i;
+							waypts.push({
+							location: stops[c],
+							stopover: false,
+							}); 
+							}
+							/*if(dis[i]<dis[i-1] && stpsdis[i]>Math.abs(parseFloat(dis[i])-parseFloat(dis[i-1])) ){
+								}
+								else{
+							c=i;
+							waypts.push({
+							location: stops[c],
+							stopover: false,
+							}); 
+								
+								}*/
+							}
+						}
+					}
+					}
+					var busLoc = [];
+					function setStpDis(v){
+					stpsdis.push(v)
+					}
+				function setDis(i,v){
+				dis[i]=v;
+				}
                 function initMap() {
+					stpsdis.push(0);
                     var cbit = {lat:17.3920,lng:78.3194};
+					var cb=[[17.3920+","+78.3194]]
                     var map = new google.maps.Map(document.getElementById('map'), {
                     zoom: 11,
                     center: cbit
@@ -125,12 +236,110 @@ function worker() {
                     var infowindow = new google.maps.InfoWindow({
                     content: '<p>Location:' + marker.getPosition() + '</p>'
                     });
+						
+			  var temp1,temp2;
+			  {% for i in bStops %}
+				temp1 = '{{i.latitude}}'
+				temp2 = '{{i.longitude}}'
+				stops.push(temp1+","+temp2);
+			  {% endfor %}
+			  //console.log(stops)
+			  window.dis=new Array(stops.length);
+			  window.stpbus=new Array(stops.length);
+			  busLoc.push(latVal+","+lonVal);      
+			  service = new google.maps.DistanceMatrixService(); // instantiate Distance Matrix service
+				for(i=1;i<stops.length;i++){
+					matrixOptions = {
+					origins: new Array(stops[i-1]), // current bus location
+					destinations: new Array(stops[i]), // bus stops locations
+					travelMode: 'DRIVING',
+					unitSystem: google.maps.UnitSystem.METRIC
+				  };
+				  
+				  var k = 0;
+				  service.getDistanceMatrix(matrixOptions, function (response, status){
+					if (status !== "OK") {
+					  console.log("Error with distance b/w stops matrix");
+					  return;
+					}
+					setStpDis(parseFloat(response.rows[0].elements[0].distance.text.substring(0,response.rows[0].elements[0].distance.text.indexOf('k'))))
+				 })
+				 
+				 }
+					matrixOptions = {
+					origins: new Array(busLoc[0]), // current bus location
+					destinations: cb[0], // bus stops locations
+					travelMode: 'DRIVING',
+					unitSystem: google.maps.UnitSystem.METRIC
+				  };
+				  var k = 0;
+				  service.getDistanceMatrix(matrixOptions, function (response, status){
+					if (status !== "OK") {
+					  console.log("Error with distance b/w stops matrix");
+					  return;
+					}
+					cbp.push(response.rows[0].elements[k].distance.text.substring(0,response.rows[0].elements[k].distance.text.indexOf('k')))
+				 })
+				 matrixOptions = {
+				origins: stops, // current bus location
+				destinations: new Array(busLoc[0]), // bus stops locations
+				travelMode: 'DRIVING',
+				unitSystem: google.maps.UnitSystem.METRIC
+			  };
+			  
+			  service.getDistanceMatrix(matrixOptions, function (response, status){
+				if (status !== "OK") {
+				  console.log("Error with distance b/w bus and stops matrix");
+				  return;
+				}
+				var k=0;
+				{% for i in bStops %}
+				stpbus[k]=parseFloat(response.rows[k].elements[0].distance.text.substring(0,response.rows[k].elements[0].distance.text.indexOf('k')));
+				k++;
+				{%endfor%}
+				})
+			  matrixOptions = {
+				origins: new Array(busLoc[0]), // current bus location
+				destinations: stops, // bus stops locations
+				travelMode: 'DRIVING',
+				unitSystem: google.maps.UnitSystem.METRIC
+			  };
+			  var k = 0;
+			  service.getDistanceMatrix(matrixOptions, function (response, status){
+				if (status !== "OK") {
+				  console.log("Error with distance b/w bus and stops matrix");
+				  return;
+				}
+				var k=0;
+				{% for i in bStops %}
+				  if(response.rows[0].elements[k].distance.value==0){
+				setDis(k,0);
+				  
+				}
+				else{
+				  setDis(k,response.rows[0].elements[k].distance.text.substring(0,response.rows[0].elements[k].distance.text.indexOf('k')));
+				  }
+				  /*
+				  if (val<=50){val=0}
+				  if(stops.length-k<=waypts.length){
+				  document.getElementById("{{i.busStopNum}}").innerHTML = "ETA  " + val;
+				  document.getElementById("{{i.busStopNum}}-sty").style.color="#1cc88a";
+				  }
+				  else{
+				  document.getElementById("{{i.busStopNum}}").innerHTML = "Already passed";
+				  document.getElementById("{{i.busStopNum}}-sty").style.color="gray";
+				  }*/k++;
+				{% endfor %}
+				})
+				//console.log(dis,stpsdis,stops)
+				getWay(pos,stops,dis,cbp,stpsdis);
                     directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
                     directionsService = new google.maps.DirectionsService();
                     directionsDisplay.setMap(map);
-                    var request = {
+                    /*var request = {
                         origin: pos,
                         destination: cbit,
+						waypoints:waypts,
                         travelMode: google.maps.TravelMode.DRIVING
                     };
                     directionsService.route(request, function (response, status) {
@@ -138,7 +347,18 @@ function worker() {
                         if (status == 'OK') {
                             directionsDisplay.setDirections(response);
                         }
-                    });
+                    });*/
+					var markerb;
+                        var bLoc; 
+                        {% for i in bStops %}
+                        bLoc = new google.maps.LatLng(parseFloat('{{i.latitude}}'), parseFloat('{{i.longitude}}'));
+                        markerb= new google.maps.Marker({
+                            map: map,
+                            position: bLoc,
+                            label:'{{i.busStopNum}}',
+                            //icon:"{% static 'markers/halt1.png' %}",                        
+                        });
+                        {% endfor %}
                 var drawingManager = new google.maps.drawing.DrawingManager({
 				  drawingControl: true,
 				  drawingControlOptions: {
@@ -147,6 +367,7 @@ function worker() {
 				  }
 				 });
 				 //drawingManager.setMap(map);
+			
 				var pathBetween1 = new google.maps.Polygon({
 				  path: path,
 				  strokeColor: '#4E73DF',
@@ -164,15 +385,38 @@ function worker() {
 					polyarray.push('{"lat":'+polylinePath.getArray()[i].lat() + ', "lng":' + polylinePath.getArray()[i].lng() + '}');
 				  }
 				});
+				setTimeout(worker,2000)
                 }
                 </script>
                 <script async differ type="text/javascript" 
-                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBWDD6lfrsc3-WbmUxC4QIQw57GHgIooqs&libraries=drawing&callback=initMap">
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBWDD6lfrsc3-WbmUxC4QIQw57GHgIooqs&libraries=drawing,geometry&callback=initMap">
                 </script>
             </div>
-        </div>
-    </div>
+        </div></div>
+<div class="col-xl-4">
 
+              <h6 class="m-1">Bus Stops - Bno {{bno}} </h6>
+              <ul class="list-group mb-3 px-2" style="overflow-y: scroll;height: 450px;">
+                  {% for i in bStops %}
+                  <li class="px-4 list-group-item d-flex justify-content-between lh-condensed" style="padding-top: 12px;padding-bottom: 0;">
+                    <div>
+                      <a href="#">
+                        <h6 class="my-0 font-weight-bold">{{i.busStopNum}} . {{i.busStopName}}</h6>
+                      </a>
+                      <small class="text-muted" id="{{i.busStopNum}}"></small>
+                    </div>
+                    <span class="md-2">
+                      <i class="fas fa-circle" id="{{i.busStopNum}}-sty" style="color: #1cc88a;"></i>
+                    </span>
+                  </li>
+                  {% endfor %}
+                </ul>
+      
+          </div>      
+
+          </div>
+
+    <div class="row">
     <!--popup was here-->
 
     <div class="col-xl-3 col-md-6 mb-4">
