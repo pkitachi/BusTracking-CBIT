@@ -14,9 +14,27 @@ function worker() {
     url: '/info/{{bno}}', 
 	type: 'GET',
     success: function(data,textStatus,request) {
-	  latVal=17.48319000//parseFloat(data['latitude']);//17.46320200,78.33501800
-	  lonVal=78.31152800//parseFloat(data['longitude']);
+	  latVal=17.43675500//parseFloat(data['latitude']);//17.46320200,78.33501800
+	  lonVal=78.36257900//parseFloat(data['longitude']);
 	  busLoc[0]=(latVal+","+lonVal); 
+	  matrixOptions = {
+				origins: stops, // current bus location
+				destinations: new Array(busLoc[0]), // bus stops locations
+				travelMode: 'DRIVING',
+				unitSystem: google.maps.UnitSystem.METRIC
+			  };
+			  
+			  service.getDistanceMatrix(matrixOptions, function (response, status){
+				if (status !== "OK") {
+				  console.log("Error with distance b/w bus and stops matrix");
+				  return;
+				}
+				var k=0;
+				{% for i in bStops %}
+				stpbus[k]=parseFloat(response.rows[k].elements[0].distance.text.substring(0,response.rows[k].elements[0].distance.text.indexOf('k')));
+				k++;
+				{%endfor%}
+				})
 	  	  matrixOptions = {
 				origins: new Array(busLoc[0]), // current bus location
 				destinations: stops, // bus stops locations
@@ -124,7 +142,7 @@ function worker() {
                     <div id="map" style="width: auto; height: 500px;"></div>
                     <script>
                 // Initialize and add the map 
-				var stops=[];var service; var matrixOptions;var dis;var stpsdis=[];var cbp=[];var waypts=[];var r;
+				var stops=[];var service; var matrixOptions;var dis;var stpsdis=[];var cbp=[];var waypts=[];var r;var stpbus=[];
 				var position;var path = {{ bus_co|safe }};
 				var marker;var directionsDisplay,directionsService;
 				function getWay(pos,stops,dis,cbp,stpsdis){
@@ -145,7 +163,7 @@ function worker() {
 						else{
 							
 							if(i==0){
-							if(dis[0]<cbp[0]){
+							if(dis[0]<cbp[0] && dis[0]<dis[1]){
 							c=0;
 							waypts.push({
 						location: stops[i],
@@ -153,9 +171,17 @@ function worker() {
 						}); 
 							}
 							}
-							else if(i>0){
-							console.log(i,dis[i],dis[i-1],stpsdis[i])
-							if(dis[i]<dis[i-1] && stpsdis[i]>Math.abs(parseFloat(dis[i])-parseFloat(dis[i-1])) ){
+							else if(i>0){//else if(dis[i]>dis[i-1] && Math.abs(parseFloat(dis[i])-parseFloat(dis[i-1]))==stpsdis[i]){}
+								
+							console.log(i,parseFloat(dis[i]),stpbus[i-1],stpsdis[i],stpbus[i])
+							if(parseFloat(dis[i])+parseFloat(stpbus[i-1])<=stpsdis[i] && parseFloat(dis[i])<stpbus[i]){
+							c=i;
+							waypts.push({
+							location: stops[c],
+							stopover: false,
+							}); 
+							}
+							/*if(dis[i]<dis[i-1] && stpsdis[i]>Math.abs(parseFloat(dis[i])-parseFloat(dis[i-1])) ){
 								}
 								else{
 							c=i;
@@ -164,7 +190,7 @@ function worker() {
 							stopover: false,
 							}); 
 								
-								}
+								}*/
 							}
 						}
 					}
@@ -219,6 +245,7 @@ function worker() {
 			  {% endfor %}
 			  //console.log(stops)
 			  window.dis=new Array(stops.length);
+			  window.stpbus=new Array(stops.length);
 			  busLoc.push(latVal+","+lonVal);      
 			  service = new google.maps.DistanceMatrixService(); // instantiate Distance Matrix service
 				for(i=1;i<stops.length;i++){
@@ -253,6 +280,24 @@ function worker() {
 					}
 					cbp.push(response.rows[0].elements[k].distance.text.substring(0,response.rows[0].elements[k].distance.text.indexOf('k')))
 				 })
+				 matrixOptions = {
+				origins: stops, // current bus location
+				destinations: new Array(busLoc[0]), // bus stops locations
+				travelMode: 'DRIVING',
+				unitSystem: google.maps.UnitSystem.METRIC
+			  };
+			  
+			  service.getDistanceMatrix(matrixOptions, function (response, status){
+				if (status !== "OK") {
+				  console.log("Error with distance b/w bus and stops matrix");
+				  return;
+				}
+				var k=0;
+				{% for i in bStops %}
+				stpbus[k]=parseFloat(response.rows[k].elements[0].distance.text.substring(0,response.rows[k].elements[0].distance.text.indexOf('k')));
+				k++;
+				{%endfor%}
+				})
 			  matrixOptions = {
 				origins: new Array(busLoc[0]), // current bus location
 				destinations: stops, // bus stops locations
