@@ -3,12 +3,6 @@
 <html lang="en">
 
 <head>
-  <script>
-    if(localStorage.getItem('rme')==null || localStorage.getItem('rme')=='0'){} 
-    if(localStorage.getItem('rme')=='1'){
-      window.open("{%url 'index'%}",'_self')
-    }
-  </script>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -35,7 +29,27 @@
 
 
 <body class="">
-
+  <script>
+    
+    if(localStorage.getItem('uname')!=null && localStorage.getItem('pass')!=null){
+              var data = {}
+              data.username = localStorage.getItem('uname')
+              data.password = localStorage.getItem('pass')
+              data.csrfmiddlewaretoken= "{{ csrf_token }}"
+              $.ajax({
+                  type: "POST",
+                  data: data,
+                  url: "{%url 'changep'%}",
+                })
+                console.log('1')
+                  
+            }
+            console.log('2')
+    if(localStorage.getItem('rme')==null || localStorage.getItem('rme')=='0'){} 
+    if(localStorage.getItem('rme')=='1'){
+      window.open("{%url 'index'%}",'_self')
+    }
+  </script>
   <div class="container">
 
     <!-- Outer Row -->
@@ -86,7 +100,7 @@
                     </div>
                     <center>
                     <div class="form-group ">
-                   <button class="btn btn-primary " type="submit" value="submit">Login</button>
+                   <button class="btn btn-primary " type="submit" value="submit" onclick="loginn()">Login</button>
                   </div>
                    </center> 
                   </div>
@@ -116,31 +130,11 @@
             }
           }
           function loginn(){
-            var accessToken = ''
-            var data = {}
-            data.username = document.getElementById('username').value
-            data.password = document.getElementById('password').value
-			
-            $.ajax({
-              type: "POST",
-              data: data,
-              url: 'http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/login',
-              success: function(data,textStatus,request){
-                window.open("{%url 'index'%}","_self")
-                accessToken = data['access_token']
-                sessionStorage.setItem('access','valid')
-                if(document.getElementById('rememberme').value == 1){
-                  localStorage.setItem('access','valid')
-                }
-              },
-              error:function(httpObj, textStatus) {       
-                if(httpObj.status==402){
-                  document.getElementById("msgg").innerHTML="<i class='fas fa-exclamation-triangle'></i>  Incorrect username or password"
-                }
-              },
-            });
+            localStorage.setItem('uname',document.getElementById('username').value)
+            localStorage.setItem('pass',document.getElementById('password').value)
+            console.log(3)
           }
-             
+
         </script>
         <script>
           var pwdField = document.getElementById("password");
@@ -157,7 +151,10 @@
               document.getElementById("password").focus();
             }
           });
-        </script>
+          
+  </script>
+        
+  
         <script>
 function myFunction() {
   document.getElementById("myForm").submit();

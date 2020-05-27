@@ -372,6 +372,14 @@ def geofence(request):
 	else:
 		s={'status':''}
 		return redirect('/')
+
+def changep(request):
+	global p
+	uname=request.POST['username']
+	pas=request.POST['password']
+	r = requests.post('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/login',data={'username':uname,'password':pas})
+	p= r.json()['access_token']
+	return redirect('index')
 @csrf_exempt
 def add_geofence(request):
 	if(p!=None):
