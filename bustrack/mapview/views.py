@@ -208,7 +208,7 @@ def eta(request, bno):
 	except:
 		bus_co=[]
 	bStops = requests.get('http://ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/busstops',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno})
-	return render(request, 'stop.html', {'curRaw':curRaw, 'buses': buses,'bno':bno,'prop':td.json()[0],'bus_co':bus_co, 'bStops':bStops.json()})
+	return render(request, 'stopcheck.html', {'curRaw':curRaw, 'buses': buses,'bno':bno,'prop':td.json()[0],'bus_co':bus_co, 'bStops':bStops.json()})
 		
 		
 def replaytracking(request):

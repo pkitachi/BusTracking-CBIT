@@ -14,12 +14,48 @@ function worker() {
     url: '/info/{{bno}}', 
 	type: 'GET',
     success: function(data,textStatus,request) {
-	  latVal=parseFloat(data['latitude']);
+	  latVal=parseFloat(data['latitude']);//17.46320200,78.33501800
 	  lonVal=parseFloat(data['longitude']);
+	  busLoc[0]=(latVal+","+lonVal); 
+	  	  matrixOptions = {
+				origins: new Array(busLoc[0]), // current bus location
+				destinations: stops, // bus stops locations
+				travelMode: 'DRIVING',
+				unitSystem: google.maps.UnitSystem.METRIC
+			  };
+			  var k = 0;
+			  service.getDistanceMatrix(matrixOptions, function (response, status){
+				if (status !== "OK") {
+				  console.log("Error with distance b/w bus and stops matrix");
+				  return;
+				}
+				var k=0;
+				{% for i in bStops %}
+				if(response.rows[0].elements[k].distance.value==0){
+				setDis(k,0);
+				  
+				}
+				else{
+				  setDis(k,response.rows[0].elements[k].distance.text.substring(0,response.rows[0].elements[k].distance.text.indexOf('k')));
+				  }if(stops.length-k<=w){
+				  document.getElementById("{{i.busStopNum}}").innerHTML = "ETA  " + response.rows[0].elements[k].duration.text;
+				  document.getElementById("{{i.busStopNum}}-sty").style.color="#1cc88a";
+				  }
+				  else{
+				  document.getElementById("{{i.busStopNum}}").innerHTML = "Already passed";
+				  document.getElementById("{{i.busStopNum}}-sty").style.color="gray";
+				  }k++;
+				 
+				{% endfor %}
+				})
+				//console.log(dis)
 	  var pos={lat:latVal,lng:lonVal};
+	  getWay(pos,stops,dis,cbp,stpsdis)
+	  var w=waypts.length;
 	  var request = {
 		origin: pos,
 		destination: cbit,
+		waypoints:waypts,
 		travelMode: google.maps.TravelMode.DRIVING
 		};
 		directionsService.route(request, function (response, status) {
@@ -34,6 +70,7 @@ function worker() {
 	  document.getElementById("lat").innerHTML="Lat: "+latVal;
 	  document.getElementById("lon").innerHTML="Lng: "+lonVal;
 	  document.getElementById("speed").innerHTML=data['speed']+" KMPH";
+
     },
     complete: function() {
       // Schedule the next request when the current one's complete
@@ -91,16 +128,19 @@ function worker() {
                 <div id="map" style="width: auto; height: 500px;"></div>
                  <script>
                 // Initialize and add the map 
-				var stops=[];var service; var matrixOptions;var dis=[];var stpsdis=[];
+				var stops=[];var service; var matrixOptions;var dis;var stpsdis=[];var cbp=[];var waypts=[];var r;
 				var position;var path = {{ bus_co|safe }};
 				var marker;var directionsDisplay,directionsService;
-				function getWay(pos,stops){
+				function getWay(pos,stops,dis,cbp,stpsdis){
 					waypts=[]
 					var wayp=[];
 					var c=-1;
 					var i;
+					if(dis.indexOf(0)!=-1){
+					c=dis.indexOf(0)
+					}
 					for(i=0;i<stops.length;i++){
-						if (c>=0){
+						if (c>=0 && i>=c){
 						waypts.push({
 						location: stops[i],
 						stopover: false,
@@ -109,16 +149,19 @@ function worker() {
 						else{
 							
 							if(i==0){
+							//console.log(dis,cbp,dis.indexOf("2.9"))
 							if(dis[0]<cbp[0]){
 							c=0;
+							waypts.push({
+						location: stops[i],
+						stopover: false,
+						}); 
 							}
 							}
 							else if(i>0){
-							
-								if(dis[i]>dis[i-1] && stpdis[i]==(dis[i]-dis[i-1])){
-								continue;
-								}
-								else{
+								
+								//console.log(i,stpsdis[i],(parseFloat(dis[i])),(parseFloat(dis[i-1])),Math.abs(parseFloat(dis[i])-parseFloat(dis[i-1])))
+								if(dis[i]<dis[i-1] && stpsdis[i]<=Math.abs(parseFloat(dis[i])-parseFloat(dis[i-1])) ){
 								
 							c=i;
 							waypts.push({
@@ -131,10 +174,17 @@ function worker() {
 						}
 					}
 					}
-					
+					var busLoc = [];
+					function setStpDis(v){
+					stpsdis.push(v)
+					}
+				function setDis(i,v){
+				dis[i]=v;
+				}
                 function initMap() {
 					stpsdis.push(0);
                     var cbit = {lat:17.3920,lng:78.3194};
+					var cb=[[17.3920+","+78.3194]]
                     var map = new google.maps.Map(document.getElementById('map'), {
                     zoom: 11,
                     center: cbit
@@ -170,30 +220,33 @@ function worker() {
 			  {% for i in bStops %}
 				temp1 = '{{i.latitude}}'
 				temp2 = '{{i.longitude}}'
-				stops.push({'lat':temp1,'lng':temp2});
+				stops.push(temp1+","+temp2);
 			  {% endfor %}
-			  var busLoc = [];
-			  busLoc.push({'lat':lonVal,'lng':latVal})      
+			  //console.log(stops)
+			  window.dis=new Array(stops.length);
+			  busLoc.push(latVal+","+lonVal);      
 			  service = new google.maps.DistanceMatrixService(); // instantiate Distance Matrix service
 				for(i=1;i<stops.length;i++){
 					matrixOptions = {
-					origins: stops[i-1], // current bus location
-					destinations: stops[i], // bus stops locations
+					origins: new Array(stops[i-1]), // current bus location
+					destinations: new Array(stops[i]), // bus stops locations
 					travelMode: 'DRIVING',
 					unitSystem: google.maps.UnitSystem.METRIC
 				  };
+				  
 				  var k = 0;
 				  service.getDistanceMatrix(matrixOptions, function (response, status){
 					if (status !== "OK") {
 					  console.log("Error with distance b/w stops matrix");
 					  return;
 					}
-					stpsdis.push(response.rows[0].elements[k].distance.text.substring(0,response.rows[0].elements[k].distance.text.indexOf('k')))
-				 }
+					setStpDis(parseFloat(response.rows[0].elements[0].distance.text.substring(0,response.rows[0].elements[0].distance.text.indexOf('k'))))
+				 })
 				 
+				 }
 					matrixOptions = {
-					origins: pos, // current bus location
-					destinations: cbit, // bus stops locations
+					origins: new Array(busLoc[0]), // current bus location
+					destinations: cb[0], // bus stops locations
 					travelMode: 'DRIVING',
 					unitSystem: google.maps.UnitSystem.METRIC
 				  };
@@ -204,9 +257,9 @@ function worker() {
 					  return;
 					}
 					cbp.push(response.rows[0].elements[k].distance.text.substring(0,response.rows[0].elements[k].distance.text.indexOf('k')))
-				 
+				 })
 			  matrixOptions = {
-				origins: pos, // current bus location
+				origins: new Array(busLoc[0]), // current bus location
 				destinations: stops, // bus stops locations
 				travelMode: 'DRIVING',
 				unitSystem: google.maps.UnitSystem.METRIC
@@ -217,18 +270,34 @@ function worker() {
 				  console.log("Error with distance b/w bus and stops matrix");
 				  return;
 				}
+				var k=0;
 				{% for i in bStops %}
-				  dis.push(response.rows[0].elements[k].distance.text.substring(0,response.rows[0].elements[k].distance.text.indexOf('k')))
-				  document.getElementById("{{i.Id}}").innerHTML = "ETA  " + response.rows[0].elements[k].duration.text;
-				  k++;
+				  if(response.rows[0].elements[k].distance.value==0){
+				setDis(k,0);
+				  
+				}
+				else{
+				  setDis(k,response.rows[0].elements[k].distance.text.substring(0,response.rows[0].elements[k].distance.text.indexOf('k')));
+				  }
+				  if(stops.length-k<=waypts.length){
+				  document.getElementById("{{i.busStopNum}}").innerHTML = "ETA  " + response.rows[0].elements[k].duration.text;
+				  document.getElementById("{{i.busStopNum}}-sty").style.color="#1cc88a";
+				  }
+				  else{
+				  document.getElementById("{{i.busStopNum}}").innerHTML = "Already passed";
+				  document.getElementById("{{i.busStopNum}}-sty").style.color="gray";
+				  }k++;
 				{% endfor %}
-				console.log(dis,stpsdis,stops)
+				})
+				//console.log(dis,stpsdis,stops)
+				getWay(pos,stops,dis,cbp,stpsdis);
                     directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
                     directionsService = new google.maps.DirectionsService();
                     directionsDisplay.setMap(map);
-                    var request = {
+                    /*var request = {
                         origin: pos,
                         destination: cbit,
+						waypoints:waypts,
                         travelMode: google.maps.TravelMode.DRIVING
                     };
                     directionsService.route(request, function (response, status) {
@@ -236,7 +305,18 @@ function worker() {
                         if (status == 'OK') {
                             directionsDisplay.setDirections(response);
                         }
-                    });
+                    });*/
+					var markerb;
+                        var bLoc; 
+                        {% for i in bStops %}
+                        bLoc = new google.maps.LatLng(parseFloat('{{i.latitude}}'), parseFloat('{{i.longitude}}'));
+                        markerb= new google.maps.Marker({
+                            map: map,
+                            position: bLoc,
+                            label:'{{i.busStopNum}}',
+                            //icon:"{% static 'markers/halt1.png' %}",                        
+                        });
+                        {% endfor %}
                 var drawingManager = new google.maps.drawing.DrawingManager({
 				  drawingControl: true,
 				  drawingControlOptions: {
@@ -263,7 +343,7 @@ function worker() {
 					polyarray.push('{"lat":'+polylinePath.getArray()[i].lat() + ', "lng":' + polylinePath.getArray()[i].lng() + '}');
 				  }
 				});
-				setTimeout(worker,10000);
+				setTimeout(worker,1000)
                 }
                 </script>
                 <script async differ type="text/javascript" 
@@ -273,6 +353,28 @@ function worker() {
         </div>
     </div>
 
+<div class="col-xl-4">
+
+              <h6 class="m-1">Bus Stops - Bno {{bno}} </h6>
+              <ul class="list-group mb-3 px-2" style="overflow-y: scroll;height: 450px;">
+                  {% for i in bStops %}
+                  <li class="px-4 list-group-item d-flex justify-content-between lh-condensed" style="padding-top: 12px;padding-bottom: 0;">
+                    <div>
+                      <a href="#">
+                        <h6 class="my-0 font-weight-bold">{{i.busStopNum}} . {{i.busStopName}}</h6>
+                      </a>
+                      <small class="text-muted" id="{{i.busStopNum}}"></small>
+                    </div>
+                    <span class="md-2">
+                      <i class="fas fa-circle" id="{{i.busStopNum}}-sty" style="color: #1cc88a;"></i>
+                    </span>
+                  </li>
+                  {% endfor %}
+                </ul>
+      
+          </div>      
+
+          </div>
     <!--popup was here-->
 
     <div class="col-xl-3 col-md-6 mb-4">
