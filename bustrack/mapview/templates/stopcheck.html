@@ -14,8 +14,8 @@ function worker() {
     url: '/info/{{bno}}', 
 	type: 'GET',
     success: function(data,textStatus,request) {
-	  latVal=17.46320200//parseFloat(data['latitude']);//17.46320200,78.33501800
-	  lonVal=78.33501800//parseFloat(data['longitude']);
+	  latVal=17.48319000//parseFloat(data['latitude']);//17.46320200,78.33501800
+	  lonVal=78.31152800//parseFloat(data['longitude']);
 	  busLoc[0]=(latVal+","+lonVal); 
 	  	  matrixOptions = {
 				origins: new Array(busLoc[0]), // current bus location
@@ -69,6 +69,7 @@ function worker() {
 		if (status == 'OK') {
 			directionsDisplay.setDirections(response);
 		}
+		//console.log(google.maps.geometry.poly.isLocationOnEdge(p,response.routes[0].overview_polyline.points))
 		});
 	  var latlng = new google.maps.LatLng(latVal, lonVal);
 	  marker.setPosition(latlng);
@@ -153,8 +154,10 @@ function worker() {
 							}
 							}
 							else if(i>0){
-							if(dis[i]<dis[i-1] && stpsdis[i]<=Math.abs(parseFloat(dis[i])-parseFloat(dis[i-1])) ){
-								
+							console.log(i,dis[i],dis[i-1],stpsdis[i])
+							if(dis[i]<dis[i-1] && stpsdis[i]>Math.abs(parseFloat(dis[i])-parseFloat(dis[i-1])) ){
+								}
+								else{
 							c=i;
 							waypts.push({
 							location: stops[c],
@@ -341,7 +344,7 @@ function worker() {
                 }
                 </script>
                 <script async differ type="text/javascript" 
-                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBWDD6lfrsc3-WbmUxC4QIQw57GHgIooqs&libraries=drawing&callback=initMap">
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBWDD6lfrsc3-WbmUxC4QIQw57GHgIooqs&libraries=drawing,geometry&callback=initMap">
                 </script>
             </div>
         </div></div>
