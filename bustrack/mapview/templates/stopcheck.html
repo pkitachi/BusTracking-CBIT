@@ -14,8 +14,8 @@ function worker() {
     url: '/info/{{bno}}', 
 	type: 'GET',
     success: function(data,textStatus,request) {
-	  latVal=17.43675500//parseFloat(data['latitude']);//17.46320200,78.33501800
-	  lonVal=78.36257900//parseFloat(data['longitude']);
+	  latVal=parseFloat(data['latitude']);
+	  lonVal=parseFloat(data['longitude']);
 	  busLoc[0]=(latVal+","+lonVal); 
 	  matrixOptions = {
 				origins: stops, // current bus location
