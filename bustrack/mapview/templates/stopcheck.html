@@ -7,16 +7,34 @@ BusStops -{{bno}}
 {%block onload%}{%endblock%}
 {%block main%}
 <script>
+var passed;var cnt=0;
 var latVal={{curRaw.lat}},lonVal={{curRaw.lon}};
 var cbit = {lat:17.3920,lng:78.3194};
+var l=[['17.517911','78.279918'],['17.510804','78.296278'],['17.507969','78.302451'],['17.507219','78.304658'],['17.502384','78.311110'],['17.494518','78.315890'],['17.486933','78.313322'],['17.483190','78.311528'],['17.480310','78.311631'],['17.479877','78.316520'],['17.478801','78.319942'],['17.472559','78.328124'],['17.467697','78.331724'],['17.463202','78.335018'],['17.457527','78.339324'],['17.451035','78.346113'],['17.446560','78.351263'],['17.441400','78.359763'],['17.436755','78.362579'],['17.422684','78.357356'],['17.416878','78.356279'],['17.404148','78.353905'],['17.398378','78.352714'],['17.390509','78.352256'],['17.386924','78.346025'],['17.386662','78.337138'],['17.385949','78.330279'],['17.390118','78.325900'],['17.393718','78.319938']]
+var ind=0;
 function worker() {
   $.ajax({
     url: '/info/{{bno}}', 
 	type: 'GET',
     success: function(data,textStatus,request) {
-	  latVal=parseFloat(data['latitude']);
-	  lonVal=parseFloat(data['longitude']);
+	  latVal=parseFloat(l[ind][0])//parseFloat(data['latitude']);
+	  lonVal=parseFloat(l[ind][1])//parseFloat(data['longitude']);
 	  busLoc[0]=(latVal+","+lonVal); 
+	  ind++;
+	  matrixOptions = {
+					origins: new Array(busLoc[0]), // current bus location
+					destinations: cb[0], // bus stops locations
+					travelMode: 'DRIVING',
+					unitSystem: google.maps.UnitSystem.METRIC
+				  };
+				  service.getDistanceMatrix(matrixOptions, function (response, status){
+				  var k=0
+					if (status !== "OK") {
+					  console.log("Error with distance b/w stops matrix");
+					  return;
+					}
+					cbp[k]=response.rows[0].elements[k].distance.text.substring(0,response.rows[0].elements[k].distance.text.indexOf('k'))
+				 })
 	  matrixOptions = {
 				origins: stops, // current bus location
 				destinations: new Array(busLoc[0]), // bus stops locations
@@ -60,13 +78,14 @@ function worker() {
 				  var val=response.rows[0].elements[k].duration.value;
 				  if (val<=50){val=0+" mins"}
 				  else{val=response.rows[0].elements[k].duration.text}
-				  if(stops.length-k<=w){
+				  if(m[k].length>1 && val>m[k][m[k].length-1] && m[k][m[k].length-1]>m[k][m[k].length-2] ){passed[k]=1}m[k].push(val)//&& stpbus[k]<dis[k]
+				  if(passed[k]==0){
 				  
 				  document.getElementById("{{i.busStopNum}}").innerHTML = "ETA  " + val;
 				  document.getElementById("{{i.busStopNum}}-sty").style.color="#1cc88a";
 				  }
 				  else{
-				  document.getElementById("{{i.busStopNum}}").innerHTML = "Already passed";
+				  document.getElementById("{{i.busStopNum}}").innerHTML =val//"Already passed";
 				  document.getElementById("{{i.busStopNum}}-sty").style.color="gray";
 				  }k++;
 				 
@@ -76,6 +95,7 @@ function worker() {
 	  var pos={lat:latVal,lng:lonVal};
 	  getWay(pos,stops,dis,cbp,stpsdis)
 	  var w=waypts.length;
+	  if (cnt!=0){
 	  var request = {
 		origin: pos,
 		destination: cbit,
@@ -89,6 +109,7 @@ function worker() {
 		}
 		//console.log(google.maps.geometry.poly.isLocationOnEdge(p,response.routes[0].overview_polyline.points))
 		});
+		}
 	  var latlng = new google.maps.LatLng(latVal, lonVal);
 	  marker.setPosition(latlng);
 	  marker.setTitle("Latitude:"+latVal+"  Longitude:"+lonVal);
@@ -99,7 +120,9 @@ function worker() {
     },
     complete: function() {
       // Schedule the next request when the current one's complete
-      setTimeout(worker, 5000);
+      cnt++;
+	  setTimeout(worker, 5000);
+	  
     }
   });
 }
@@ -142,18 +165,30 @@ function worker() {
                     <div id="map" style="width: auto; height: 500px;"></div>
                     <script>
                 // Initialize and add the map 
-				var stops=[];var service; var matrixOptions;var dis;var stpsdis=[];var cbp=[];var waypts=[];var r;var stpbus=[];
+				var stops=[];var service; var m;var matrixOptions;var pi=0;var dis;var stpsdis=[];var cbp=[];var waypts=[];var r;var stpbus=[];
 				var position;var path = {{ bus_co|safe }};
 				var marker;var directionsDisplay,directionsService;
 				function getWay(pos,stops,dis,cbp,stpsdis){
+					if(cnt==0){return;}
 					waypts=[]
-					var wayp=[];
 					var c=-1;
 					var i;
-					if(dis.indexOf(0)!=-1){
-					c=dis.indexOf(0)
+					i=passed.indexOf(0);
+					if(i==-1){return;}
+					for(var j=i;j<m.length;j++){
+					waypts.push({location: stops[i],
+						stopover: false,})
 					}
-					for(i=0;i<stops.length;i++){
+					/*if(stpbus[pi]<=parseFloat(dis[pi]) || parseFloat(dis[pi]==0)){
+					passed[pi]=1;
+					pi+=1
+					}
+					for(i=pi;i<stops.length;i++){
+					waypts.push({location: stops[i],
+						stopover: false,})
+					}*/
+					/*for(i=0;i<stops.length;i++){
+					if(pi<stops.length && passed[pi]==0){
 						if (c>=0 && i>=c){
 						waypts.push({
 						location: stops[i],
@@ -161,15 +196,32 @@ function worker() {
 						}); 
 						}
 						else{
-							if(stpbus[i]>=parseFloat(dis[i])){
+							//console.log(stpbus[i]>=parseFloat(dis[i]))
+							console.log(i,stpbus[i],parseFloat(dis[i]))
+							/*if(i==0){
+							if(stpbus[i]<=parseFloat(dis[i])){
+							passed[i]=1
+							c=i+1;
+							}
+							}
+							else{
+							if(stpbus[i]>=parseFloat(dis[i]) && passed[i]==0){
+							if(i>0 && cnt!=0){passed[i-1]=1;}
+							//console.log(i,stpbus[i],parseFloat(dis[i]))
 							c=i;
 							waypts.push({
 						location: stops[i],
 						stopover: false,
 						}); 
 						}
+							} 
+							if(stpbus[i]<=parseFloat(dis[i])){
+							c=i+1
+							passed[i]=1;
+							}
 							}
 						}
+						}*/
 					}
 					
 					var busLoc = [];
@@ -177,12 +229,14 @@ function worker() {
 					stpsdis.push(v)
 					}
 				function setDis(i,v){
-				dis[i]=v;
+				dis[i]=parseFloat(v);
 				}
+				var cb;
                 function initMap() {
 					stpsdis.push(0);
+					
                     var cbit = {lat:17.3920,lng:78.3194};
-					var cb=[[17.3920+","+78.3194]]
+					cb=[[17.3920+","+78.3194]]
                     var map = new google.maps.Map(document.getElementById('map'), {
                     zoom: 11,
                     center: cbit
@@ -220,8 +274,16 @@ function worker() {
 				temp2 = '{{i.longitude}}'
 				stops.push(temp1+","+temp2);
 			  {% endfor %}
+			  stops.push(cbit.lat+","+cbit.lng)
 			  //console.log(stops)
-			  window.dis=new Array(stops.length);
+			  m=new Array(stops.length-1)
+			  for(var j=0;j<m.length;j++){
+			  m[j]=[]
+			  }
+			  window.dis=new Array(stops.length-1);
+			  passed=new Array(stops.length-1);
+			  for(i=0;i<passed.length;i++){
+			  passed[i]=0}
 			  window.stpbus=new Array(stops.length);
 			  busLoc.push(latVal+","+lonVal);      
 			  service = new google.maps.DistanceMatrixService(); // instantiate Distance Matrix service
