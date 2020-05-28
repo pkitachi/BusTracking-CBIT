@@ -161,40 +161,17 @@ function worker() {
 						}); 
 						}
 						else{
-							
-							if(i==0){
-							if(dis[0]<cbp[0] && dis[0]<dis[1]){
-							c=0;
+							if(stpbus[i]>=parseFloat(dis[i])){
+							c=i;
 							waypts.push({
 						location: stops[i],
 						stopover: false,
 						}); 
-							}
-							}
-							else if(i>0){//else if(dis[i]>dis[i-1] && Math.abs(parseFloat(dis[i])-parseFloat(dis[i-1]))==stpsdis[i]){}
-								
-							console.log(i,parseFloat(dis[i]),stpbus[i-1],stpsdis[i],stpbus[i])
-							if(parseFloat(dis[i])+parseFloat(stpbus[i-1])<=stpsdis[i] && parseFloat(dis[i])<stpbus[i]){
-							c=i;
-							waypts.push({
-							location: stops[c],
-							stopover: false,
-							}); 
-							}
-							/*if(dis[i]<dis[i-1] && stpsdis[i]>Math.abs(parseFloat(dis[i])-parseFloat(dis[i-1])) ){
-								}
-								else{
-							c=i;
-							waypts.push({
-							location: stops[c],
-							stopover: false,
-							}); 
-								
-								}*/
+						}
 							}
 						}
 					}
-					}
+					
 					var busLoc = [];
 					function setStpDis(v){
 					stpsdis.push(v)
