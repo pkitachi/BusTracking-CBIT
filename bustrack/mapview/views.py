@@ -32,7 +32,7 @@ def login(request):
 		pas=request.POST['password']
 		rme=request.POST['rememberme']
 		clientkey=request.POST['g-recaptcha-response']
-		secretkey='6LcREvsUAAAAACGXJ7JnpN7lb3D6m8FcPOnmxous'
+		secretkey='6Lfts_sUAAAAAK-VYv2g8qDlRZIGclCf1J_XtRE8'
 		captchaData={
 		'secret':secretkey,
 		'response':clientkey
