@@ -20,7 +20,8 @@ function worker() {
       var request = {
         origin: pos,
         destination: cbit,
-        travelMode: google.maps.TravelMode.DRIVING
+        travelMode: google.maps.TravelMode.DRIVING,
+		drivingOptions:{departureTime:new Date()}
         };
         directionsService.route(request, function (response, status) {
         console.log(status);
@@ -58,7 +59,7 @@ function worker() {
           return;
         }
         {% for i in bStops %}
-          document.getElementById("{{i.Id}}").innerHTML = "ETA  " + response.rows[0].elements[k].duration.text;
+          document.getElementById("{{i.busStopNum}}").innerHTML = "ETA  " + response.rows[0].elements[k].duration.text;
           k++;
         {% endfor %}
         console.log(response);        
@@ -160,7 +161,8 @@ function worker() {
                         var request = {
                           origin: pos,
                           destination: cbit,
-                          travelMode: google.maps.TravelMode.DRIVING
+                          travelMode: google.maps.TravelMode.DRIVING,
+						  drivingOptions:{departureTime:new Date()}
                         };
                         directionsService.route(request, function (response, status) {
                           console.log(status);
@@ -177,7 +179,7 @@ function worker() {
                         markerb= new google.maps.Marker({
                             map: map,
                             position: bLoc,
-                            label:'{{i.Id}}',
+                            label:'{{i.busStopNum}}',
                             //icon:"{% static 'markers/halt1.png' %}",                        
                         });
                         {% endfor %}
@@ -227,9 +229,9 @@ function worker() {
                   <li class="px-4 list-group-item d-flex justify-content-between lh-condensed" style="padding-top: 12px;padding-bottom: 0;">
                     <div>
                       <a href="#">
-                        <h6 class="my-0 font-weight-bold">{{i.Id}} . {{i.busStopName}}</h6>
+                        <h6 class="my-0 font-weight-bold">{{i.busStopNum}} . {{i.busStopName}}</h6>
                       </a>
-                      <small class="text-muted" id="{{i.Id}}"></small>
+                      <small class="text-muted" id="{{i.busStopNum}}"></small>
                     </div>
                     <span class="md-2">
                       <i class="fas fa-circle" style="color: #1cc88a;"></i>
