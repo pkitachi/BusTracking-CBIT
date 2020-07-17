@@ -69,6 +69,8 @@ def login(request):
 					s1="user "+uname+" is blocked"
 					s={'status':s1}
 					return render(request,'login.html',{'data':s})
+			except:
+				return render(request,"404.html")
 		else:
 			s1="Please verify captcha"
 			s={'status':s1}
