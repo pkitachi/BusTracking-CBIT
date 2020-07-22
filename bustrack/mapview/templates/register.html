@@ -28,11 +28,7 @@ input {
 /* Style the submit button */
 
 
-/* Style the container for inputs */
-.container {
-  background-color: #f1f1f1;
-  padding: 20px;
-}
+
 
 /* The message box is shown when the user clicks on the password field */
 #message {
@@ -104,41 +100,49 @@ input {
               <div class="text-center">
                 <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
               </div>
-              <form class="user">
+              <form class="user" action="{%url 'signup'%}" method="POST">
+                {% csrf_token %}
                 <div class="form-group row">
+                  {% block main%}
+                  {% endblock%}
                   <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input type="text" class="form-control form-control-user" id="exampleFirstName" placeholder="First Name">
+                    <input type="text" class="form-control form-control-user" id="firstName" name="firstName" placeholder="First Name">
                   </div>
                   <div class="col-sm-6">
-                    <input type="text" class="form-control form-control-user" id="exampleLastName" placeholder="Last Name">
+                    <input type="text" class="form-control form-control-user" id="lastName" name="lastName" placeholder="Last Name">
                   </div>
-                </div>
-                <div class="form-group row">
-                  <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input type="text" class="form-control form-control-user" id="exampleUserName" placeholder="Username">
-                  </div>
-                  <div class="col-sm-6">
-                    <input type="text" class="form-control form-control-user" id="exampleRollNum" placeholder="Roll number">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <input type="email" class="form-control form-control-user" id="exampleInputEmail" placeholder="Email Address">
                 </div>
                 <div class="form-group row">
                   <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input type="password" id="psw" name="psw" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"  placeholder="Password" required>
+                    <input type="text" class="form-control form-control-user" id="username" name="username" placeholder="Username">
                   </div>
-                  <div class="col-sm-6">
-                    <input type="password" class="form-control form-control-user" id="exampleRepeatPassword" placeholder="Repeat Password">
+                  <div class="col-sm-6 mb-3 mb-sm-0">
+                    <input type="phone" class="form-control form-control-user" id="phoneNumber" name="phoneNumber" placeholder="Phone number">
                   </div>
                 </div>
-                  <div id="message">
-  <h3>Password must contain the following:</h3>
-  <p id="letter" class="invalid">A <b>lowercase</b> letter</p>
-  <p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>
-  <p id="number" class="invalid">A <b>number</b></p>
-  <p id="length" class="invalid">Minimum <b>8 characters</b></p>
-</div>
+                <div class="form-group row">
+                  <div class="col-sm-9 mb-3 mb-sm-0">
+                    <input type="email" class="form-control form-control-user" id="email" name="email" placeholder="Email Address">
+                  </div>
+                  <div class="col-sm-3 mb-3 mb-sm-0">
+                    <input type="number" class="form-control form-control-user" id="vendorid" name="vendorid" placeholder="Vendor Id">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <div class="col-sm-6 mb-3 mb-sm-0">
+                    <input type="password" class="form-control form-control-user" id="password" name="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"  placeholder="Password" required>
+                  </div>
+                  <div class="col-sm-6">
+                    <input type="password" class="form-control form-control-user" id="repeatPassword" name="repeatPassword"  placeholder="Repeat Password">
+                  </div>
+                </div>
+                <div class="rounded shadow-lg bg-white rounded" id="message" style="position:absolute;top:100px">
+                  <h6>Password must contain the following:</h6>
+                  <p id="letter" class="invalid py-0" style="font-size: 16px;">A <b>lowercase</b> letter</p>
+                  <p id="capital" class="invalid py-0" style="font-size: 16px;">A <b>capital (uppercase)</b> letter</p>
+                  <p id="number" class="invalid py-0" style="font-size: 16px;">A <b>number</b></p>
+                  <p id="length" class="invalid py-0" style="font-size: 16px;">Minimum <b>8 characters</b></p>
+                </div>
                 <input type="submit" class="btn btn-primary btn-user btn-block" value="Register Account">
                 
               </form>
@@ -157,7 +161,7 @@ input {
 
   </div>
   <script>
-var myInput = document.getElementById("psw");
+var myInput = document.getElementById("password");
 var letter = document.getElementById("letter");
 var capital = document.getElementById("capital");
 var number = document.getElementById("number");

@@ -57,7 +57,7 @@ myFunctinForListener(marker, infowindow);
 },
 complete: function() {
   // Schedule the next request when the current one's complete
-  setTimeout(worker, 10000);
+  setTimeout(worker, 100000);
 },
 });
 }
@@ -168,7 +168,7 @@ content: '<p>Latitude: ' +lat + '</p>'+
                                                 polyarray.push('{"lat":'+polylinePath.getArray()[i].lat() + ', "lng":' + polylinePath.getArray()[i].lng() + '}');
                                               }
                                             });
-                        						setTimeout(worker,5000);
+                        						setTimeout(worker,500000);
                                           }
                     </script>
                 <script async differ type="text/javascript" 

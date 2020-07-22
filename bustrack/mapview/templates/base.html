@@ -662,31 +662,20 @@
             var str = ''
             var newAlertList=[]
             for (var i = data.length-1; i >=0; i--) {
-              str+="<li class='list-group-item d-flex justify-content-between lh-condensed'><div><h6 class='my-0 font-weight-bold'>Bus - " + data[i]['routeId'] + "</h6><small class='text-muted'>"+data[i]['alert']+"</small></div><span class='md-2'><i class='fas fa-circle' style='color: #e74a3b;'></i></span></li>"
-              if (!alertList.includes(data[i]['IMEI'])){
-				var a='',b,c=0;
-				for(var j=0;j<data[i]['alert'].length;j++){
-				a+=data[i]['alert'][j];
-				if (data[i]['alert'][j]==' ' && c==0){
-				b=a;
-				a='';
-				c+=1;
-				}
-				}
-                document.getElementById("alert-info").innerHTML = b+" - "+parseInt(data[i]['routeId']) + " "+a;
+              time=data[i]['alertTime']
+              str+="<li class='list-group-item d-flex justify-content-between lh-condensed'><div><h6 class='my-0 font-weight-bold'>Bus - " + data[i]['routeId'] + "</h6><small class='text-muted'>"+data[i]['description']+" - "+time.substring(17,22)+"</small></div><span class='md-2'><i class='fas fa-circle' style='color: #e74a3b;'></i></span></li>"
+              if (!alertList.includes(data[i])){
+                document.getElementById("alert-info").innerHTML = "Bus - "+parseInt(data[i]['routeId'])+ " : " + data[i]['description'] + " " ;
                 notification();
               }
-              newAlertList.push(data[i]['IMEI']);
+              newAlertList.push(data[i]);
             }
             document.getElementById("alert-list").innerHTML = str;
-            // var alertBody =document.getElementById("alert-body"); 
-            // if(alertBody!=null)
-            // alertBody.innerHTML = str;
-            alertList = newAlertList;
-            window.localStorage.setItem('alertList',alertList);
-            var alertCount = data.length;
+            window.localStorage.setItem('alertList',newAlertList);
+            var alertCount = newAlertList.length;
+            if(alertCount>0){
             if ( alertCount>5 ){ document.getElementById("alert-count").innerHTML = "5+"; }
-            else{ document.getElementById("alert-count").innerHTML = alertCount; }
+            else{ document.getElementById("alert-count").innerHTML = alertCount; }}
           }
         });
             
