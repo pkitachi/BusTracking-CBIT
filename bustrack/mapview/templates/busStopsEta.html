@@ -67,7 +67,7 @@ function worker() {
     },
     complete: function() {
       // Schedule the next request when the current one's complete
-      setTimeout(worker, 200000);
+      setTimeout(worker, 2000000000000000);
     }
   });
 }
@@ -270,8 +270,12 @@ function worker() {
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
               <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Ignition</div>
-              <div class="h6 mb-0 font-weight-bold text-gray-800" style="text-transform:capitalize">{{prop.ignition}}</div>
-            </div>
+              {%if prop.ignition_status == 1 %}
+              <div class="h6 mb-0 font-weight-bold text-gray-800" style="text-transform:capitalize">On</div>
+              {%else%}
+              <div class="h6 mb-0 font-weight-bold text-gray-800" style="text-transform:capitalize">Off</div>
+              {%endif%}
+			  </div>
             <div class="col-auto">
               <i class="fas fa-bus fa-2x text-gray-300"></i>
             </div>
@@ -366,15 +370,11 @@ function worker() {
         <div class="card-body">
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
-              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Battery</div>
+              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Battery Voltage</div>
                 <div class="row no-gutters align-items-center">
                   <div class="col-auto">
-                    <div class="h6 mb-0 mr-3 font-weight-bold text-gray-800">{{prop.battery}}%</div>
+                    <div class="h6 mb-0 mr-3 font-weight-bold text-gray-800">{{prop.battery_volatge}}V</div>
                   </div>
-                  <div class="col">
-                    <div class="progress progress-sm mr-1">
-                      <div class="progress-bar bg-warning" role="progressbar" style="width: {{prop.battery}}%" aria-valuenow="{{prop.battery}}" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
                   </div>
                 </div>
               </div>

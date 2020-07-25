@@ -70,9 +70,9 @@ function down(){
                   <tbody>
                   {% for i in geofence_report %}
                     <tr>
-					<script> d.push({'busno':{{ i.routeId }},'time':(new Date('{{ i.gTime }}').toLocaleString()),'status':g({{i.status}})}) </script>
+					<script> d.push({'busno':{{ i.routeId }},'time':'{{ i.gTime }}','status':g({{i.status}})}) </script>
                       <th scope="row">{{ i.routeId }}</th>
-                      <td><script>document.write((new Date('{{ i.gTime }}').toLocaleString()))</script></td>
+                      <td><script>document.write('{{ i.gTime }}')</script></td>
                       {% if i.status == 0 %}
                       <td> EXIT </td>
                       {% else %}
