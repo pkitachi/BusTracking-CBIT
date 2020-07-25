@@ -13,10 +13,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
-  <link rel="shortcut icon" type="image/png" href="{% static 'cbit.png' %}"/>
-  <title>{%block title%}{%endblock%}</title>
-
-  
   <!-- Custom fonts for this template-->
   <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
@@ -25,10 +21,9 @@
   <link rel="stylesheet" type="text/css" href="{% static 'css/sb-admin-2.min.css' %}">
   <!-- Custom styles for this template-->
   <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
-  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.2.4.min.js">
-</script>
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.2.4.min.js"></script>
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-
+  <!-- Added Only in reports -->
     
 
 </head>
@@ -250,8 +245,10 @@
 
         </nav>
         <!-- End of Topbar -->
-{% block main%}
-{% endblock%}
+        
+    {% block content %}
+
+    {% endblock content %}
 
 <!-- Popup -->
               <div class="modal fade popup" id="bus-list" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -542,16 +539,6 @@
             </div>
           </div>
         </div>
-		
-      <!-- Footer -->
-      <footer class="sticky-footer bg-white col-lg-12 mb-4">
-        <div class="container my-auto">
-          <div class="copyright text-center my-auto">
-            <span>Copyright &copy; Your Website 2020</span>
-          </div>
-        </div>
-      </footer>
-      <!-- End of Footer -->
 	  
   <!-- Scroll to Top Button-->
   <a class="scroll-to-top rounded" href="#page-top">

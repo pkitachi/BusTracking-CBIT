@@ -1,0 +1,29 @@
+{% include 'reports/base.html' %}
+{% include 'reports/base1.html' %}
+{% load static %}
+{% block head %}
+{% load static %}
+<script src="{% static 'reports/js/routes.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'reports/css/routes.css' %}">
+{% endblock head %}
+{% block content %}
+    <div class="container">
+      
+       <h2 style="color: #4e73df;">Routes </h2>       
+        <table class="row">
+            <table id="example" class="table" >
+                <thead>
+                    <tr>
+                        <th scope="row">Vehicle No</th>
+                        <th scope="row">Route Id</th>
+                        <th scope="row">Route Name</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock content %}

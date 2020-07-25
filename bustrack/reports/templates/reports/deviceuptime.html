@@ -1,0 +1,80 @@
+{% include 'reports/base.html' %}
+{% include 'reports/base1.html' %}
+
+{% block head %}
+{% load static %}
+<script src="{% static 'reports/js/deviceUptime.js'%}"></script>
+<link rel = "stylesheet" type="text/css" href = "{% static 'reports/css/deviceUptime.css' %}">
+{% endblock head %}
+    
+  
+    {% block content %}
+    
+  
+
+    <div class = "container" style="padding-top:20px">
+        <div id="error-msg" class="alert alert-danger" role="alert"></div>
+    
+        <h3 style="color: #4e73df;">Device Uptime Hours</h3>
+        
+        <div class="row">
+
+            <div class="input-group ">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="addon-wrapping"
+                    style="background-color: #4e73df; color:white">Bus No</span>
+                </div>
+                <input type="text" id="busno" class="form-control" placeholder="Enter Bus No" aria-label="Username" aria-describedby="addon-wrapping">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm">
+                    <div class="input-group date"  data-target-input="nearest">
+                   
+                        <input type="text" placeholder="From Date" id="start_date"class="form-control datetimepicker-input" data-target="#start_date"/>
+
+                        <div class="input-group-append" data-target="#start_date" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                    </div>
+            </div>
+            <div class="col-sm">  
+     
+                    <div class="input-group date"  data-target-input="nearest">
+                        
+                        <input type="text" placeholder="From Date" id="end_date" class="form-control datetimepicker-input" 
+                        
+                        data-target="#end_date"/>
+                        <div class="input-group-append" data-target="#end_date" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+         
+ <button type="button" class="btn btn-secondary btn-sm btn-block" id="searchBus" style="background-color: #4e73df; color:white">
+ Search</button><br/>
+
+        
+
+    <table id="example" class="table" style="width:100%">
+        <thead >
+            <tr>
+                <th scope="row" >Date</th>
+                <th scope="row" >Run Time</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            
+        </tbody>
+    </table>
+ </div>
+    {% endblock content %}
+    
+    
+
+
+
+
