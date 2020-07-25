@@ -21,6 +21,8 @@ urlpatterns = [
     path('home/alerts/',views.alerts,name='alerts'),
     #home/ajax-refresh/
     path('home/ajax-refresh/', views.apicall,name='apicall'),
+    #home/sms/
+    path('home/sms/', views.apicall,name='sms'),
     #home/alert-call/
     re_path(r'^home/alert-call/(?P<date>.+)/$', views.alertcall,name='alertcall'),
 	#/info/<bno>

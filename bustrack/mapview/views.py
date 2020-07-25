@@ -312,14 +312,17 @@ def alerts(request):
 def apicall(request):
 	if(p!=None):
 		today = date.today()
-		datee=str(today.year)+'-'+str(today.month)+'-'+str(today.day-1)
+		datee=str(today.year)+'-'+str(today.month)+'-'+str(today.day-4)
 		tr=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/alerts',headers={'Authorization':f'Bearer {p}'},data={'alertDate':datee})
 		alertRes=tr.json()
 		return JsonResponse(alertRes,safe=False)
 	else:
 		s={'status':''}
 		return redirect('/')
-
+def sms(request,msg):
+	global p
+	t=requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/sms',headers={'Authorization':f'Bearer {p}'},data={'to':'krishna','description':msg})
+	return None
 
 def alertcall(request, date):
 	tr=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/alerts',headers={'Authorization':f'Bearer {p}'}, data={'alertDate':date})

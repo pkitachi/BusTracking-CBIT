@@ -25,8 +25,7 @@
   <link rel="stylesheet" type="text/css" href="{% static 'css/sb-admin-2.min.css' %}">
   <!-- Custom styles for this template-->
   <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
-  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.2.4.min.js">
-</script>
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.2.4.min.js"></script>
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
     
@@ -96,7 +95,7 @@
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">View Reports:</h6>
             <a class="collapse-item" href="{%url 'deviceuptime'%}">Device Uptime</a>
-            <a class="collapse-item" href="{%url 'alerts'%}">Alerts</a>
+            <a class="collapse-item" href="{%url 'repalerts'%}">Alerts</a>
             <a class="collapse-item" href="{%url 'routes'%}">Routes</a>
 			      <a class="collapse-item" href="{%url 'geofence_report'%}"  data-toggle="modal" data-target="#geo-report"  aria-expanded="true" aria-controls="collapseUtilities">GeoFence Report</a>
             <a class="collapse-item" href="{%url 'distance'%}">Distance</a>
@@ -611,6 +610,14 @@
       </div>
     </div>
     <script>
+      function sms(msg){
+        $.ajax({
+          type: "GET",
+          msg:msg,
+          url: "{% url 'sms' %}",
+          success: console.log('Yes')
+        });
+      }
       function notification(){
         $('.alert').addClass("show");
         $('.alert').removeClass("hide");
@@ -646,7 +653,7 @@
       function myLoop() {
         setTimeout(function() {
           if (i < 1) {     
-            refresh();      
+            refresh();
             myLoop();
           }
         }, 10000)
@@ -659,23 +666,21 @@
           url: "{{ '/home/ajax-refresh/' }}",
           success: function(data,textStatus,request){
             var str = ''
-            var newAlertList=[]
             for (var i = data.length-1; i >=0; i--) {
               time=data[i]['alertTime']
               str+="<li class='list-group-item d-flex justify-content-between lh-condensed'><div><h6 class='my-0 font-weight-bold'>Bus - " + data[i]['routeId'] + "</h6><small class='text-muted'>"+data[i]['description']+" - "+time.substring(17,22)+"</small></div><span class='md-2'><i class='fas fa-circle' style='color: #e74a3b;'></i></span></li>"
-              if (!alertList.includes(data[i])){
+              if (!alertList.includes(JSON.stringify(data[i]))){
                 document.getElementById("alert-info").innerHTML = "Bus - "+parseInt(data[i]['routeId'])+ " : " + data[i]['description'] + " " ;
+                // sms(data[i]['description']);
                 notification();
+                alertList.push(JSON.stringify(data[i]));
               }
-              newAlertList.push(data[i]);
             }
             document.getElementById("alert-list").innerHTML = str;
-            window.localStorage.setItem('alertList',newAlertList);
-            var alertCount = newAlertList.length;
-            if(alertCount>0){
+            window.localStorage.setItem('alertList',alertList);
+            var alertCount = data.length;
             if ( alertCount>5 ){ document.getElementById("alert-count").innerHTML = "5+"; }
             else{ document.getElementById("alert-count").innerHTML = alertCount; }}
-          }
         });
             
       }
