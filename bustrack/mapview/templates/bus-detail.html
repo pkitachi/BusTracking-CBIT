@@ -30,9 +30,15 @@ function worker() {
 		});
 	  var latlng = new google.maps.LatLng(latVal, lonVal);
 	  marker.setPosition(latlng);
-	  marker.setTitle("Latitude:"+latVal+"  Longitude:"+lonVal);
-	  document.getElementById("lat").innerHTML="Lat: "+latVal;
-	  document.getElementById("lon").innerHTML="Lng: "+lonVal;
+			  const geocoder = new google.maps.Geocoder();
+			  geocoder.geocode({ location: pos }, (results, status) => {
+                                if (status === "OK") {
+                                  if (results[0]) {
+								  document.getElementById("addr").innerHTML=results[0].formatted_address;
+								  
+								marker.setTitle(results[0].formatted_address);}
+								  }
+								  });
 	  document.getElementById("speed").innerHTML=data['speed']+" KMPH";
     },
     complete: function() {
@@ -231,8 +237,19 @@ function worker() {
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
               <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">Location</div>
-              <div class="text-xs mb-0 text-gray-800" id="lat">Lat: {{curRaw.lat}}</div>
-              <div class="text-xs mb-0 text-gray-800" id="lon">Lng: {{curRaw.lon}}</div>
+              <div class="text-xs mb-0 text-gray-800" id="addr">
+			  <script>
+			  pos={'lat':{{curRaw.lat}},'lng':{{curRaw.lon}}}
+			  const geocoder = new google.maps.Geocoder();
+			  geocoder.geocode({ location: pos }, (results, status) => {
+                                if (status === "OK") {
+                                  if (results[0]) {
+								  document.getElementById("addr").innerHTML=(results[0].formatted_address);
+								  }
+								  }
+								  });
+			  
+			  </script></div>
             </div>
             <div class="col-auto">
               <i class="fas fa-map-marker fa-2x text-gray-300"></i>
@@ -298,7 +315,7 @@ function worker() {
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
               <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Battery Voltage</div>
-              <div class="h6 mb-0 font-weight-bold text-gray-800">{{prop.battery_volatge}}V</div>
+              <div class="h6 mb-0 font-weight-bold text-gray-800">{{prop.battery_voltage}} V</div>
             </div>
           </div>
         </div>

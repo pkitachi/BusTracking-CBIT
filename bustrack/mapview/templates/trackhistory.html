@@ -75,7 +75,7 @@ TrackHistory-{{bno}}
                     time = '{{i.updatedTime}}';
 					if (c%5==0){
 					speed = '{{i.speed}}'+' KMPH';
-					battery = {{i.battery}}+'%';
+					battery = '{{i.battery_voltage}}'+' V';
 					fuel = {{i.fuel}}+ '%';
                     waypts.push({
                         location: pos,
@@ -98,6 +98,7 @@ TrackHistory-{{bno}}
                         icon:"http://maps.google.com/mapfiles/kml/pal3/icon61.png",                        
                     });
 					}
+					
                     var infowindow = new google.maps.InfoWindow({
                     content: '<p>Time: '+time + '</p>'+
                              '<p>Latitude: '+lat + '</p>'+

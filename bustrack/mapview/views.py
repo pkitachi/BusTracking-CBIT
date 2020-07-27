@@ -207,10 +207,10 @@ def trackhistory(request):
 				#runHrs=th.json()[-1]['runHrs']
 				dname=th.json()[0]['driverName']
 				dphone=th.json()[0]['driverPhone']
-				#vNo=th.json()[0]['vehicleNo']
+				vNo=th.json()[0]['vehicleNo']
 			except IndexError:
-				return render(request,'indexerror.html')#'vNo':vNo,'runHrs':runHrs,
-		return render(request,'trackhistory.html',{'buses':buses,"bno":bno,"date":date,"track_his":track_his,"dname":dname,"dphone":dphone})
+				return render(request,'indexerror.html')#'runHrs':runHrs,
+		return render(request,'trackhistory.html',{'vNo':vNo,'buses':buses,"bno":bno,"date":date,"track_his":track_his,"dname":dname,"dphone":dphone})
 	else:
 		s={'status':''}
 		return redirect('/')
@@ -245,9 +245,10 @@ def replaytracking(request):
 			th=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno,'deviceTime':date})
 			track_replay=th.json()
 			#runHrs=th.json()[-1]['runHrs']
+			vNo=th.json()[0]['vehicleNo']
 			dname=th.json()[0]['driverName']
 			dphone=th.json()[0]['driverPhone']#'runHrs':runHrs,
-			return render(request,'replayTrack.html',{'buses':buses,"bno":bno,"date":date,"track_replay":track_replay,"dname":dname,"dphone":dphone}) 
+			return render(request,'replayTrack.html',{'vNo':vNo,'buses':buses,"bno":bno,"date":date,"track_replay":track_replay,"dname":dname,"dphone":dphone}) 
 	else:
 		s={'status':''}
 		return redirect('/')

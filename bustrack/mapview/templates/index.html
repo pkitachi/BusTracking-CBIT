@@ -15,7 +15,7 @@ function worker() {
 console.log('ok');
 img="{% static 'markers/Bus.png' %}"
 for (var i = 0; i < data.length; i++) {
-var im=(data[i]['IMEI']).toString();
+var im=(data[i]['imei']).toString();
 var lat = parseFloat(data[i]['latitude']);
 var lng = parseFloat(data[i]['longitude']);
 var pos={lat:lat ,lng:lng};
@@ -35,11 +35,10 @@ geocoder.geocode({ location: pos }, (results, status) => {
                                   if (results[0]) {
                                     var infowindow = new google.maps.InfoWindow({
                                         content: '<p>' +results[0].formatted_address+ '</p>'+
-		  '<p>Speed:' + speed + '</p>'+
-		  '<p>Altitude:' + data[i]['altitude'] + '</p>'+
-		  '<p>Battery:' + data[i]['battery_voltage'] + '</p>'+
-		  '<p>Fuel:' + data[i]['fuel'] + '</p>'+
-		  '<p>Alert:' + data[i]['alert'] + '</p>'+
+		  '<p>Speed: ' + speed + ' KMPH </p>'+
+		  '<p>Battery: ' + data[i]['battery_voltage'] + 'V </p>'+
+		  '<p>Fuel: ' + data[i]['fuel'] + '</p>'+
+		  '<p>Alert: ' + data[i]['alert'] + '</p>'+
 		  '<a href = "/home/Bus-'+ k +'">Live Tracking </a>'
                                     });
                                     myFunctinForListener(marker, infowindow);
@@ -66,11 +65,10 @@ geocoder.geocode({ location: pos }, (results, status) => {
                                   if (results[0]) {
                                     var infowindow = new google.maps.InfoWindow({
                                         content: '<p>' +results[0].formatted_address+ '</p>'+
-		  '<p>Speed:' + speed + '</p>'+
-		  '<p>Altitude:' + data[i]['altitude'] + '</p>'+
-		  '<p>Battery:' + data[i]['battery_voltage'] + '</p>'+
-		  '<p>Fuel:' + data[i]['fuel'] + '</p>'+
-		  '<p>Alert:' + data[i]['alert'] + '</p>'+
+		  '<p>Speed: ' + speed + ' KMPH</p>'+
+		  '<p>Battery: ' + data[i]['battery_voltage'] + 'V </p>'+
+		  '<p>Fuel: ' + data[i]['fuel'] + '</p>'+
+		  '<p>Alert: ' + data[i]['alert'] + '</p>'+
 		  '<a href = "/home/Bus-'+ k +'">Live Tracking </a>'
                                     });
                                     myFunctinForListener(marker, infowindow);
@@ -165,7 +163,7 @@ complete: function() {
                         img="{% static 'markers/Bus.png' %}"
 						const geocoder = new google.maps.Geocoder();
                         {% for i in track_liv %}
-						  var imei='{{i.IMEI}}';
+						  var imei='{{i.imei}}';
 						  mIMEI.push(imei)
                           var lat = parseFloat('{{i.latitude}}');
                           var lng = parseFloat('{{i.longitude}}');
@@ -185,11 +183,10 @@ complete: function() {
                                   if (results[0]) {
                                     var infowindow = new google.maps.InfoWindow({
                                         content: '<p>' +results[0].formatted_address+ '</p>'+
-                                        '<p>Speed:' + '{{i.speed}}' + '</p>'+
-                                        '<p>Altitude:' + '{{i.altitude}}' + '</p>'+
-                                        '<p>Battery:' + '{{i.battery}}' + '</p>'+
-                                        '<p>Fuel:' + '{{i.fuel}}' + '</p>'+
-                                        '<p>Alert:' + '{{i.alert}}' + '</p>'+
+                                        '<p>Speed:' + ' {{i.speed}} KMPH' + '</p>'+
+                                        '<p>Battery:' + ' {{i.battery_voltage}} V' + '</p>'+
+                                        '<p>Fuel:' + ' {{i.fuel}}' + '</p>'+
+                                        '<p>Alert:' + ' {{i.alert}}' + '</p>'+
                                         '<a href = "/home/Bus-'+ k +'">Live Tracking </a>'
                                     });
                                     myFunctinForListener(marker, infowindow);
