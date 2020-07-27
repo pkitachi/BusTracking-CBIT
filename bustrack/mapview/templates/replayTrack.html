@@ -92,8 +92,7 @@ Replay Tracking-{{bno}}
                     {% for i in track_replay %}
                     lat = parseFloat('{{i.latitude}}');
                     lng = parseFloat('{{i.longitude}}');
-                    time = new Date('{{i.updatedTime}}');
-					time=time.toLocaleString()
+                    time = '{{i.updatedTime}}';
 					console.log(time)
 					speed = '{{i.speed}}'+' KMPH';
 					battery = '{{i.battery}}'+'%';
@@ -322,8 +321,8 @@ Replay Tracking-{{bno}}
                   timer = setInterval(LoadPB, speed);
                 }
                 </script>
-                <script async differ type="text/javascript" 
-                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBWDD6lfrsc3-WbmUxC4QIQw57GHgIooqs&libraries=drawing&callback=initMap">
+                <script async differ type="text/javascript"  
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyArbAIIe2DNFzV8bWdqno7S-9UcZmMlkos&libraries=drawing&callback=initMap">
                 </script>
             </div>
         </div>
@@ -351,7 +350,7 @@ Replay Tracking-{{bno}}
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
               <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Vehicle Info</div>
-              <div class="h6 mb-0 font-weight-bold text-gray-800">TS 18 XX XXXX </div>
+              <div class="h6 mb-0 font-weight-bold text-gray-800">{{vNo}} </div>
             </div>
             <div class="col-auto">
               <i class="fas fa-bus fa-2x text-gray-300"></i>

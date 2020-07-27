@@ -71,14 +71,15 @@ TrackHistory-{{bno}}
 					lat = parseFloat('{{i.latitude}}');
                     lng = parseFloat('{{i.longitude}}');
 					pos={lat:lat,lng:lng};
-                    time = (new Date('{{i.updatedTime}}')).toLocaleString();
+					console.log('{{i.updatedTime}}');
+                    time = '{{i.updatedTime}}';
 					if (c%5==0){
 					speed = '{{i.speed}}'+' KMPH';
 					battery = {{i.battery}}+'%';
 					fuel = {{i.fuel}}+ '%';
                     waypts.push({
                         location: pos,
-                        stopover: false,
+                        stopover: true,
                     });
                     k='{{bno}}';
 					if (c==0){
@@ -141,8 +142,8 @@ TrackHistory-{{bno}}
                                                                          
                 }
                 </script>
-                <script async differ type="text/javascript" 
-                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBWDD6lfrsc3-WbmUxC4QIQw57GHgIooqs&libraries=drawing&callback=initMap">
+                <script async differ type="text/javascript"
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyArbAIIe2DNFzV8bWdqno7S-9UcZmMlkos&libraries=drawing&callback=initMap">
                 </script>
             </div>
         </div>
@@ -170,7 +171,7 @@ TrackHistory-{{bno}}
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
               <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Vehicle Info</div>
-              <div class="h6 mb-0 font-weight-bold text-gray-800">TS 18 XX XXXX </div>
+              <div class="h6 mb-0 font-weight-bold text-gray-800">{{vNo}} </div>
             </div>
             <div class="col-auto">
               <i class="fas fa-bus fa-2x text-gray-300"></i>
