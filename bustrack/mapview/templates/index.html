@@ -14,6 +14,7 @@ function reLoad() {
 console.log('ok');
 window.localStorage.setItem('cur',0);
 window.localStorage.setItem('maxi',data.length-1);
+var indices=[];
 img="{% static 'markers/Bus.png' %}"
 for (var i = 0; i < data.length; i++) {
 var im=(data[i]['imei']).toString();
@@ -57,12 +58,13 @@ position: pos,
 label:''+k,                      
 });
 markers.push(marker);
+indices.push(markers.length-1)
 geocoder.geocode({ location: pos }, (results, status) => {
                                 if (status === "OK") {
                                   if (results[0]) {
-								  var i=window.localStorage.getItem('cur');
-								  
-							console.log(data[i]['ignition_status'].toString());
+								  var i=parseInt(window.localStorage.getItem('cur'));
+								  var indices = JSON.parse(window.localStorage.getItem("indices"));
+                                    
                                     var infowindow = new google.maps.InfoWindow({
 									content: '<table border="1" cellpadding="5" style="text-align:center;  font-size: 0.9em;">'+
                                                   '<tr><td colspan="5" ><i class="fa fa-bus" aria-hidden="true"></i>&nbsp;&nbsp;'+data[i]['imei']+'</td></tr>'+
@@ -74,8 +76,7 @@ geocoder.geocode({ location: pos }, (results, status) => {
                                                   '<tr><td colspan="5"><i class="fa fa-location-arrow" aria-hidden="true">&nbsp;&nbsp;</i><a href = "/home/Bus-'+ k +'">Live Tracking </a></td></tr>'+
                                                   '</table>'
                                     });
-									
-                                    myFunctinForListener(marker, infowindow);
+                                    myFunctinForListener(markers[indices[i]], infowindow);
 									window.localStorage.setItem('cur',i+1);
                                   }
                                 }
@@ -84,37 +85,7 @@ geocoder.geocode({ location: pos }, (results, status) => {
 
 }
 else{
-console.log('update');
-markers[ind].setMap(null)
-marker = new google.maps.Marker({
-map: map,
-icon:img,
-position: pos,
-label:''+k,                      
-});
-d[im]=pos;
-markers[ind]=marker;
-geocoder.geocode({ location: pos }, (results, status) => {
-                                if (status === "OK") {
-                                  if (results[0]) {
-								  var i=window.localStorage.getItem('cur');
-                                    var infowindow = new google.maps.InfoWindow({
-									content: '<table border="1" cellpadding="5" style="text-align:center;  font-size: 0.9em;">'+
-                                                  '<tr><td colspan="5" ><i class="fa fa-bus" aria-hidden="true"></i>&nbsp;&nbsp;'+data[i]['imei']+'</td></tr>'+
-                                                  '<tr><td colspan="5"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;&nbsp;'+results[0].formatted_address+'</td></tr>'+
-                                                  '<tr><td colspan="4"> <i class="fa fa-user-circle" aria-hidden="true"></i>&nbsp;&nbsp;'+data[i]['driverName']+'</td><td rowspan="3" style="background-color:yellow;font-size:16px;">'+data[i]['speed']+' KMPH</td></tr>'+
-                                                  '<tr><td colspan="4"> <i class="fa fa-mobile" aria-hidden="true"></i>&nbsp;&nbsp;'+data[i]['driverPhone']+'</td></tr>'+
-                                                  '<tr><td><i class="fa fa-circle" aria-hidden="true" style="color:'+data[i]['ignition_status'].toString()+';font-size: 0.7em;"></i>&nbsp;&nbsp;IGN </td><td><i class="fa fa-circle" aria-hidden="true" style="color:'+data[i]['mains_power'].toString()+';font-size: 0.7em;"></i>&nbsp;&nbsp;POW </td><td><i class="fa fa-circle" aria-hidden="true" style="color:'+data[i]['ac'].toString()+';font-size: 0.7em;"></i>&nbsp;&nbsp;AC </td><td><i class="fa fa-circle" aria-hidden="true" style="color:'+data[i]["gps_fix"].toString()+';font-size: 0.7em;"></i>&nbsp;&nbsp;GPS</td></tr>'+
-                                                  '<tr><td colspan="5"> <i  class="fa fa-circle" aria-hidden="true" style="color:'+data[i]['ignition_status'].toString()+';font-size: 0.7em;"></i>&nbsp;'+stat+'</td></tr>'+
-                                                  '<tr><td colspan="5"><i class="fa fa-location-arrow" aria-hidden="true">&nbsp;&nbsp;</i><a href = "/home/Bus-'+ k +'">Live Tracking </a></td></tr>'+
-                                                  '</table>'
-                                    });
-                                    myFunctinForListener(marker, infowindow);
-									window.localStorage.setItem('cur',i+1);
-                                  }
-                                }
-                          });
-
+console.log(JSON.stringify(d[im]),JSON.stringify(pos))
 if(JSON.stringify(d[im])!==JSON.stringify(pos)){
 console.log('update');
 markers[ind].setMap(null)
@@ -126,23 +97,26 @@ label:''+k,
 });
 d[im]=pos;
 markers[ind]=marker;
+indices.push(ind);
 geocoder.geocode({ location: pos }, (results, status) => {
                                 if (status === "OK") {
                                   if (results[0]) {
-								  var i=window.localStorage.getItem('cur');
+								  var i=parseInt(window.localStorage.getItem('cur'));
+									var indices = JSON.parse(window.localStorage.getItem("indices"));
+									
                                     var infowindow = new google.maps.InfoWindow({
 									content: '<table border="1" cellpadding="5" style="text-align:center;  font-size: 0.9em;">'+
                                                   '<tr><td colspan="5" ><i class="fa fa-bus" aria-hidden="true"></i>&nbsp;&nbsp;'+data[i]['imei']+'</td></tr>'+
                                                   '<tr><td colspan="5"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;&nbsp;'+results[0].formatted_address+'</td></tr>'+
                                                   '<tr><td colspan="4"> <i class="fa fa-user-circle" aria-hidden="true"></i>&nbsp;&nbsp;'+data[i]['driverName']+'</td><td rowspan="3" style="background-color:yellow;font-size:16px;">'+data[i]['speed']+' KMPH</td></tr>'+
                                                   '<tr><td colspan="4"> <i class="fa fa-mobile" aria-hidden="true"></i>&nbsp;&nbsp;'+data[i]['driverPhone']+'</td></tr>'+
-                                                  '<tr><td><i class="fa fa-circle" aria-hidden="true" style="color:"'+data[i]['ignition_status'].toString()+'";font-size: 0.7em;"></i>&nbsp;&nbsp;IGN </td><td><i class="fa fa-circle" aria-hidden="true" style="color:"'+data[i]['mains_power'].toString()+'";font-size: 0.7em;"></i>&nbsp;&nbsp;POW </td><td><i class="fa fa-circle" aria-hidden="true" style="color:"'+data[i]['ac'].toString()+'";font-size: 0.7em;"></i>&nbsp;&nbsp;AC </td><td><i class="fa fa-circle" aria-hidden="true" style="color:"'+data[i]["gps_fix"].toString()+'";font-size: 0.7em;"></i>&nbsp;&nbsp;GPS</td></tr>'+
-                                                  '<tr><td colspan="5"> <i  class="fa fa-circle" aria-hidden="true" style="color:"'+data[i]['ignition_status'].toString()+'";font-size: 0.7em;"></i>&nbsp;'+stat+'</td></tr>'+
+                                                  '<tr><td><i class="fa fa-circle" aria-hidden="true" style="color:'+data[i]['ignition_status'].toString()+';font-size: 0.7em;"></i>&nbsp;&nbsp;IGN </td><td><i class="fa fa-circle" aria-hidden="true" style="color:'+data[i]['mains_power'].toString()+';font-size: 0.7em;"></i>&nbsp;&nbsp;POW </td><td><i class="fa fa-circle" aria-hidden="true" style="color:'+data[i]['ac'].toString()+';font-size: 0.7em;"></i>&nbsp;&nbsp;AC </td><td><i class="fa fa-circle" aria-hidden="true" style="color:'+data[i]["gps_fix"].toString()+';font-size: 0.7em;"></i>&nbsp;&nbsp;GPS</td></tr>'+
+                                                  '<tr><td colspan="5"> <i  class="fa fa-circle" aria-hidden="true" style="color:'+data[i]['ignition_status'].toString()+';font-size: 0.7em;"></i>&nbsp;'+stat+'</td></tr>'+
                                                   '<tr><td colspan="5"><i class="fa fa-location-arrow" aria-hidden="true">&nbsp;&nbsp;</i><a href = "/home/Bus-'+ k +'">Live Tracking </a></td></tr>'+
                                                   '</table>'
                                     });
 									
-                                    myFunctinForListener(marker, infowindow);
+                                    myFunctinForListener(markers[indices[i]], infowindow);
 									window.localStorage.setItem('cur',i+1);
                                   }
                                 }
@@ -151,11 +125,13 @@ geocoder.geocode({ location: pos }, (results, status) => {
 }
 
 }
+window.localStorage.setItem("indices", JSON.stringify(indices));
+
 
 },
 complete: function() {
   // Schedule the next request when the current one's complete
-  setTimeout(reLoad, 100000);
+  setTimeout(reLoad, 10000);
 },
 });
 }
@@ -232,6 +208,7 @@ complete: function() {
                         });
                       }
                         img="{% static 'markers/Bus.png' %}"
+						var indices=[]
 						geocoder = new google.maps.Geocoder();
                         {% for i in track_liv %}
 						  var imei='{{i.imei}}';
@@ -249,9 +226,12 @@ complete: function() {
                             label:'{{i.routeId}}',                      
                           });
 						  markers.push(marker);
+						  indices.push(markers.indexOf(marker))
 						  geocoder.geocode({ location: pos }, (results, status) => {
                                 if (status === "OK") {
                                   if (results[0]) {
+								  var indices=JSON.parse(window.localStorage.getItem("indices"));
+								  var i=parseInt(window.localStorage.getItem("cur"));
                                     var infowindow = new google.maps.InfoWindow({
                                          content: '<table border="1" cellpadding="5" style="text-align:center;  font-size: 0.9em;">'+
                                                   '<tr><td colspan="5" ><i class="fa fa-bus" aria-hidden="true"></i>&nbsp;&nbsp;{{i.imei}}</td></tr>'+
@@ -263,19 +243,22 @@ complete: function() {
                                                   '<tr><td colspan="5"><i class="fa fa-location-arrow" aria-hidden="true">&nbsp;&nbsp;</i><a href = "/home/Bus-'+ k +'">Live Tracking </a></td></tr>'+
                                                   '</table>'
                                     });
-                                    myFunctinForListener(marker, infowindow);
+                                    myFunctinForListener(markers[indices[i]], infowindow);
+									window.localStorage.setItem("cur",i+1)
                                   }
                                 }
                           });
                        
                          
                         {% endfor %}
+						window.localStorage.setItem("indices", JSON.stringify(indices));
+						window.localStorage.setItem("cur",0);
 						//setTimeout(refresh,10000);
 						setTimeout(reLoad,10000);
                       }
                     </script>
                     <script async differ type="text/javascript" 
-                src="https://maps.googleapis.com/maps/api/js?key=RemoveThisAIzaSyArbAIIe2DNFzV8bWdqno7S-9UcZmMlkos&libraries=drawing&callback=initMap">
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyArbAIIe2DNFzV8bWdqno7S-9UcZmMlkos&libraries=drawing&callback=initMap">
                 </script>
                   </div>
                 </div>
