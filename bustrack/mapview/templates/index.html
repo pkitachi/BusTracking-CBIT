@@ -66,14 +66,14 @@ geocoder.geocode({ location: pos }, (results, status) => {
 								  var indices = JSON.parse(window.localStorage.getItem("indices"));
                                     
                                     var infowindow = new google.maps.InfoWindow({
-									content: '<table border="1" cellpadding="5" style="text-align:center;  font-size: 0.9em;">'+
+									content: '<table class="table" cellpadding="5" style="text-align:center;  font-size: 0.9em;">'+
                                                   '<tr><td colspan="5" ><i class="fa fa-bus" aria-hidden="true"></i>&nbsp;&nbsp;'+data[i]['imei']+'</td></tr>'+
                                                   '<tr><td colspan="5"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;&nbsp;'+results[0].formatted_address+'</td></tr>'+
-                                                  '<tr><td colspan="4"> <i class="fa fa-user-circle" aria-hidden="true"></i>&nbsp;&nbsp;'+data[i]['driverName']+'</td><td rowspan="3" style="background-color:yellow;font-size:16px;">'+data[i]['speed']+' KMPH</td></tr>'+
+                                                  '<tr><td colspan="4"> <i class="fa fa-user-circle" aria-hidden="true"></i>&nbsp;&nbsp;'+data[i]['driverName']+'</td><td rowspan="3" class="text-center text-white bg-warning rounded" style="font-size:16px;"><h3>'+data[i]['speed']+'</h3>KMPH</td></tr>'+
                                                   '<tr><td colspan="4"> <i class="fa fa-mobile" aria-hidden="true"></i>&nbsp;&nbsp;'+data[i]['driverPhone']+'</td></tr>'+
                                                   '<tr><td><i class="fa fa-circle" aria-hidden="true" style="color:'+data[i]['ignition_status'].toString()+';font-size: 0.7em;"></i>&nbsp;&nbsp;IGN </td><td><i class="fa fa-circle" aria-hidden="true" style="color:'+data[i]['mains_power'].toString()+';font-size: 0.7em;"></i>&nbsp;&nbsp;POW </td><td><i class="fa fa-circle" aria-hidden="true" style="color:'+data[i]['ac'].toString()+';font-size: 0.7em;"></i>&nbsp;&nbsp;AC </td><td><i class="fa fa-circle" aria-hidden="true" style="color:'+data[i]["gps_fix"].toString()+';font-size: 0.7em;"></i>&nbsp;&nbsp;GPS</td></tr>'+
-                                                  '<tr><td colspan="5"> <i  class="fa fa-circle" aria-hidden="true" style="color:'+data[i]['ignition_status'].toString()+';font-size: 0.7em;"></i>&nbsp;'+stat+'</td></tr>'+
-                                                  '<tr><td colspan="5"><i class="fa fa-location-arrow" aria-hidden="true">&nbsp;&nbsp;</i><a href = "/home/Bus-'+ k +'">Live Tracking </a></td></tr>'+
+                                                  '<tr><td colspan="3"> <i  class="fa fa-circle" aria-hidden="true" style="color:'+data[i]['ignition_status'].toString()+';font-size: 0.7em;"></i>&nbsp;'+stat+'</td>'+
+                                                  '<td colspan="2"><i class="fa fa-location-arrow" aria-hidden="true">&nbsp;&nbsp;</i><a href = "/home/Bus-'+ k +'">Live Tracking </a></td></tr>'+
                                                   '</table>'
                                     });
                                     myFunctinForListener(markers[indices[i]], infowindow);
@@ -105,14 +105,14 @@ geocoder.geocode({ location: pos }, (results, status) => {
 									var indices = JSON.parse(window.localStorage.getItem("indices"));
 									
                                     var infowindow = new google.maps.InfoWindow({
-									content: '<table border="1" cellpadding="5" style="text-align:center;  font-size: 0.9em;">'+
+									content: '<table class="table" cellpadding="5" style="text-align:center;  font-size: 0.9em;">'+
                                                   '<tr><td colspan="5" ><i class="fa fa-bus" aria-hidden="true"></i>&nbsp;&nbsp;'+data[i]['imei']+'</td></tr>'+
                                                   '<tr><td colspan="5"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;&nbsp;'+results[0].formatted_address+'</td></tr>'+
-                                                  '<tr><td colspan="4"> <i class="fa fa-user-circle" aria-hidden="true"></i>&nbsp;&nbsp;'+data[i]['driverName']+'</td><td rowspan="3" style="background-color:yellow;font-size:16px;">'+data[i]['speed']+' KMPH</td></tr>'+
+                                                  '<tr><td colspan="4"> <i class="fa fa-user-circle" aria-hidden="true"></i>&nbsp;&nbsp;'+data[i]['driverName']+'</td><td rowspan="3" class="text-center text-white bg-warning rounded" style="font-size:16px;"><h3>'+data[i]['speed']+'</h3>KMPH</td></tr>'+
                                                   '<tr><td colspan="4"> <i class="fa fa-mobile" aria-hidden="true"></i>&nbsp;&nbsp;'+data[i]['driverPhone']+'</td></tr>'+
                                                   '<tr><td><i class="fa fa-circle" aria-hidden="true" style="color:'+data[i]['ignition_status'].toString()+';font-size: 0.7em;"></i>&nbsp;&nbsp;IGN </td><td><i class="fa fa-circle" aria-hidden="true" style="color:'+data[i]['mains_power'].toString()+';font-size: 0.7em;"></i>&nbsp;&nbsp;POW </td><td><i class="fa fa-circle" aria-hidden="true" style="color:'+data[i]['ac'].toString()+';font-size: 0.7em;"></i>&nbsp;&nbsp;AC </td><td><i class="fa fa-circle" aria-hidden="true" style="color:'+data[i]["gps_fix"].toString()+';font-size: 0.7em;"></i>&nbsp;&nbsp;GPS</td></tr>'+
-                                                  '<tr><td colspan="5"> <i  class="fa fa-circle" aria-hidden="true" style="color:'+data[i]['ignition_status'].toString()+';font-size: 0.7em;"></i>&nbsp;'+stat+'</td></tr>'+
-                                                  '<tr><td colspan="5"><i class="fa fa-location-arrow" aria-hidden="true">&nbsp;&nbsp;</i><a href = "/home/Bus-'+ k +'">Live Tracking </a></td></tr>'+
+                                                  '<tr><td colspan="3"> <i  class="fa fa-circle" aria-hidden="true" style="color:'+data[i]['ignition_status'].toString()+';font-size: 0.7em;"></i>&nbsp;'+stat+'</td>'+
+                                                  '<td colspan="2"><i class="fa fa-location-arrow" aria-hidden="true">&nbsp;&nbsp;</i><a href = "/home/Bus-'+ k +'">Live Tracking </a></td></tr>'+
                                                   '</table>'
                                     });
 									
@@ -233,14 +233,14 @@ complete: function() {
 								  var indices=JSON.parse(window.localStorage.getItem("indices"));
 								  var i=parseInt(window.localStorage.getItem("cur"));
                                     var infowindow = new google.maps.InfoWindow({
-                                         content: '<table border="1" cellpadding="5" style="text-align:center;  font-size: 0.9em;">'+
+                                         content: '<table class="table" cellpadding="5" style="text-align:center;  font-size: 0.9em;">'+
                                                   '<tr><td colspan="5" ><i class="fa fa-bus" aria-hidden="true"></i>&nbsp;&nbsp;{{i.imei}}</td></tr>'+
                                                   '<tr><td colspan="5"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;&nbsp;'+results[0].formatted_address+'</td></tr>'+
-                                                  '<tr><td colspan="4"> <i class="fa fa-user-circle" aria-hidden="true"></i>&nbsp;&nbsp{{i.driverName}}</td><td rowspan="3" style="background-color:yellow;font-size:16px;">{{i.speed}} KMPH</td></tr>'+
+                                                  '<tr><td colspan="4"> <i class="fa fa-user-circle" aria-hidden="true"></i>&nbsp;&nbsp{{i.driverName}}</td><td rowspan="3" class="text-center text-white bg-warning rounded pt-4" style="font-size:16px;"><h3>{{i.speed}}</h3>KMPH</td></tr>'+
                                                   '<tr><td colspan="4"> <i class="fa fa-mobile" aria-hidden="true"></i>&nbsp;&nbsp;{{i.driverPhone}}</td></tr>'+
                                                   '<tr><td>{% if i.ignition_status == 1 %}<i class="fa fa-circle" aria-hidden="true" style="color:green;font-size: 0.7em;"></i>{% else %}<i class="fa fa-circle" aria-hidden="true" style="color:red;font-size: 0.7em;"></i>{% endif %}&nbsp;&nbsp;IGN </td><td>{% if i.mains_power == 1 %}<i class="fa fa-circle" aria-hidden="true" style="color:green;font-size: 0.7em;"></i>{% else %}<i class="fa fa-circle" aria-hidden="true" style="color:red;font-size: 0.7em;"></i>{% endif %}&nbsp;&nbsp;POW </td><td>{% if i.ac == 1 %}<i class="fa fa-circle" aria-hidden="true" style="color:green;font-size: 0.7em;"></i>{%else%}<i class="fa fa-circle" aria-hidden="true" style="color:red;font-size: 0.7em;"></i>{%endif%}&nbsp;&nbsp;AC </td><td>{% if i.gps_fix == 1%}<i class="fa fa-circle" aria-hidden="true" style="color:green;font-size: 0.7em;"></i>{%else%}<i class="fa fa-circle" aria-hidden="true" style="color:red;font-size: 0.7em;"></i>{%endif%}&nbsp;&nbsp;GPS</td></tr>'+
-                                                  '<tr><td colspan="5"> {% if i.ignition_status == 1%}<i  class="fa fa-circle" aria-hidden="true" style="color:green;font-size: 0.7em;"></i>&nbsp;Active{% else %}<i  class="fa fa-circle" aria-hidden="true" style="color:red;font-size: 0.7em;"></i> &nbsp;Stopped{% endif %}</td></tr>'+
-                                                  '<tr><td colspan="5"><i class="fa fa-location-arrow" aria-hidden="true">&nbsp;&nbsp;</i><a href = "/home/Bus-'+ k +'">Live Tracking </a></td></tr>'+
+                                                  '<tr><td colspan="3"> {% if i.ignition_status == 1%}<i  class="fa fa-circle" aria-hidden="true" style="color:green;font-size: 0.7em;"></i>&nbsp;Active{% else %}<i  class="fa fa-circle" aria-hidden="true" style="color:red;font-size: 0.7em;"></i> &nbsp;Stopped{% endif %}</td>'+
+                                                  '<td colspan="2"><i class="fa fa-location-arrow" aria-hidden="true">&nbsp;&nbsp;</i><a href = "/home/Bus-'+ k +'">Live Tracking </a></td></tr>'+
                                                   '</table>'
                                     });
                                     myFunctinForListener(markers[indices[i]], infowindow);
@@ -258,7 +258,7 @@ complete: function() {
                       }
                     </script>
                     <script async differ type="text/javascript" 
-                src="https://maps.googleapis.com/maps/api/js?key=RemoveThisAIzaSyArbAIIe2DNFzV8bWdqno7S-9UcZmMlkos&libraries=drawing&callback=initMap">
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyArbAIIe2DNFzV8bWdqno7S-9UcZmMlkos&libraries=drawing&callback=initMap">
                 </script>
                   </div>
                 </div>
