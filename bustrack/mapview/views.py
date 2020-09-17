@@ -209,7 +209,7 @@ def trackhistory(request):
 				dphone=th.json()[0]['driverPhone']
 				vNo=th.json()[0]['vehicleNo']
 			except IndexError:
-				return render(request,'indexerror.html')#'runHrs':runHrs,
+				return render(request,'indexerror.html',{'buses':buses})#'runHrs':runHrs,
 		return render(request,'trackhistory.html',{'vNo':vNo,'buses':buses,"bno":bno,"date":date,"track_his":track_his,"dname":dname,"dphone":dphone})
 	else:
 		s={'status':''}

@@ -1,3 +1,18 @@
-<html>
-<h2> The data entered/selected is invalid. </h2>
-</html>
+{%extends 'base.html'%}
+{% load static %}
+{%block title%}
+TrackHistory-{{bno}}
+{%endblock%}
+{%block trackhis%}active{%endblock%}
+{%block main%}
+<div class="container-fluid">
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800"></h1>
+        </div>
+        <!-- Content Row -->
+
+        <div class="row">
+<h2> Data doesn't exist for the selected date </h2>
+</div>
+</div>
+{%endblock%}
