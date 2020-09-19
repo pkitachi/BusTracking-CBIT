@@ -185,20 +185,7 @@ def index(request, rme = ''):
 		buses=t.json()
 		td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
 		track_liv=td.json()
-		tBus=[]
-		bBus=[]
-		onBus=[]
-		offBus=[]
-		for i in track_liv:
-			tBus.append({'routeId':i['routeId'],'routeName':i['routeName']})
-		for i in buses:
-			bBus.append({'routeId':i['routeId'],'routeName':i['routeName']})
-		for i in bBus:
-			if(i in tBus):
-				onBus.append(i)
-			else:
-				offBus.append(i)
-		return render(request,'index.html',{'buses':buses,'track_liv':track_liv,'rme':rme,'onBus':onBus,'offBus':offBus})
+		return render(request,'index.html',{'buses':buses,'track_liv':track_liv,'rme':rme})
 	else:
 		s={'status':''}
 		return redirect('/')
@@ -207,6 +194,8 @@ def trackhistory(request):
 	if(p!=None):
 		t=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
 		buses=t.json()
+		td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
+		track_liv=td.json()
 		runHrs=None;bno=None;date=None;track_his=None;driver={};
 		if request.method=="POST":
 			bno=int(request.POST.get('busno'))
@@ -216,14 +205,16 @@ def trackhistory(request):
 			date=('-'.join(temp))
 			th=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno,'deviceTime':date})
 			track_his=th.json()
+			td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
+			track_liv=td.json()
 			try:
 				#runHrs=th.json()[-1]['runHrs']
 				dname=th.json()[0]['driverName']
 				dphone=th.json()[0]['driverPhone']
 				vNo=th.json()[0]['vehicleNo']
 			except IndexError:
-				return render(request,'indexerror.html',{'buses':buses})#'runHrs':runHrs,
-		return render(request,'trackhistory.html',{'vNo':vNo,'buses':buses,"bno":bno,"date":date,"track_his":track_his,"dname":dname,"dphone":dphone})
+				return render(request,'indexerror.html',{'buses':buses,'track_liv':track_liv})#'runHrs':runHrs,
+		return render(request,'trackhistory.html',{'vNo':vNo,'buses':buses,"bno":bno,"date":date,"track_his":track_his,"dname":dname,"dphone":dphone,'track_liv':track_liv})
 	else:
 		s={'status':''}
 		return redirect('/')
@@ -231,9 +222,11 @@ def trackhistory(request):
 def eta(request, bno):
 	t=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
 	buses=t.json()
+	td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
+	track_liv=td.json()
 	td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno})
 	if(td.json()==[]):
-		return render(request, 'busStopsEta.html', {'curRaw':{'lat':0,'lng':0}, 'buses': buses,'bno':bno,'prop':{}})
+		return render(request, 'busStopsEta.html', {'curRaw':{'lat':0,'lng':0}, 'buses': buses,'bno':bno,'prop':{},'track_liv':track_liv})
 	curRaw={'lat':td.json()[0]['latitude'],'lon':td.json()[0]['longitude']}
 	# prop={'speed':td.json()[0]['speed'],'battery':td.json()[0]['battery_volatge'],'fuel':td.json()[0]['fuel'],}
 	global bus_res
@@ -242,13 +235,15 @@ def eta(request, bno):
 	except:
 		bus_co=[]
 	bStops = requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/busstops',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno})
-	return render(request, 'busStopsEta.html', {'curRaw':curRaw, 'buses': buses,'bno':bno,'prop':td.json()[0],'bus_co':bus_co, 'bStops':bStops.json()})
+	return render(request, 'busStopsEta.html', {'curRaw':curRaw, 'buses': buses,'bno':bno,'prop':td.json()[0],'bus_co':bus_co, 'bStops':bStops.json(),'track_liv':track_liv})
 		
 		
 def replaytracking(request):
 	if(p!=None):
 		t=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
 		buses=t.json()
+		td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
+		track_liv=td.json()
 		if request.method=="POST":
 			bno=int(request.POST.get('bno'))
 			date=request.POST.get('ddate')
@@ -261,7 +256,7 @@ def replaytracking(request):
 			vNo=th.json()[0]['vehicleNo']
 			dname=th.json()[0]['driverName']
 			dphone=th.json()[0]['driverPhone']#'runHrs':runHrs,
-			return render(request,'replayTrack.html',{'vNo':vNo,'buses':buses,"bno":bno,"date":date,"track_replay":track_replay,"dname":dname,"dphone":dphone}) 
+			return render(request,'replayTrack.html',{'vNo':vNo,'buses':buses,"bno":bno,"date":date,"track_replay":track_replay,"dname":dname,"dphone":dphone,'track_liv':track_liv}) 
 	else:
 		s={'status':''}
 		return redirect('/')
@@ -269,9 +264,11 @@ def clusterview(request):
 	if(p!=None):
 		t=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
 		buses=t.json()
+		td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
+		track_liv=td.json()
 		t=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
 		cluster=t.json()
-		return render(request,'clusterview.html',{'cluster':cluster,'buses': buses})
+		return render(request,'clusterview.html',{'cluster':cluster,'buses': buses,'track_liv':track_liv})
 	else:
 		s={'status':''}
 		return redirect('/')	
@@ -283,16 +280,18 @@ def detail(request, bno):
 	if(p!=None):
 		t=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
 		buses=t.json()
+		td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
+		track_liv=td.json()
 		td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno})
 		if(td.json()==[]):
-			return render(request, 'bus-detail.html', {'curRaw':{'lat':0,'lng':0}, 'buses': buses,'bno':bno,'prop':{}})
+			return render(request, 'bus-detail.html', {'curRaw':{'lat':0,'lng':0}, 'buses': buses,'bno':bno,'prop':{},'track_liv':track_liv})
 		curRaw={'lat':td.json()[0]['latitude'],'lon':td.json()[0]['longitude']}
 		global bus_res
 		try:
 			bus_co = [{'lat': float(i[1]), 'lng': float(i[0])} for i in bus_res[bno]]
 		except:
 			bus_co=[]
-		return render(request, 'bus-detail.html', {'curRaw':curRaw, 'buses': buses,'bno':bno,'prop':td.json()[0],'bus_co':bus_co})
+		return render(request, 'bus-detail.html', {'curRaw':curRaw, 'buses': buses,'bno':bno,'prop':td.json()[0],'bus_co':bus_co,'track_liv':track_liv})
 	else:
 		s={'status':''}
 		return redirect('/')	
@@ -308,6 +307,8 @@ def alerts(request):
 		track=tr.json()
 		t=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/buses',headers={'Authorization':f'Bearer {p}'})
 		buses=t.json()
+		td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
+		track_liv=td.json()
 		if (request.method)=="POST":
 			gmailaddress =request.POST['smail']
 			gmailpassword=request.POST['pass']
@@ -320,7 +321,7 @@ def alerts(request):
 			mailServer.quit()
 			return HttpResponseRedirect(request.path_info)
 		else:
-			return render(request,'alerts.html',{'track':track, 'buses': buses})
+			return render(request,'alerts.html',{'track':track, 'buses': buses,'track_liv':track_liv})
 	else:
 		s={'status':''}
 		return redirect('/') 
@@ -350,6 +351,8 @@ def geofence_report(request):
 		cluster=track_data.json()
 		bus = requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
 		buses = bus.json()
+		td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
+		track_liv=td.json()
 		geofence_report = None
 		if request.method=="POST":
 			bno=request.POST.get('busno')
@@ -373,7 +376,7 @@ def geofence_report(request):
 				else:
 					ress=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/geofence',headers={'Authorization':f'Bearer {p}'},data={'fromDate':gDate,'toDate':gDate1})
 			geofence_report=ress.json()
-		return render(request,'geofence_report.html',{'cluster':cluster,'buses': buses,'geofence_report':geofence_report})
+		return render(request,'geofence_report.html',{'cluster':cluster,'buses': buses,'geofence_report':geofence_report,'track_liv':track_liv})
 	else:
 		s={'status':''}
 		return redirect('/')
@@ -384,6 +387,8 @@ def buses(request):
 		b = b.json()
 		drv = requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/sms',headers={'Authorization':f'Bearer {p}'})
 		drv = drv.json()
+		td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
+		track_liv=td.json()
 		if (request.method)=="POST":
 			lis=request.POST.get('lis')
 			message=request.POST['mess']
@@ -394,7 +399,7 @@ def buses(request):
 			print(num)
 			return HttpResponseRedirect(request.path_info)
 		else:
-			return render(request,'buses.html',{'buses':b}) 
+			return render(request,'buses.html',{'buses':b,'track_liv':track_liv}) 
 	else:
 		s={'status':''}
 		return redirect('/')
@@ -404,7 +409,9 @@ def geofence(request):
 		tracking=td.json()
 		rt=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
 		buses=rt.json()
-		return render(request,'geofence.html',{'buses':buses,'tracking':tracking})
+		td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
+		track_liv=td.json()
+		return render(request,'geofence.html',{'buses':buses,'tracking':tracking,'track_liv':track_liv})
 	else:
 		s={'status':''}
 		return redirect('/')
@@ -421,6 +428,8 @@ def add_geofence(request):
 	if(p!=None):
 		b1=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
 		buses=b1.json()
+		td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
+		track_liv=td.json()
 		if request.method == "POST":
 			busnum = request.POST.get('busno')
 			if 'polyarray' in request.POST:
@@ -433,7 +442,7 @@ def add_geofence(request):
 					print(i)
 					requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/busgeofence',headers={'Authorization':f'Bearer {p}'},json={'routeId': busno,'latitude':i[0],'longitude':i[1],'pointNum':pno})
 					pno += 1
-		return render(request, 'add_geofence.html', {'buses':buses,'busnum': busnum})
+		return render(request, 'add_geofence.html', {'buses':buses,'busnum': busnum,'track_liv':track_liv})
 	else:
 		s={'status':''}
 		return redirect('/')
@@ -446,10 +455,12 @@ def view_geofence(request):
 		busnum = None
 		td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/busgeofence',headers={'Authorization':f'Bearer {p}'})
 		bus_res=td.json()
+		td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
+		track_liv=td.json()
 		if request.method == "POST":
 			busnum = request.POST.get('busno')
 		bus_res = [ {'lat':float(i[1]),'lng':float(i[0])} for i in bus_res[busnum]]
-		return render(request,'bus_geofence.html',{'buses':buses,'bus_co':bus_res,'busnum':busnum})
+		return render(request,'bus_geofence.html',{'buses':buses,'bus_co':bus_res,'busnum':busnum,'track-liv':track_liv})
 	else:
 		s={'status':''}
 		return redirect('/')

@@ -263,44 +263,52 @@
                       </button>
                     </div>
                     <div class="modal-body" style="padding-bottom: 55px;">
+                      <!-- Calculating Online and Offline Buses -->
+                      {{track_liv|json_script:"track_liv"}}
+                      {{buses|json_script:"buses"}}
+                      <script>
+                        var track_liv=JSON.parse(document.getElementById('track_liv').textContent);
+                        var buses=JSON.parse(document.getElementById('buses').textContent);
+                        var tBus=[]
+                        var bBus=[]
+                        var onBus=[]
+                        var offBus=[]
+                        for(i in track_liv)
+                          tBus.push({'routeId':track_liv[i]['routeId'],'routeName':track_liv[i]['routeName']})
+                        for(i in buses)
+                          bBus.push({'routeId':buses[i]['routeId'],'routeName':buses[i]['routeName']})
+                        for(i in bBus)
+                          for(j in tBus)
+                            {
+                              if(bBus[i]['routeId']==tBus[j]['routeId'])
+                              {
+                                onBus.push(bBus[i])
+                                break
+                              }
+                              else if(bBus[i]!=tBus[j] && j==tBus.length-1)
+                                offBus.push(bBus[i])
+                            }                            
+                      </script>
                       <h6 class="m-1">Online</h6>
-                      <ul class="list-group px-2 mb-3">
-                        
-                        {% for i in onBus %}
-                        <li class="px-4 list-group-item d-flex justify-content-between lh-condensed" style="padding-top: 12px;padding-bottom: 0;">
-                          <div>
-                            <a href="/home/Bus-{{i.routeId}}/">
-                              <h6 class="my-0 font-weight-bold">Bus - {{i.routeId}}</h6>
-                            </a>
-                            <small class="text-muted">{{i.routeName}}</small>
-                          </div>
-                          <span class="md-2">
-                            <i class="fas fa-circle" style="color: #1cc88a;"></i>
-                          </span>
-                        </li>
-                        {% endfor %}
-                      </ul>
+                      <!-- Online Buses -->
+                      <script>
+                        document.write("<ul class='list-group px-2 mb-3'>")
+                        for(i in onBus){
+                          document.write("<li class='px-4 list-group-item d-flex justify-content-between lh-condensed' style='padding-top: 12px;padding-bottom: 0;'><div><a href='/home/Bus-"+onBus[i]['routeId']+"/'><h6 class='my-0 font-weight-bold'>Bus - "+ onBus[i]['routeId'] + "</h6></a><small class='text-muted'>" + onBus[i]['routeName'] + "</small></div><span class='md-2'><i class='fas fa-circle' style='color: #1cc88a;'></i></span></li>")
+                        }
+                        document.write("</ul>")
+                      </script>
+                      
                       <h6 class="m-1">Offline</h6>
-                      <ul class="list-group mb-3 px-2">
-                        
-                        {% for i in offBus %}
-                        <li class="px-4 list-group-item d-flex justify-content-between lh-condensed" style="padding-top: 12px;padding-bottom: 0;">
-                          <div>
-                            <a class="disabled" href="/home/Bus-{{i.routeId}}/">
-                              <h6 class="my-0 font-weight-bold">Bus - {{i.routeId}}</h6>
-                            </a>
-                            <small class="text-muted">{{i.routeName}}</small>
-                          </div>
-                          <span class="md-2">
-                            <i class="fas fa-circle"></i>
-                          </span>
-                        </li>
-                        {% endfor %}
-                      </ul>
-					  
-                      <a href="#" class="btn btn-primary" data-dismiss="modal" aria-label="Close" style="right: 15px; position: absolute;">
-                        <span class="text">Close</span>
-                      </a>
+                      <!-- Offline Buses -->
+                      <script>
+                        document.write("<ul class='list-group px-2 mb-3'>")
+                        for(i in offBus){
+                          document.write("<li class='px-4 list-group-item d-flex justify-content-between lh-condensed' style='padding-top: 12px;padding-bottom: 0;'><div><a class='disabled' href='/home/Bus-"+offBus[i]['routeId']+"/'><h6 class='my-0 font-weight-bold'>Bus - "+ offBus[i]['routeId'] + "</h6></a><small class='text-muted'>" + offBus[i]['routeName'] + "</small></div><span class='md-2'><i class='fas fa-circle'></i></span></li>")
+                        }
+                        document.write("</ul>")
+                        document.write("<a href='#' class='btn btn-primary' data-dismiss='modal' aria-label='Close' style='right: 15px; position: absolute;'><span class='text'>Close</span></a>")
+                      </script>
                     </div>
                   </div>
                 </div>
