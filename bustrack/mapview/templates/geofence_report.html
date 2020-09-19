@@ -7,9 +7,10 @@ return "EXIT"}
 return "ENTRY"
 }
 function down(){
-
-
-        alasql("SELECT * INTO XLSX('geofence-report.xlsx',{headers:true}) FROM ? ",[d]);
+		var date=new Date();
+		date=date.toString().substring(4, 15);
+		var name='geofence-report-'+date+'.xlsx';
+        alasql("SELECT * INTO XLSX(?,{headers:true}) FROM ? ",[name,d]);
 
 } 
 </script>
