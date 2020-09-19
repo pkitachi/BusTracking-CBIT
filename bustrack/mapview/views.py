@@ -185,7 +185,20 @@ def index(request, rme = ''):
 		buses=t.json()
 		td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
 		track_liv=td.json()
-		return render(request,'index.html',{'buses':buses,'track_liv':track_liv,'rme':rme}) 
+		tBus=[]
+		bBus=[]
+		onBus=[]
+		offBus=[]
+		for i in track_liv:
+			tBus.append({'routeId':i['routeId'],'routeName':i['routeName']})
+		for i in buses:
+			bBus.append({'routeId':i['routeId'],'routeName':i['routeName']})
+		for i in bBus:
+			if(i in tBus):
+				onBus.append(i)
+			else:
+				offBus.append(i)
+		return render(request,'index.html',{'buses':buses,'track_liv':track_liv,'rme':rme,'onBus':onBus,'offBus':offBus})
 	else:
 		s={'status':''}
 		return redirect('/')
@@ -314,7 +327,7 @@ def alerts(request):
 def apicall(request):
 	if(p!=None):
 		today = date.today()
-		datee=str(today.year)+'-'+str(today.month)+'-'+str(today.day-4)
+		datee=str(today.year)+'-'+str(today.month)+'-'+str(today.day)
 		tr=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/alerts',headers={'Authorization':f'Bearer {p}'},data={'alertDate':datee})
 		alertRes=tr.json()
 		return JsonResponse(alertRes,safe=False)
