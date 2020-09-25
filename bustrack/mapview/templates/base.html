@@ -94,13 +94,13 @@
         <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">View Reports:</h6>
-            <a class="collapse-item" href="{%url 'deviceuptime'%}">Device Uptime</a>
-            <a class="collapse-item" href="{%url 'repalerts'%}">Alerts</a>
-            <a class="collapse-item" href="{%url 'routes'%}">Routes</a>
+            <!-- <a class="collapse-item" href="{%url 'deviceuptime'%}">Device Uptime</a> -->
+            <!-- <a class="collapse-item" href="{%url 'routes'%}">Routes</a> -->
+            <a class="collapse-item" href="{%url 'fleetreport'%}" data-toggle="modal" data-target="#alertreport" aria-expanded="true" aria-controls="collapseUtilities">Alerts Report</a>
+            <!-- <a class="collapse-item" href="{%url 'distance'%}">Distance</a> -->
+            <a class="collapse-item" href="{%url 'fleetreport'%}" data-toggle="modal" data-target="#fleetreport" aria-expanded="true" aria-controls="collapseUtilities">Fleet Report</a>
 			      <a class="collapse-item" href="{%url 'geofence_report'%}"  data-toggle="modal" data-target="#geo-report"  aria-expanded="true" aria-controls="collapseUtilities">GeoFence Report</a>
-            <a class="collapse-item" href="{%url 'distance'%}">Distance</a>
-            <a class="collapse-item" href="{%url 'routes'%}">Fleet Reports</a>
-            <a class="collapse-item" href="{%url 'fleetsummary'%}">Fleet Summary</a>
+            <!-- <a class="collapse-item" href="{%url 'fleetsummary'%}">Fleet Summary</a> -->
           </div>
         </div>
       </li>
@@ -446,7 +446,128 @@
             </div>
           </div>
         </div>
+<!-- FleetReport Popup Author:fox -->
+<div class="modal fade" id="fleetreport" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="m-0 font-weight-bold text-primary">Fleet Report</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span class="text">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="padding-bottom: 55px;">
+          <!-- Form code begins -->
+            <form method='POST' action="{%url 'fleetreport'%}">
+              {% csrf_token %}
+                <div class="form-group">
+                    <span class="busno">
+                    <label for="busno">Bus No.
+                    <select class="form-control" id="geo-busno" name="busno">
+                        <option value="">Choose Bus Number</option>
+                        {% for i in buses %}
+                            <option value={{i.routeId}}>Bus - {{i.routeId}}</option>
+                        {% endfor %}
+                    </select></label>
+  
+                </div>
+                <div class="form-group ">
+                    <span class="fleetdates1">
+                        <label class="control-label requiredField" for="date1">From Date<input type="text" class="form-control" id="fleet-date1" name="fleetdate1" placeholder="DD-MM-YYYY" required/></label>
+    </span> 
 
+  <span class="fleetdates2">
+    <label class="control-label requiredField" for="date2">To Date<input type="text" class="form-control" id="fleet-date2" name="fleetdate2" placeholder="DD-MM-YYYY" required/></label>
+                    </span>
+                </div>
+
+                <div class="form-group"> <!-- Submit button -->
+                    <button class="btn btn-primary " name="submit" type="submit">Ok</button>
+                </div>
+            </form>
+            <a href="#" class="btn btn-primary" data-dismiss="modal" aria-label="Close" style="right: 15px; position: absolute;">
+              <span class="text">Close</span>
+            </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Alert Popup -->
+<div class="modal fade" id="alertreport" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="m-0 font-weight-bold text-primary">Alerts Report</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span class="text">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="padding-bottom: 55px;">
+          <!-- Form code begins -->
+            <form method='POST' action="{%url 'alertreport'%}">
+              {% csrf_token %}
+                <div class="form-group">
+                    <span class="busno">
+                    <label for="busno">Bus No.
+                    <select class="form-control" id="geo-busno" name="busno">
+                        <option value="">Choose Bus Number</option>
+                        {% for i in buses %}
+                            <option value={{i.routeId}}>Bus - {{i.routeId}}</option>
+                        {% endfor %}
+                    </select></label>
+                    
+  
+                </div>
+                </span class="alert">
+                  <label for="Alert">AlertCode
+                                    <select class="form-control" id="alert-code" name="alertcode">
+                                        <option value="">Choose Alert</option>
+                                        <option value="ALL">ALL</option>
+                                        <option value="0">No Alert</option>
+                                            <option value="1">Location Update</option>
+                                            <option value="2">Location Update(History)</option>
+                                            <option value="3">Disconnect From Main Battery</option>
+                                            <option value="4">Low Battery</option>
+                                            <option value="5">Internal Battery Charged Again</option>
+                                            <option value="6">Connected to Main Battery</option>
+                                            <option value="7">Ignition ON</option>
+                                            <option value="8">Ignition OFF</option>
+                                            <option value="9">Box Opened</option>
+                                            <option value="10">Emergency State ON</option>
+                                            <option value="11">Emergency State OFF</option>
+                                            <option value="12">OTA Parameter Changed</option>
+                                            <option value="13">Harsh Braking</option>
+                                            <option value="14">Harsh Acceleration</option>
+                                            <option value="15">Rash Turning</option>
+                                            <option value="16">Device Tampered</option>
+                                    </select></label>
+  </span>
+                <div class="form-group ">
+                    <span class="alertdates1">
+                        <label class="control-label requiredField" for="date1">From Date<input type="text" class="form-control" id="alert-date1" name="alertdate1" placeholder="DD-MM-YYYY" required/></label>
+    </span> 
+
+  <span class="alertdates2">
+    <label class="control-label requiredField" for="date2">To Date<input type="text" class="form-control" id="alert-date2" name="alertdate2" placeholder="DD-MM-YYYY" required/></label>
+                    </span>
+                </div>
+
+                <div class="form-group"> <!-- Submit button -->
+                    <button class="btn btn-primary " name="submit" type="submit">Ok</button>
+                </div>
+            </form>
+            <a href="#" class="btn btn-primary" data-dismiss="modal" aria-label="Close" style="right: 15px; position: absolute;">
+              <span class="text">Close</span>
+            </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- /alertPopup -->
+
+<!-- fox -->
 	  
                 <!--Replay Tracking popup-->
           <div class="modal fade" id="replay-tracking" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">

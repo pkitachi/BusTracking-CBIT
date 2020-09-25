@@ -464,3 +464,63 @@ def view_geofence(request):
 	else:
 		s={'status':''}
 		return redirect('/')
+
+
+
+# Author fox
+def fleetreport(request):
+	if(p!=None):
+		bus = requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
+		buses = bus.json()
+		
+		if request.method =="POST":
+			bno = request.POST.get('busno')
+			gDate=request.POST.get('fleetdate1')
+			gDate1=request.POST.get('fleetdate2')
+			temp=gDate.split('-')
+			temp[0],temp[2]=temp[2],temp[0]
+			fromDate=('-'.join(temp))
+			temp1=gDate1.split('-')
+			temp1[0],temp1[2]=temp1[2],temp1[0]
+			toDate=('-'.join(temp1))
+			print(fromDate)
+			print(toDate)
+
+			fleetdata = requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/reports/fleet',headers={'Authorization':f'Bearer {p}'}, data = {'routeId':bno, 'fromDate':fromDate,'toDate':toDate})
+			fleetdata = fleetdata.json()
+		
+		return render(request,'fleet_report.html',{'busno':bno,'buses':buses,'fleetdata':fleetdata })
+	else:
+		s={'status':''}
+		return redirect('/')
+
+
+def alertreport(request):
+	if(p!=None):
+		bus = requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
+		buses = bus.json()
+		
+		if request.method =="POST":
+			print(request)
+			bno = request.POST.get('busno')
+			gDate=request.POST.get('alertdate1')
+			gDate1=request.POST.get('alertdate2')
+			temp=gDate.split('-')
+			temp[0],temp[2]=temp[2],temp[0]
+			fromDate=('-'.join(temp))
+			temp1=gDate1.split('-')
+			temp1[0],temp1[2]=temp1[2],temp1[0]
+			toDate=('-'.join(temp1))
+			alertCode = request.POST.get('alertcode')
+			print(request)
+
+			alertdata = requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/reports/fleet',headers={'Authorization':f'Bearer {p}'}, data = {'routeId':bno, 'fromDate':fromDate,'toDate':toDate})
+			alertdata = alertdata.json()
+		
+		return render(request,'alert_report.html',{'busno':bno,'buses':buses,'alertdata':alertdata,'alertid':alertCode })
+	else:
+		s={'status':''}
+		return redirect('/')
+
+
+#/ fox

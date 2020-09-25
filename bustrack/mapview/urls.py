@@ -45,6 +45,10 @@ urlpatterns = [
     path('home/geofence_report',views.geofence_report,name='geofence_report'),
 	path('home/add_geofence', views.add_geofence, name='add_geofence'),
     path('home/view_geofence', views.view_geofence, name='view_geofence'),
+    # Author Fox
+    path('home/fleetreport', views.fleetreport, name="fleetreport"),
+    path('home/alertreport', views.alertreport, name="alertreport"),
+    # /fox
     #/home/changep
     path('home/changep', views.changep, name='changep'),
 ]
