@@ -1,0 +1,66 @@
+{%extends 'basesup.html'%} {% load static %} {%block title%} CBIT Bus Tracking
+Dashboard {%endblock%} {%block main%}  
+<form method="POST" class="post-form" action="/empSos">  
+  {% csrf_token %}  
+<div class="container">  
+<br>  
+<div class="form-group row">  
+<label class="col-sm-1 col-form-label"></label>  
+<div class="col-sm-4">  
+<h3>Update Details</h3>  
+</div>  
+</div>  
+<div class="form-group row">  
+<label class="col-sm-2 col-form-label">Sos Id:</label>  
+<div class="col-sm-4">  
+    <input type="text" name="sosId" id="sosId" required maxlength="20" value="{{ employee.sosId }}"/>  
+</div>  
+</div>  
+<!-- <div class="form-group row">  
+<label class="col-sm-2 col-form-label">IMEI:</label>  
+<div class="col-sm-4">  
+    <input type="text" name="IMEI" id="id_ename" required maxlength="100" value="{{ employee.IMEI }}" />  
+</div>  
+</div>   -->
+<div class="form-group row">  
+<label class="col-sm-2 col-form-label">Sos Name 1:</label>  
+<div class="col-sm-4">  
+    <input type="text" name="sosName1" id="sosName1" required maxlength="254" value="{{ employee.sosName1 }}" />  
+</div>  
+</div>  
+<div class="form-group row">  
+<label class="col-sm-2 col-form-label">Sos Phone 1:</label>  
+<div class="col-sm-4">  
+    <input type="text" name="sosPhone1" id="sosPhone1" required maxlength="15" value="{{ employee.sosPhone1 }}" />  
+</div>  
+</div> 
+<div class="form-group row">  
+    <label class="col-sm-2 col-form-label">Sos Name 2:</label>  
+    <div class="col-sm-4">  
+        <input type="text" name="sosName2" id="sosName2" required maxlength="254" value="{{ employee.sosName2 }}" />  
+    </div>  
+    </div>  
+    <div class="form-group row">  
+    <label class="col-sm-2 col-form-label">Sos Phone 2:</label>  
+    <div class="col-sm-4">  
+        <input type="text" name="sosPhone2" id="sosPhone2" required maxlength="15" value="{{ employee.sosPhone2 }}" />  
+    </div>  
+    </div> 
+
+<!-- <div class="form-group row">  
+  <label class="col-sm-2 col-form-label">vendor Id:</label>  
+  <div class="col-sm-4">  
+      <input type="text" name="vendorId" id="driverId" required maxlength="20" value="{{ employee.vendorId }}"/>  
+  </div>  
+  </div> -->
+  
+    <div class="form-group row">  
+    <label class="col-sm-1 col-form-label"></label>  
+    <div class="col-sm-4">  
+    <button type="submit" class="btn btn-primary">Submit</button>  
+    </div>  
+  </div>  
+    </div>  
+</form>  
+
+{% endblock %}

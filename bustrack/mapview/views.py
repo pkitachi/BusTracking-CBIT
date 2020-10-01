@@ -524,3 +524,216 @@ def alertreport(request):
 
 
 #/ fox
+
+#crudex
+
+access_token = None
+def dse(request):
+    return render(request,"ds.html")
+# Create your views here.
+def add(request):
+    return render(request,"index1.html")
+def emp(request):  
+    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    access_token = r.json()['access_token']
+    new_details = {'driverId':request.POST["driverId"],"driverName":request.POST["driverName"],"Phone":request.POST["phone"]}
+    response=requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/drivers',headers={'Authorization':f'Bearer {access_token}'},data=new_details),
+    print(response)
+    return redirect('/show')  
+def show(request): 
+    global access_token 
+    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    access_token = r.json()['access_token']
+    tr=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/drivers',headers={'Authorization':f'Bearer {access_token}'})
+    drivers=tr.json()
+    
+    return render(request,"show.html",{'drivers':drivers})
+
+def edit(request, id):
+    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    access_token = r.json()['access_token']
+    tr = requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/drivers',headers={'Authorization':f'Bearer {access_token}'},data={'driverId':id}), 
+    driver= tr[0].json()
+    print(driver)
+    return render(request,'edit.html', {'employee':driver[0]})
+
+def update(request, id):
+    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    access_token = r.json()['access_token']
+    updated_details = {'driverId':request.POST["driverId"],"driverName":request.POST["driverName"],"Phone":request.POST["phone"]}
+    response=requests.put('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/drivers',headers={'Authorization':f'Bearer {access_token}'},data=updated_details),
+    print(response[0].json())
+    return redirect('/show')  
+
+def destroy(request, id): 
+    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    access_token = r.json()['access_token']
+    tr = requests.delete('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/drivers',headers={'Authorization':f'Bearer {access_token}'},data={'driverId':id}), 
+    return redirect("/show")
+
+#vehicles
+def addBus(request):
+    return render(request,"indexbus.html")
+
+def empbus(request):  
+    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    access_token = r.json()['access_token']
+    new_details = {'IMEI':request.POST["busIMEI"],"vehicleNo":request.POST["vehicleNo"],"routeId":request.POST["routeId"],"status":request.POST["busStatus"],"personCapacity":request.POST["personCapacity"],"fuelCapacity":request.POST["fuelCapacity"],"driverId":request.POST["driverId"]}
+    response=requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/buses',headers={'Authorization':f'Bearer {access_token}'},data=new_details),
+    print(response[0].json())
+    return redirect('/showbus')
+def showbus(request): 
+    global access_token 
+    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    access_token = r.json()['access_token']
+    tr=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/buses',headers={'Authorization':f'Bearer {access_token}'})
+    buses=tr.json()
+    return render(request,"showbus.html",{'buses':buses})
+    
+
+def editbus(request, id):
+    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    access_token = r.json()['access_token']
+    tr = requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/buses',headers={'Authorization':f'Bearer {access_token}'},data={'routeId':id}), 
+    driver= tr[0].json()
+    #print(driver)
+    return render(request,'editbus.html', {'employee':driver[0]})
+    
+
+def updatebus(request, id):
+    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    access_token = r.json()['access_token']
+    print("gvhjvhjv",request.POST['BusdriverId'])
+    updated_details = {'IMEI':request.POST["IMEI"],"vehicleNo":request.POST["vehicleNo"],"routeId":request.POST["routeId"],"status":request.POST["busStatus"],"personCapacity":request.POST["personCapacity"],"fuelCapacity":request.POST["fuelCapacity"],"driverId":request.POST["BusdriverId"],"vendorId":request.POST["vendorId"]}
+    response=requests.put('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/buses',headers={'Authorization':f'Bearer {access_token}'},data=updated_details),
+    print(response[0].json())
+    return redirect('/showbus')
+
+def destroybus(request, id): 
+    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    access_token = r.json()['access_token']
+    tr = requests.delete('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/buses',headers={'Authorization':f'Bearer {access_token}'},data={'routeId':id}), 
+    return redirect("/showbus")
+
+    #user
+def addUser(request):
+    return render(request,"indexUser.html")
+def empUser(request):  
+    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    access_token = r.json()['access_token']
+    new_details =  {'Id':request.POST["Id"],"username":request.POST["username"],"password":request.POST["password"],"firstName":request.POST["firstName"],"lastName":request.POST["lastName"],"phone":request.POST["phone"],"email":request.POST["email"],"createdDate":request.POST["createdDate"],"updatedDate":request.POST["updatedDate"],"vendorId":request.POST["vendorId"]}
+    response=requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/register',headers={'Authorization':f'Bearer {access_token}'},data=new_details),
+    print(response[0].json())
+    return redirect('/showuser')
+def showUser(request): 
+    global access_token 
+    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    access_token = r.json()['access_token']
+    tr=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/users',headers={'Authorization':f'Bearer {access_token}'})
+    users=tr.json()
+    
+    return render(request,"showUser.html",{'users':users})
+
+def editUser(request, id):
+    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    access_token = r.json()['access_token']
+    tr = requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/users',headers={'Authorization':f'Bearer {access_token}'},data={'Id':id}), 
+    user= tr[0].json()
+    return render(request,'editUser.html', {'users':user[0]})
+
+def updateUser(request, id):
+    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    access_token = r.json()['access_token']
+    updated_details = {'Id':request.POST["Id"],"username":request.POST["username"],"password":request.POST["password"],"firstName":request.POST["firstName"],"lastName":request.POST["lastName"],"phone":request.POST["phone"],"email":request.POST["email"],"createdDate":request.POST["createdDate"],"updatedDate":request.POST["updatedDate"],"vendorId":request.POST["vendorId"]}
+    response=requests.put('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/users',headers={'Authorization':f'Bearer {access_token}'},data=updated_details),
+    print(response[0].json())
+    return redirect('/showuser') 
+
+def destroyUser(request, id): 
+    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    access_token = r.json()['access_token']
+    tr = requests.delete('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/users',headers={'Authorization':f'Bearer {access_token}'},data={'Id':id}), 
+    return redirect("/showuser")
+
+#alertcontrol
+def addalerts(request):
+    return render(request,"indexalerts.html")
+def empalerts(request):  
+    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    access_token = r.json()['access_token']
+    new_details =  {'alertCode':request.POST["alertCode"],"alertInterval":request.POST["alertInterval"],"maxAlerts":request.POST["maxAlerts"],"description":request.POST["description"]}
+    response=requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/alertscontrol',headers={'Authorization':f'Bearer {access_token}'},data=new_details),
+    print(response)
+    return redirect('/showalerts')
+def showalerts(request): 
+    global access_token 
+    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    access_token = r.json()['access_token']
+    tr=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/alertscontrol',headers={'Authorization':f'Bearer {access_token}'})
+    alerts=tr.json()
+    
+    return render(request,"showalerts.html",{'alertcontrol':alerts})
+
+def editalerts(request, id):
+    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    access_token = r.json()['access_token']
+    tr = requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/alertscontrol',headers={'Authorization':f'Bearer {access_token}'},data={'alertCode':id}), 
+    a= tr[0].json()
+    return render(request,'editalerts.html', {'employee':a[0]})
+
+
+def updatealerts(request, id):
+    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    access_token = r.json()['access_token']
+    print(requests)
+    updated_details = {'alertCode':request.POST["alertCode"],"alertInterval":request.POST["alertInterval"],"maxAlerts":request.POST["maxAlerts"],"description":request.POST["description"]}
+    response=requests.put('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/alertscontrol',headers={'Authorization':f'Bearer {access_token}'},data=updated_details),
+    print(response[0].json())
+    return redirect('/showalerts')  
+
+def destroyalerts(request, id): 
+    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    access_token = r.json()['access_token']
+    tr = requests.delete('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/alertscontrol',headers={'Authorization':f'Bearer {access_token}'},data={'alertCode':id}), 
+    return redirect("/showalerts")
+#sos
+def addSos(request):
+    return render(request,"indexsos.html")
+
+def empSos(request):  
+    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    access_token = r.json()['access_token']
+    new_details = {'sosId':request.POST["sosId"],"sosName1":request.POST["sosName1"],"sosPhone1":request.POST["sosPhone1"],"sosName2":request.POST["sosName2"],"sosPhone2":request.POST["sosPhone2"]}
+    response=requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/sos',headers={'Authorization':f'Bearer {access_token}'},data=new_details),
+    print(response[0].json())
+    return redirect('/showsos')
+def showSos(request): 
+    global access_token 
+    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    access_token = r.json()['access_token']
+    tr=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/sos',headers={'Authorization':f'Bearer {access_token}'})
+    sos=tr.json()
+    
+    return render(request,"showsos.html",{'sos':sos})
+
+def editSos(request, id):
+    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    access_token = r.json()['access_token']
+    tr = requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/sos',headers={'Authorization':f'Bearer {access_token}'},data={'sosId':id}), 
+    sos= tr[0].json()
+    return render(request,'editsos.html', {'employee':sos[0]})
+
+def updateSos(request, id):
+    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    access_token = r.json()['access_token']
+    updated_details = {'sosId':request.POST["sosId"],"sosName1":request.POST["sosName1"],"sosPhone1":request.POST["sosPhone1"],"sosName2":request.POST["sosName2"],"sosPhone2":request.POST["sosPhone2"]}
+    response=requests.put('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/sos',headers={'Authorization':f'Bearer {access_token}'},data=updated_details),
+    print(response[0].json())
+    return render(request, 'editsos.html', {'employee': updated_details})  
+
+def destroySos(request, id): 
+    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    access_token = r.json()['access_token']
+    tr = requests.delete('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/sos',headers={'Authorization':f'Bearer {access_token}'},data={'sosId':id}), 
+    return redirect("/showsos")
+#crudex ends

@@ -1,0 +1,62 @@
+{%extends 'basesup.html'%} {% load static %} {%block title%} CBIT Bus Tracking
+Dashboard {%endblock%} {%block main%}
+    <div style="align-content: center;">
+        <center><h1>Driver Management</h1></center>
+
+    </div>
+
+    <div class="a">
+        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search by Driver Id." title="Type in a Driver Id">
+    </div>
+
+<table id='myTable' class="table table-striped table-bordered table-sm">
+    <thead class="thead-dark">
+    <tr>
+        <th>Driver ID</th>
+        <th>Driver Name</th>
+        <th>Driver Phone</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+{% for driver in drivers %}
+    <tr>
+        <td>{{ driver.driverId }}</td>
+        <td>{{ driver.driverName }}</td>
+        <td>{{ driver.phone }}</td>
+        <td>
+            <!-- TODO -->
+            <a href='/edit/{{ driver.driverId }}'><span class="glyphicon glyphicon-pencil" >Edit</span></a>
+            <a href="/delete/{{ driver.driverId }}">Delete</a>
+        </td>
+    </tr>
+{% endfor %}
+    </tbody>
+</table>
+<br>
+<br>
+<center><a href="/add" class="btn btn-primary">Add New Record</a></center>
+
+<script>
+    function myFunction() {
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("myInput");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("myTable");
+      tr = table.getElementsByTagName("tr");
+      for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[1];
+        if (td) {
+          txtValue = td.textContent || td.innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
+          }
+        }
+      }
+    }
+    </script>
+
+
+{% endblock %}

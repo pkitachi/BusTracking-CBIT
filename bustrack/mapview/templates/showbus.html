@@ -1,0 +1,74 @@
+{%extends 'basesup.html'%} {% load static %} {%block title%} CBIT Bus Tracking
+Dashboard {%endblock%} {%block main%}
+    <div style="align-content: center;">
+        <center><h1>Vehicle Management</h1></center>
+
+    </div>
+
+    <div class="a">
+        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search by Route Id." title="Type in a Route Id">
+    </div>
+
+
+<table id='myTable' class="table table-striped table-bordered table-sm">
+    <thead class="thead-dark">
+    <tr>
+        <th>IMEI</th>
+        <th>Vehicle No</th>
+        <th>Route ID</th>
+        <th>Status</th>
+        <th>Person Capacity</th>
+        <th>Fuel Capacity</th>
+        <th>Driver ID</th>
+        <th>Vendor ID</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+
+{% for bus in buses %}
+    <tr>
+        <td>{{ bus.IMEI }}</td>
+        <td>{{ bus.vehicleNo }}</td>
+        <td>{{ bus.routeId }}</td>
+        <td>{{ bus.status }}</td>
+        <td>{{ bus.personCapacity }}</td>
+        <td>{{ bus.fuelCapacity }}</td>
+        <td>{{ bus.driverId }}</td>
+        <td>{{ bus.vendorId }}</td>
+        <td>
+            <!-- TODO -->
+            <a href='/editbus/{{ bus.routeId}}'><span class="glyphicon glyphicon-pencil" >Edit</span></a>
+            <a href="/destroybus/{{ bus.routeId}}">Delete</a>
+        </td>
+    </tr>
+{% endfor %}
+    </tbody>
+</table>
+<br>
+<br>
+<center><a href="/addBus" class="btn btn-primary">Add New Record</a></center>
+
+
+<script>
+    function myFunction() {
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("myInput");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("myTable");
+      tr = table.getElementsByTagName("tr");
+      for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[2];
+        if (td) {
+          txtValue = td.textContent || td.innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
+          }
+        }
+      }
+    }
+    </script>
+
+{% endblock %}

@@ -1,0 +1,854 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <script>
+    if(sessionStorage.getItem('access')!='true' && localStorage.getItem('rme')=='0'){
+      window.open("{%url 'login'%}",'_self')
+    }
+  </script>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="shortcut icon" type="image/png" href="{% static 'cbit.png' %}"/>
+  <title>{%block title%}{%endblock%}</title>
+
+  
+  <!-- Custom fonts for this template-->
+  <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/sb-admin-2.min.css' %}">
+  <!-- Custom styles for this template-->
+  <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.2.4.min.js"></script>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <style>
+    #myInput {
+              background-image: url('/css/search icon.png');
+              background-position: 10px 10px;
+              background-repeat: no-repeat;
+              width: 80%;
+              font-size: 16px;
+              padding: 12px 100px 12px 40px;
+              border: 1px solid #ddd;
+              margin-bottom: 12px;
+              align : right;
+           }
+
+  div.a {
+              text-indent: 10%;
+            }
+
+</style>
+    
+
+</head>
+
+<body id="page-top" onload="{%block onload%}{%endblock%}">
+
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+
+    <!-- Sidebar -->
+    <ul class="navbar-nav bg-gradient-primary sidebar toggled sidebar-dark accordion" id="accordionSidebar">
+
+      <!-- Sidebar - Brand -->
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="">
+        <div class="sidebar-brand-text mx-3">Dashboard</div>
+      </a>
+
+      <!-- Divider -->
+      <hr class="sidebar-divider my-0">
+
+      <!-- Nav Item - Dashboard -->
+      <li class="nav-item {%block home%}{%endblock%}">
+        <a class="nav-link" href="/login">
+          <i class="fas fa-home"></i>
+          <span>Home</span></a> 
+      </li>
+      <hr class="sidebar-divider my-0">
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{%url 'show'%}" aria-expanded="true" aria-controls="collapseUtilities">
+          <i class="fa fa-user"></i>
+          <span>Driver Management</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{%url 'showbus'%}" aria-expanded="true" aria-controls="collapseUtilities">
+          <i class="fa fa-bus"></i>
+          <span>Vehicle Management</span>
+        </a>
+      </li>
+      
+      <hr class="sidebar-divider my-0">
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{%url 'showSOS'%}" aria-expanded="true" aria-controls="collapseUtilities">
+          <i class="fa fa-exclamation-circle"></i>
+          <span>SOS Management</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{%url 'showAlert'%}" aria-expanded="true" aria-controls="collapseUtilities">
+          <i class="fa fa-bell"></i>
+          <span>Alert Management</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{%url 'showUser'%}" aria-expanded="true" aria-controls="collapseUtilities">
+          <i class="fa fa-users"></i>
+          <span>User Management</span>
+        </a>
+      </li>
+	  <!-- <li class="nav-item {%block eta%}{%endblock%}">
+        <a class="nav-link collapsed" href="#" data-toggle="modal" data-target="#busstop-list"  aria-expanded="true" aria-controls="collapseUtilities">
+          <i class="far fa-clock"></i>
+          <span>Get ETA</span>
+        </a>
+      </li> -->
+      <!-- <li class="nav-item {%block trackhis%}{%endblock%}">
+        <a class="nav-link collapsed" href="{%url 'trackhistory'%}"   data-toggle="modal" data-target="#tracking-list"  aria-expanded="true" aria-controls="collapseUtilities">
+		  <i class="fas fa-route"></i>
+          <span>Tracking History</span></a>
+      </li> -->
+
+      
+      
+    
+
+      <!-- Sidebar Toggler (Sidebar) -->
+      <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+      </div>
+
+    </ul>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+
+        <!-- Topbar -->
+        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+          <!-- Sidebar Toggle (Topbar) -->
+          <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+            <i class="fa fa-bars"></i>
+          </button>
+          <img class="img-profile rounded-circle" alt=" "src="{% static 'img/cbit.png' %}" height="40" width="40">
+          <h4 class="m-2 font-weight-bold text-primary">CBIT Bus Tracking</h4>
+
+          <!-- Topbar Navbar -->
+          <ul class="navbar-nav ml-auto">
+
+            <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+            <li class="nav-item dropdown no-arrow d-sm-none">
+              <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-search fa-fw"></i>
+              </a>
+              <!-- Dropdown - Messages -->
+              <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
+                <form class="form-inline mr-auto w-100 navbar-search">
+                  <div class="input-group">
+                    <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                    <div class="input-group-append">
+                      <button class="btn btn-primary" type="button">
+                        <i class="fas fa-search fa-sm"></i>
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </li>
+
+            <!-- Nav Item - Alerts -->
+            <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link" href="{%url 'buses'%}" role="button">
+                <i class="fas fa-comment-alt fa-fw"></i>
+              </a>
+            </li>
+            <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-bell fa-fw"></i>
+                <!-- Counter - Alerts -->
+                <span id="alert-count" class="badge badge-danger badge-counter"></span>
+              </a>
+              <!-- Dropdown - Alerts -->
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                <h6 class="dropdown-header">
+                  Emergency Alerts
+                </h6>
+                <ul id="alert-list" class="list-group mb-0" style="margin: 10px;max-height:350px;overflow: scroll;">
+                </ul>
+                <ul class="list-group mb-3 mt-0" style="">
+                  <a class="pt-0 mt-0 text-center small text-gray-600 text-decoration-none" href="{%url 'alerts'%}">Show All Alerts</a>
+                </ul>
+              </div>
+              <script>
+              </script>
+            </li>
+
+            <div class="topbar-divider d-none d-sm-block"></div>
+
+            <!-- Nav Item - User Information -->
+            <li class="nav-item dropdown no-arrow">
+              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Admin</span>
+                <!--
+                <img class="img-profile rounded-circle" alt=" "src="{% static 'cbit.png' %}">
+              -->
+                <i class="fas fa-user"></i>
+              </a>
+              <!--  Dropdown - User Information -->
+              <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="#">
+                  <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Profile
+                </a>
+                <a class="dropdown-item" href="#">
+                  <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Settings
+                </a>
+                <a class="dropdown-item" href="#">
+                  <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Activity Log
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                  <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Logout
+                </a>
+              </div>
+            </li>
+          </ul>
+
+        </nav>
+        <!-- End of Topbar -->
+{% block main%}
+{% endblock%}
+
+<!-- Popup -->
+              <div class="modal fade popup" id="bus-list" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="m-0 font-weight-bold text-primary">Buses List</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span class="text">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body" style="padding-bottom: 55px;">
+                      <!-- Calculating Online and Offline Buses -->
+                      {{track_liv|json_script:"track_liv"}}
+                      {{buses|json_script:"buses"}}
+                      <script>
+                        var track_liv=JSON.parse(document.getElementById('track_liv').textContent);
+                        var buses=JSON.parse(document.getElementById('buses').textContent);
+                        var tBus=[]
+                        var bBus=[]
+                        var onBus=[]
+                        var offBus=[]
+                        for(i in track_liv)
+                          tBus.push({'routeId':track_liv[i]['routeId'],'routeName':track_liv[i]['routeName']})
+                        for(i in buses)
+                          bBus.push({'routeId':buses[i]['routeId'],'routeName':buses[i]['routeName']})
+                        for(i in bBus)
+                          for(j in tBus)
+                            {
+                              if(bBus[i]['routeId']==tBus[j]['routeId'])
+                              {
+                                onBus.push(bBus[i])
+                                break
+                              }
+                              else if(bBus[i]!=tBus[j] && j==tBus.length-1)
+                                offBus.push(bBus[i])
+                            }                            
+                      </script>
+                      <h6 class="m-1">Online</h6>
+                      <!-- Online Buses -->
+                      <script>
+                        document.write("<ul class='list-group px-2 mb-3'>")
+                        for(i in onBus){
+                          document.write("<li class='px-4 list-group-item d-flex justify-content-between lh-condensed' style='padding-top: 12px;padding-bottom: 0;'><div><a href='/home/Bus-"+onBus[i]['routeId']+"/'><h6 class='my-0 font-weight-bold'>Bus - "+ onBus[i]['routeId'] + "</h6></a><small class='text-muted'>" + onBus[i]['routeName'] + "</small></div><span class='md-2'><i class='fas fa-circle' style='color: #1cc88a;'></i></span></li>")
+                        }
+                        document.write("</ul>")
+                      </script>
+                      
+                      <h6 class="m-1">Offline</h6>
+                      <!-- Offline Buses -->
+                      <script>
+                        document.write("<ul class='list-group px-2 mb-3'>")
+                        for(i in offBus){
+                          document.write("<li class='px-4 list-group-item d-flex justify-content-between lh-condensed' style='padding-top: 12px;padding-bottom: 0;'><div><a class='disabled' href='/home/Bus-"+offBus[i]['routeId']+"/'><h6 class='my-0 font-weight-bold'>Bus - "+ offBus[i]['routeId'] + "</h6></a><small class='text-muted'>" + offBus[i]['routeName'] + "</small></div><span class='md-2'><i class='fas fa-circle'></i></span></li>")
+                        }
+                        document.write("</ul>")
+                        document.write("<a href='#' class='btn btn-primary' data-dismiss='modal' aria-label='Close' style='right: 15px; position: absolute;'><span class='text'>Close</span></a>")
+                      </script>
+                    </div>
+                  </div>
+                </div>
+              </div>
+			  
+			  <!--Tracking history popup-->
+				<div class="modal fade" id="tracking-list" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="m-0 font-weight-bold text-primary">Buses Tracking History</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span class="text">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body" style="padding-bottom: 55px;">
+                            <!-- Form code begins -->
+                              <form method='POST' action="{% url 'trackhistory' %}">
+                                {% csrf_token %}
+                                  <div class="form-group">
+                                      <label for="busno">Bus No.</label>
+                                      <select class="form-control" id="busno" name="busno" required>
+                                          <option value="">Choose bus</option>
+                                          {% for i in buses %}
+                                              <option value={{i.routeId}}>Bus - {{i.routeId}}</option>
+                                          {% endfor %}
+                                      </select>
+                                  </div>
+                                  <div class="form-group ">
+                                      <div class="dates">
+                                          <label class="control-label requiredField" for="date">Date</label>
+                                          <input type="text" class="form-control" id="date" name="date" placeholder="DD-MM-YYYY" required/>
+                                      </div>
+                                  </div>
+                                  <div class="form-group"> <!-- Submit button -->
+                                      <button class="btn btn-primary " name="submit" type="submit">Ok</button>
+                                  </div>
+                              </form>
+                              <a href="#" class="btn btn-primary" data-dismiss="modal" aria-label="Close" style="right: 15px; position: absolute;">
+                                <span class="text">Close</span>
+                              </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+      
+			<!--Geofence report popup-->
+				<div class="modal fade" id="geo-report" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="m-0 font-weight-bold text-primary">GeoFence Report</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span class="text">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body" style="padding-bottom: 55px;">
+                            <!-- Form code begins -->
+                              <form method='POST' action="{%url 'geofence_report'%}">
+                                {% csrf_token %}
+                                  <div class="form-group">
+									<span class="busno">
+                                      <label for="busno">Bus No.
+                                      <select class="form-control" id="geo-busno" name="busno">
+                                          <option value="">Choose Bus Number</option>
+                                          {% for i in buses %}
+                                              <option value={{i.routeId}}>Bus - {{i.routeId}}</option>
+                                          {% endfor %}
+                                      </select></label>
+									  </span class="dir">
+									  <label for="dir">Directions
+                                      <select class="form-control" id="geo-dir" name="dir">
+                                          <option value="">Choose Direction</option>
+                                              <option value="1">ENTRY</option>
+											  <option value="0">EXIT</option>
+											  <option value="-1">BOTH</option>
+                                      </select></label>
+									  </span>
+                                  </div>
+                                  <div class="form-group ">
+                                      <span class="dates1">
+                                          <label class="control-label requiredField" for="date1">From Date<input type="text" class="form-control" id="geo-date1" name="date1" placeholder="DD-MM-YYYY" required/></label>
+								      </span> 
+						
+									  <span class="dates2">
+										  <label class="control-label requiredField" for="date2">To Date<input type="text" class="form-control" id="geo-date2" name="date2" placeholder="DD-MM-YYYY" required/></label>
+                                      </span>
+                                  </div>
+								  
+                                  <div class="form-group"> <!-- Submit button -->
+                                      <button class="btn btn-primary " name="submit" type="submit">Ok</button>
+                                  </div>
+                              </form>
+                              <a href="#" class="btn btn-primary" data-dismiss="modal" aria-label="Close" style="right: 15px; position: absolute;">
+                                <span class="text">Close</span>
+                              </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+      
+	  <!--ETA popup-->
+        <div class="modal fade popup" id="busstop-list" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="m-0 font-weight-bold text-primary">Buses List</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span class="text">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body" style="padding-bottom: 55px;">
+                <h6 class="m-1">Online</h6>
+                <ul class="list-group mb-3 px-2" style="overflow-y: scroll;height: 450px;">
+                  
+                  {% for i in buses %}
+                  <li class="px-4 list-group-item d-flex justify-content-between lh-condensed" style="padding-top: 12px;padding-bottom: 0;">
+                    <div>
+                      <a href="/home/BusStopsETA-{{i.routeId}}/">
+                        <h6 class="my-0 font-weight-bold">Bus - {{i.routeId}}</h6>
+                      </a>
+                      <small class="text-muted">{{i.routeName}}</small>
+                    </div>
+                    <span class="md-2">
+                      <i class="fas fa-circle" style="color: #1cc88a;"></i>
+                    </span>
+                  </li>
+                  {% endfor %}
+                </ul>
+      
+                <a href="#" class="btn btn-primary" data-dismiss="modal" aria-label="Close" style="right: 15px; position: absolute;">
+                  <span class="text">Close</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+<!-- FleetReport Popup Author:fox -->
+<div class="modal fade" id="fleetreport" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="m-0 font-weight-bold text-primary">Fleet Report</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span class="text">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="padding-bottom: 55px;">
+          <!-- Form code begins -->
+            <form method='POST' action="{%url 'fleetreport'%}">
+              {% csrf_token %}
+                <div class="form-group">
+                    <span class="busno">
+                    <label for="busno">Bus No.
+                    <select class="form-control" id="geo-busno" name="busno">
+                        <option value="">Choose Bus Number</option>
+                        {% for i in buses %}
+                            <option value={{i.routeId}}>Bus - {{i.routeId}}</option>
+                        {% endfor %}
+                    </select></label>
+  
+                </div>
+                <div class="form-group ">
+                    <span class="fleetdates1">
+                        <label class="control-label requiredField" for="date1">From Date<input type="text" class="form-control" id="fleet-date1" name="fleetdate1" placeholder="DD-MM-YYYY" required/></label>
+    </span> 
+
+  <span class="fleetdates2">
+    <label class="control-label requiredField" for="date2">To Date<input type="text" class="form-control" id="fleet-date2" name="fleetdate2" placeholder="DD-MM-YYYY" required/></label>
+                    </span>
+                </div>
+
+                <div class="form-group"> <!-- Submit button -->
+                    <button class="btn btn-primary " name="submit" type="submit">Ok</button>
+                </div>
+            </form>
+            <a href="#" class="btn btn-primary" data-dismiss="modal" aria-label="Close" style="right: 15px; position: absolute;">
+              <span class="text">Close</span>
+            </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Alert Popup -->
+<div class="modal fade" id="alertreport" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="m-0 font-weight-bold text-primary">Alerts Report</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span class="text">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="padding-bottom: 55px;">
+          <!-- Form code begins -->
+            <form method='POST' action="{%url 'alertreport'%}">
+              {% csrf_token %}
+                <div class="form-group">
+                    <span class="busno">
+                    <label for="busno">Bus No.
+                    <select class="form-control" id="geo-busno" name="busno">
+                        <option value="">Choose Bus Number</option>
+                        {% for i in buses %}
+                            <option value={{i.routeId}}>Bus - {{i.routeId}}</option>
+                        {% endfor %}
+                    </select></label>
+                    
+  
+                </div>
+                </span class="alert">
+                  <label for="Alert">AlertCode
+                                    <select class="form-control" id="alert-code" name="alertcode">
+                                        <option value="">Choose Alert</option>
+                                        <option value="ALL">ALL</option>
+                                        <option value="0">No Alert</option>
+                                            <option value="1">Location Update</option>
+                                            <option value="2">Location Update(History)</option>
+                                            <option value="3">Disconnect From Main Battery</option>
+                                            <option value="4">Low Battery</option>
+                                            <option value="5">Internal Battery Charged Again</option>
+                                            <option value="6">Connected to Main Battery</option>
+                                            <option value="7">Ignition ON</option>
+                                            <option value="8">Ignition OFF</option>
+                                            <option value="9">Box Opened</option>
+                                            <option value="10">Emergency State ON</option>
+                                            <option value="11">Emergency State OFF</option>
+                                            <option value="12">OTA Parameter Changed</option>
+                                            <option value="13">Harsh Braking</option>
+                                            <option value="14">Harsh Acceleration</option>
+                                            <option value="15">Rash Turning</option>
+                                            <option value="16">Device Tampered</option>
+                                    </select></label>
+  </span>
+                <div class="form-group ">
+                    <span class="alertdates1">
+                        <label class="control-label requiredField" for="date1">From Date<input type="text" class="form-control" id="alert-date1" name="alertdate1" placeholder="DD-MM-YYYY" required/></label>
+    </span> 
+
+  <span class="alertdates2">
+    <label class="control-label requiredField" for="date2">To Date<input type="text" class="form-control" id="alert-date2" name="alertdate2" placeholder="DD-MM-YYYY" required/></label>
+                    </span>
+                </div>
+
+                <div class="form-group"> <!-- Submit button -->
+                    <button class="btn btn-primary " name="submit" type="submit">Ok</button>
+                </div>
+            </form>
+            <a href="#" class="btn btn-primary" data-dismiss="modal" aria-label="Close" style="right: 15px; position: absolute;">
+              <span class="text">Close</span>
+            </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- /alertPopup -->
+
+<!-- fox -->
+	  
+                <!--Replay Tracking popup-->
+          <div class="modal fade" id="replay-tracking" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="m-0 font-weight-bold text-primary">Buses Tracking History</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span class="text">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body" style="padding-bottom: 55px;">
+                    <!-- Form code begins -->
+                      <form method='POST' action="{% url 'replaytracking' %}">
+                        {% csrf_token %}
+                          <div class="form-group">
+                              <label for="bno">Bus No.</label>
+                              <select class="form-control" id="bno" name="bno" required>
+                                  <option value="">Choose bus</option>
+                                  {% for i in buses %}
+                                      <option value={{i.routeId}}>Bus - {{i.routeId}}</option>
+                                  {% endfor %}
+                              </select>
+                          </div>
+                          <div class="form-group ">
+                              <div class="dates">
+                                  <label class="control-label requiredField" for="ddate">Date</label>
+                                  <input type="text" class="form-control" id="date" name="ddate" placeholder="DD-MM-YYYY" required/>
+                              </div>
+                          </div>
+                          <div class="form-group"> <!-- Submit button -->
+                              <button class="btn btn-primary " name="submit" type="submit">Ok</button>
+                          </div>
+                      </form>
+                      <a href="#" class="btn btn-primary" data-dismiss="modal" aria-label="Close" style="right: 15px; position: absolute;">
+                        <span class="text">Close</span>
+                      </a>
+                </div>
+              </div>
+            </div>
+          </div>
+              
+<!-- Add geofence popup -->
+        <div class="modal fade" id="add_geofence_list" tabindex="-1" role="dialog"
+          aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="m-0 font-weight-bold text-primary">Add GeoFence</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span class="text">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body" style="padding-bottom: 55px;">
+                <!-- Form code begins -->
+                <form method='POST' action="{% url 'add_geofence' %}">
+                  {% csrf_token %}
+                  <div class="form-group">
+                    <label for="busno">Bus No.</label>
+                    <select class="form-control" id="busno" name="busno" required>
+                      <option value="">Choose bus</option>
+                      {% for i in buses %}
+                      <option value={{i.routeId}}>Bus - {{i.routeId}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <!-- Submit button -->
+                    <button class="btn btn-primary " name="submit" type="submit">Ok</button>
+                  </div>
+                </form>
+                <a href="#" class="btn btn-primary" data-dismiss="modal" aria-label="Close"
+                  style="right: 15px; position: absolute;">
+                  <span class="text">Close</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      <!-- View geofence popup -->
+        <div class="modal fade" id="view_geofence_list" tabindex="-1" role="dialog"
+          aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="m-0 font-weight-bold text-primary">View GeoFence</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span class="text">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body" style="padding-bottom: 55px;">
+                <!-- Form code begins -->
+                <form method='POST' action="{% url 'view_geofence' %}">
+                  {% csrf_token %}
+                  <div class="form-group">
+                    <label for="busno">Bus No.</label>
+                    <select class="form-control" id="busno" name="busno" required>
+                      <option value="">Choose bus</option>
+                      {% for i in buses %}
+                      <option value={{i.routeId}}>Bus - {{i.routeId}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <!-- Submit button -->
+                    <button class="btn btn-primary " name="submit" type="submit">Ok</button>
+                  </div>
+                </form>
+                <a href="#" class="btn btn-primary" data-dismiss="modal" aria-label="Close"
+                  style="right: 15px; position: absolute;">
+                  <span class="text">Close</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+		
+      <!-- Footer -->
+      <footer class="sticky-footer bg-white col-lg-12 mb-4">
+        <div class="container my-auto">
+          <div class="copyright text-center my-auto">
+            <span>Copyright &copy; Your Website 2020</span>
+          </div>
+        </div>
+      </footer>
+      <!-- End of Footer -->
+	  
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+  <!-- Logout Modal-->
+  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+          <a class="btn btn-primary" onclick="logout()" href="{%url 'logout'%}">Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+    <script>
+	    $(function() {
+			$('.dates #date').datepicker({
+				'format': 'dd-mm-yyyy',
+				'autoclose': true,
+                'endDate': '+0d',
+                'startDate': '-3m'
+			});
+		});
+		$(function() {
+			$('.dates1 #geo-date1').datepicker({
+				'format': 'dd-mm-yyyy',
+				'autoclose': true,
+                'endDate': '+0d',
+			});
+		});
+		$(function() {
+			$('.dates2 #geo-date2').datepicker({
+				'format': 'dd-mm-yyyy',
+				'autoclose': true,
+                'endDate': '+0d',
+			});
+		});
+    </script>
+    <!-- Alert Message -->
+    <div class="alert hide">
+      <span class="fas fa-exclamation-circle"></span>
+      <span class="msg font-weight-bold">Alert : </span>
+      <span id="alert-info" class="info font-weight-bold text-gray-800">
+      </span>
+      <div class="close-btn">
+        <span class="fas fa-times"></span>
+      </div>
+    </div>
+    <script>
+      function sms(msg){
+        $.ajax({
+          type: "GET",
+          msg:msg,
+          url: "{% url 'sms' %}",
+          success: console.log('Yes')
+        });
+      }
+      function notification(){
+        $('.alert').addClass("show");
+        $('.alert').removeClass("hide");
+        $('.alert').addClass("showAlert");
+        
+        setTimeout(function(){
+          $('.alert').removeClass("show");
+          $('.alert').addClass("hide");
+        },2000);
+      }
+      $('#alert-btn').click(notification);
+      $('.close-btn').click(function(){
+        $('.alert').removeClass("show");
+        $('.alert').addClass("hide");
+      });
+      
+      alertBtn = document.getElementById("alert-btn")
+      if(alertBtn!=null){
+        document.getElementById("alert-btn").addEventListener("click", function(){  
+          var audio = new Audio( 
+          "{% static 'beep.mp3' %}"); 
+          audio.play();  
+        });
+      }
+        
+      var track;
+      var i = 0;
+      var alertList = window.localStorage.getItem('alertList');
+      if(alertList==null){
+        alertList=[];
+      }
+      refresh()
+      function myLoop() {
+        setTimeout(function() {
+          if (i < 1) {     
+            refresh();
+            myLoop();
+          }
+        }, 10000)
+      }
+      myLoop();
+  
+      function refresh(){
+        $.ajax({
+          type: "GET",
+          url: "{{ '/home/ajax-refresh/' }}",
+          success: function(data,textStatus,request){
+            var str = ''
+            for (var i = data.length-1; i >=0; i--) {
+              time=data[i]['alertTime']
+              str+="<li class='list-group-item d-flex justify-content-between lh-condensed'><div><h6 class='my-0 font-weight-bold'>Bus - " + data[i]['routeId'] + "</h6><small class='text-muted'>"+data[i]['description']+" - "+time.substring(17,22)+"</small></div><span class='md-2'><i class='fas fa-circle' style='color: #e74a3b;'></i></span></li>"
+              if (!alertList.includes(JSON.stringify(data[i]))){
+                document.getElementById("alert-info").innerHTML = "Bus - "+parseInt(data[i]['routeId'])+ " : " + data[i]['description'] + " " ;
+                // sms(data[i]['description']);
+                notification();
+                alertList.push(JSON.stringify(data[i]));
+              }
+            }
+            document.getElementById("alert-list").innerHTML = str;
+            window.localStorage.setItem('alertList',alertList);
+            var alertCount = data.length;
+            if ( alertCount>5 ){ document.getElementById("alert-count").innerHTML = "5+"; }
+            else{ document.getElementById("alert-count").innerHTML = alertCount; }}
+        });
+            
+      }
+      function logout(){
+        console.log('something')
+        localStorage.clear()
+      }
+    </script>
+      
+    <script>
+      alertBtn = document.getElementById("alert-btn")
+      if(alertBtn!=null){
+        alertBtn.addEventListener("click", function(){  
+        var audio = new Audio( 
+        "{% static 'beep.mp3' %}"); 
+        audio.play();  });
+      }
+    </script>
+  <!-- Bootstrap core JavaScript-->
+  <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
+
+  <!-- Page level plugins -->
+ 
+
+  <!-- Page level custom scripts -->
+  
+
+    <!-- Include jQuery -->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+    <!-- Include Date Range Picker -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css"/>
+    
+</body>
+
+</html>

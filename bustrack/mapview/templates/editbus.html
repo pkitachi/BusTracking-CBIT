@@ -1,0 +1,87 @@
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+    <meta charset="UTF-8">  
+    <title>Index</title>  
+    {% load static %}  
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"/>  
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>  
+<body> 
+
+<form method="POST" class="post-form" action="/updatebus/{{employee.routeId}}">  
+        {% csrf_token %}  
+    <div class="container">  
+<br>  
+    <div class="form-group row">  
+    <label class="col-sm-1 col-form-label"></label>  
+    <div class="col-sm-4">  
+    <h3>Update Details</h3>  
+    </div>  
+  </div>  
+    <div class="form-group row">  
+    <label class="col-sm-2 col-form-label">Bus IMEI:</label>  
+    <div class="col-sm-4">  
+        <input type="text" name="IMEI" required maxlength="25" value="{{ employee.IMEI }}"/>  
+    </div>  
+  </div>  
+  <!-- <div class="form-group row">  
+    <label class="col-sm-2 col-form-label">IMEI:</label>  
+    <div class="col-sm-4">  
+        <input type="text" name="IMEI" id="id_ename" required maxlength="100" value="{{ employee.IMEI }}" />  
+    </div>  
+  </div>   -->
+    <div class="form-group row">  
+    <label class="col-sm-2 col-form-label">vehicle number</label>  
+    <div class="col-sm-4">  
+        <input type="text" name="vehicleNo" id="name" required maxlength="254" value="{{ employee.vehicleNo }}" />  
+    </div>  
+  </div>  
+    <div class="form-group row">  
+    <label class="col-sm-2 col-form-label">route id</label>  
+    <div class="col-sm-4">  
+        <input type="text" name="routeId" id="id_econtact" required maxlength="15" value="{{ employee.routeId }}" />  
+    </div>  
+  </div> 
+   <div class="form-group row">  
+    <label class="col-sm-2 col-form-label">Bus Status:</label>  
+    <div class="col-sm-4">  
+        <input type="text" name="busStatus" required maxlength="20" value="{{ employee.status }}"/>  
+    </div>  
+  </div> 
+  <div class="form-group row">  
+    <label class="col-sm-2 col-form-label">Person Capacity:</label>  
+    <div class="col-sm-4">  
+        <input type="text" name="personCapacity" required maxlength="20" value="{{ employee.personCapacity}}"/>  
+    </div>  
+  </div>  
+  <div class="form-group row">  
+    <label class="col-sm-2 col-form-label">Fuel Capacity:</label>  
+    <div class="col-sm-4">  
+        <input type="text" name="fuelCapacity" required maxlength="20" value="{{ employee.fuelCapacity }}"/>  
+    </div>  
+  </div>
+  <div class="form-group row">  
+    <label class="col-sm-2 col-form-label">Driver Id:</label>  
+    <div class="col-sm-4">  
+        <input type="text" name="BusdriverId" required maxlength="20" value="{{ employee.driverId }}"/>  
+    </div>  
+  </div>
+   <div class="form-group row">  
+    <label class="col-sm-2 col-form-label">vendor Id:</label>  
+    <div class="col-sm-4">  
+        <input type="text" name="vendorId"  required maxlength="20" value="{{ employee.vendorId }}"/>  
+    </div>  
+  </div> 
+
+  </div>   
+    <div class="form-group row">  
+    <label class="col-sm-1 col-form-label"></label>  
+    <div class="col-sm-4">  
+    <button type="submit" class="btn btn-success">Update</button>  
+    </div>  
+  </div>  
+    </div>  
+</form>  
+</body>  
+</html>  

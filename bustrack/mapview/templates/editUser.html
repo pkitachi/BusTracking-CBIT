@@ -1,0 +1,87 @@
+{%extends 'basesup.html'%} {% load static %} {%block title%} CBIT Bus Tracking
+Dashboard {%endblock%} {%block main%}
+<form method="POST" class="post-form" action="/updateUser/{{users.Id}}">  
+        {% csrf_token %}  
+    <div class="container">  
+<br>  
+    <div class="form-group row">  
+    <label class="col-sm-1 col-form-label"></label>  
+    <div class="col-sm-4">  
+    <h3>Update Details</h3>  
+    </div>  
+  </div>  
+    <div class="form-group row">  
+    <label class="col-sm-2 col-form-label">Id:</label>  
+    <div class="col-sm-4">  
+        <input type="text" name="Id" id="Id" required maxlength="20" value="{{ users.Id }}"/>  
+    </div>  
+  </div>  
+  <!-- <div class="form-group row">  
+    <label class="col-sm-2 col-form-label">IMEI:</label>  
+    <div class="col-sm-4">  
+        <input type="text" name="IMEI" id="id_ename" required maxlength="100" value="{{ employee.IMEI }}" />  
+    </div>  
+  </div>   -->
+    <div class="form-group row">  
+    <label class="col-sm-2 col-form-label">User Name:</label>  
+    <div class="col-sm-4">  
+        <input type="text" name="username" id="username" required maxlength="254" value="{{ users.username }}" />  
+    </div>  
+  </div>  
+    <div class="form-group row">  
+    <label class="col-sm-2 col-form-label">Password:</label>  
+    <div class="col-sm-4">  
+        <input type="password" name="password" id="password" required maxlength="20" value="{{ users.password }}" />  
+    </div>  
+  </div>  
+  <div class="form-group row">  
+    <label class="col-sm-2 col-form-label">First Name :</label>  
+    <div class="col-sm-4">  
+        <input type="text" name="firstName" id="firstName" required maxlength="254" value="{{ users.firstName }}" />  
+    </div>  
+  </div>  
+  <div class="form-group row">  
+    <label class="col-sm-2 col-form-label">Last Name :</label>  
+    <div class="col-sm-4">  
+        <input type="text" name="lastName" id="lastName" required maxlength="254" value="{{ users.lastName }}" />  
+    </div>  
+  </div>  
+    <div class="form-group row">  
+    <label class="col-sm-2 col-form-label">Phone :</label>  
+    <div class="col-sm-4">  
+        <input type="text" name="phone" id="phone" required maxlength="20" value="{{ users.phone }}" />  
+    </div>  
+  </div> 
+  <div class="form-group row">  
+    <label class="col-sm-2 col-form-label">Email:</label>  
+    <div class="col-sm-4">  
+        <input type="email" name="email" id="email" required maxlength="256" value="{{ users.email }}" />  
+    </div>  
+  </div>
+  <div class="form-group row">  
+    <label class="col-sm-2 col-form-label">Created Date :</label>  
+    <div class="col-sm-4">  
+        <input type="text" name="createdDate" id="lastName" required maxlength="254" value="{{ users.createdDate }}" />  
+    </div>  
+    </div>
+    <div class="form-group row">  
+        <label class="col-sm-2 col-form-label">Updated Date:</label>  
+        <div class="col-sm-4">  
+            <input type="text" name="updatedDate" id="lastName" required maxlength="254" value="{{ users.updatedDate }}" />  
+        </div>  
+        </div>  
+        <div class="form-group row">  
+          <label class="col-sm-2 col-form-label">Vendor Id:</label>  
+          <div class="col-sm-4">  
+              <input type="text" name="vendorId" id="lastName" required maxlength="254" value="{{ users.vendorId }}" />  
+          </div>  
+          </div> 
+    <div class="form-group row">  
+    <label class="col-sm-1 col-form-label"></label>  
+    <div class="col-sm-4">  
+    <button type="submit" class="btn btn-success">Update</button>  
+    </div>  
+  </div>  
+    </div>  
+</form>  
+{% endblock %}
