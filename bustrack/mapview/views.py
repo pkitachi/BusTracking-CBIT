@@ -698,5 +698,43 @@ def destroyalerts(request, id):
     access_token = r.json()['access_token']
     tr = requests.delete('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/alertscontrol',headers={'Authorization':f'Bearer {access_token}'},data={'alertCode':id}), 
     return redirect("/showalerts")
+def addVendor(request):
+    return render(request,"indexvendors.html")
 
+def empVendor(request):  
+    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    access_token = r.json()['access_token']
+    new_details = {'vendorName':request.POST["vendorName"],"vendorId":request.POST["vendorId"]}
+    response=requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/vendors',headers={'Authorization':f'Bearer {access_token}'},data=new_details),
+    print(response[0].json())
+    return redirect('/showVendor')
+def showVendor(request): 
+    global access_token 
+    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    access_token = r.json()['access_token']
+    tr=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/vendors',headers={'Authorization':f'Bearer {access_token}'})
+    vendors=tr.json()
+    
+    return render(request,"showvendors.html",{'vendors':vendors})
+
+def editVendor(request, id):
+    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    access_token = r.json()['access_token']
+    tr = requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/vendors',headers={'Authorization':f'Bearer {access_token}'},data={'vendorId':id}), 
+    vendor= tr[0].json()
+    return render(request,'editvendors.html', {'employee':vendor[0]})
+
+def updateVendor(request, id):
+    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    access_token = r.json()['access_token']
+    updated_details = {'vendorName':request.POST["vendorName"],"vendorId":request.POST["vendorId"]}
+    response=requests.put('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/vendors',headers={'Authorization':f'Bearer {access_token}'},data=updated_details),
+    print(response[0].json())
+    return redirect('/showVendor')
+
+def destroyVendor(request, id): 
+    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    access_token = r.json()['access_token']
+    tr = requests.delete('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/vendors',headers={'Authorization':f'Bearer {access_token}'},data={'vendorId':id}), 
+    return redirect("/showVendor")
 #crudex ends
