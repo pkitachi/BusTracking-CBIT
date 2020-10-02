@@ -538,7 +538,7 @@ def add(request):
 def emp(request):  
     r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
     access_token = r.json()['access_token']
-    new_details = {'driverId':request.POST["driverId"],"driverName":request.POST["driverName"],"Phone":request.POST["phone"]}
+    new_details = {"driverName":request.POST["driverName"],"Phone":request.POST["phone"]}
     response=requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/drivers',headers={'Authorization':f'Bearer {access_token}'},data=new_details),
     print(response)
     return redirect('/show')  
@@ -605,8 +605,8 @@ def editbus(request, id):
 def updatebus(request, id):
     r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
     access_token = r.json()['access_token']
-    print("gvhjvhjv",request.POST['BusdriverId'])
-    updated_details = {'IMEI':request.POST["IMEI"],"vehicleNo":request.POST["vehicleNo"],"routeId":request.POST["routeId"],"status":request.POST["busStatus"],"personCapacity":request.POST["personCapacity"],"fuelCapacity":request.POST["fuelCapacity"],"driverId":request.POST["BusdriverId"],"vendorId":request.POST["vendorId"]}
+    
+    updated_details = {'IMEI':request.POST["IMEI"],"vehicleNo":request.POST["vehicleNo"],"routeId":request.POST["routeId"],"status":request.POST["busStatus"],"personCapacity":request.POST["personCapacity"],"fuelCapacity":request.POST["fuelCapacity"],"driverId":request.POST["driverId"],"vendorId":request.POST["vendorId"]}
     response=requests.put('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/buses',headers={'Authorization':f'Bearer {access_token}'},data=updated_details),
     print(response[0].json())
     return redirect('/showbus')
@@ -623,7 +623,7 @@ def addUser(request):
 def empUser(request):  
     r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
     access_token = r.json()['access_token']
-    new_details =  {'Id':request.POST["Id"],"username":request.POST["username"],"password":request.POST["password"],"firstName":request.POST["firstName"],"lastName":request.POST["lastName"],"phone":request.POST["phone"],"email":request.POST["email"],"createdDate":request.POST["createdDate"],"updatedDate":request.POST["updatedDate"],"vendorId":request.POST["vendorId"]}
+    new_details =  {"username":request.POST["username"],"password":request.POST["password"],"firstName":request.POST["firstName"],"lastName":request.POST["lastName"],"phone":request.POST["phone"],"email":request.POST["email"],"createdDate":request.POST["createdDate"],"updatedDate":request.POST["updatedDate"],"vendorId":request.POST["vendorId"]}
     response=requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/register',headers={'Authorization':f'Bearer {access_token}'},data=new_details),
     print(response[0].json())
     return redirect('/showuser')
@@ -698,44 +698,5 @@ def destroyalerts(request, id):
     access_token = r.json()['access_token']
     tr = requests.delete('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/alertscontrol',headers={'Authorization':f'Bearer {access_token}'},data={'alertCode':id}), 
     return redirect("/showalerts")
-#sos
-def addSos(request):
-    return render(request,"indexsos.html")
 
-def empSos(request):  
-    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
-    access_token = r.json()['access_token']
-    new_details = {'sosId':request.POST["sosId"],"sosName1":request.POST["sosName1"],"sosPhone1":request.POST["sosPhone1"],"sosName2":request.POST["sosName2"],"sosPhone2":request.POST["sosPhone2"]}
-    response=requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/sos',headers={'Authorization':f'Bearer {access_token}'},data=new_details),
-    print(response[0].json())
-    return redirect('/showsos')
-def showSos(request): 
-    global access_token 
-    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
-    access_token = r.json()['access_token']
-    tr=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/sos',headers={'Authorization':f'Bearer {access_token}'})
-    sos=tr.json()
-    
-    return render(request,"showsos.html",{'sos':sos})
-
-def editSos(request, id):
-    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
-    access_token = r.json()['access_token']
-    tr = requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/sos',headers={'Authorization':f'Bearer {access_token}'},data={'sosId':id}), 
-    sos= tr[0].json()
-    return render(request,'editsos.html', {'employee':sos[0]})
-
-def updateSos(request, id):
-    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
-    access_token = r.json()['access_token']
-    updated_details = {'sosId':request.POST["sosId"],"sosName1":request.POST["sosName1"],"sosPhone1":request.POST["sosPhone1"],"sosName2":request.POST["sosName2"],"sosPhone2":request.POST["sosPhone2"]}
-    response=requests.put('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/sos',headers={'Authorization':f'Bearer {access_token}'},data=updated_details),
-    print(response[0].json())
-    return render(request, 'editsos.html', {'employee': updated_details})  
-
-def destroySos(request, id): 
-    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
-    access_token = r.json()['access_token']
-    tr = requests.delete('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/sos',headers={'Authorization':f'Bearer {access_token}'},data={'sosId':id}), 
-    return redirect("/showsos")
 #crudex ends
