@@ -53,6 +53,8 @@ def login(request):
 					buses=t.json()
 					td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
 					track_liv=td.json()
+					if(uname=='superadmin'):
+						return show(request)
 					return index(request,rme)	
 				else:
 					s1="user "+uname+" is blocked"
