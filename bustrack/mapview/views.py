@@ -45,13 +45,13 @@ def login(request):
 				global r 
 				global p
 				global td
-				r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':uname,'password':pas})
+				r = requests.post('http://cbit-bus-tracking.herokuapp.com/login',data={'username':uname,'password':pas})
 				p= r.json()['access_token']
 				accept,num=throttle_classes.allow_request(uname,1)
 				if accept:
-					t=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
+					t=requests.get('http://cbit-bus-tracking.herokuapp.com/routes',headers={'Authorization':f'Bearer {p}'})
 					buses=t.json()
-					td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
+					td=requests.get('http://cbit-bus-tracking.herokuapp.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
 					track_liv=td.json()
 					if(uname=='superadmin'):
 						return show(request)
@@ -98,7 +98,7 @@ def signup(request):
 		vendorId=request.POST['vendorid']
 		if(passw!=repassw):
 			return render(request,'invalidsignup.html',{'data':' Both Password fields do not match','color':'danger'})
-		r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/register',data={'username':uname,'password':passw,'firstName':fname,'lastName':lname,'phone':phoneNumber,'email':email,'createdDate':date.today(),'updatedDate':date.today(),'vendorId':vendorId})
+		r = requests.post('http://cbit-bus-tracking.herokuapp.com/register',data={'username':uname,'password':passw,'firstName':fname,'lastName':lname,'phone':phoneNumber,'email':email,'createdDate':date.today(),'updatedDate':date.today(),'vendorId':vendorId})
 		if(str(r)=='<Response [201]>'):
 			return render(request,'invalidsignup.html',{'data':r.json()['message'],'color':'success'})
 		if(str(r)=='<Response [400]>'):
@@ -140,12 +140,12 @@ bus_res = None
 
 def geofence_check():
 	threading.Timer(10.0, geofence_check).start()
-	track=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
+	track=requests.get('http://cbit-bus-tracking.herokuapp.com/tracking',headers={'Authorization':f'Bearer {p}'})
 	tr = track.json()
 
 	# get api request for individual geofen
 	global bus_res
-	bus_geofence_response = requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/busgeofence',headers={'Authorization':f'Bearer {p}'})
+	bus_geofence_response = requests.get('http://cbit-bus-tracking.herokuapp.com/busgeofence',headers={'Authorization':f'Bearer {p}'})
 	bus_res = bus_geofence_response.json()
 
 	for i in tr:
@@ -159,11 +159,11 @@ def geofence_check():
 
 				# if bus moves out of geofence.. raise alert
 				print("Should Raise Alert Here")
-				outalert = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/alerts',headers={'Authorization':f'Bearer {p}','Content-Type':'application/json'},json={'smsStatus':0,'routeId':i['routeId'],'alertDate':str(i['deviceTime']),'alertTime':ds,'alertCode':'100'});
+				outalert = requests.post('http://cbit-bus-tracking.herokuapp.com/alerts',headers={'Authorization':f'Bearer {p}','Content-Type':'application/json'},json={'smsStatus':0,'routeId':i['routeId'],'alertDate':str(i['deviceTime']),'alertTime':ds,'alertCode':'100'});
 			elif(check_res and bus_indi_status.get(routeIds) !=None and not bus_indi_status.get(routeIds)):
 				# bus coming back into the geofence..... raise alert
 				print("Should Raise an incoming alert here")
-				inalert = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/alerts',headers={'Authorization':f'Bearer {p}','Content-Type':'application/json'},json={'smsStatus':0,'routeId':i['routeId'],'alertDate':str(i['deviceTime']),'alertTime':ds,'alertCode':'200'});
+				inalert = requests.post('http://cbit-bus-tracking.herokuapp.com/alerts',headers={'Authorization':f'Bearer {p}','Content-Type':'application/json'},json={'smsStatus':0,'routeId':i['routeId'],'alertDate':str(i['deviceTime']),'alertTime':ds,'alertCode':'200'});
 			bus_indi_status[routeIds] = check_res
 
 		if (bus_in_status.get(i['IMEI']) == None) or (bus_in_status.get(i['IMEI']) != inGeofence(i['latitude'],i['longitude'])):	
@@ -171,21 +171,21 @@ def geofence_check():
 			gDate = str(date.today())
 			gTime = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 			if(bus_in_status.get(i['IMEI']) != None):
-				requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/geofence',headers={'Authorization':f'Bearer {p}'},json={'IMEI': i['IMEI'],'gDate':gDate,'gTime':gTime,'status':res})
+				requests.post('http://cbit-bus-tracking.herokuapp.com/geofence',headers={'Authorization':f'Bearer {p}'},json={'IMEI': i['IMEI'],'gDate':gDate,'gTime':gTime,'status':res})
 			# post into api inGeofence(i['latitude'],i['longitude'])
 			bus_in_status[i['IMEI']] = res
 			# bus_in_status[i['IMEI']] = api result
 
 def trackapicall(request):
-	th=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
+	th=requests.get('http://cbit-bus-tracking.herokuapp.com/tracking',headers={'Authorization':f'Bearer {p}'})
 	track_liv=th.json()
 	return JsonResponse(track_liv,safe=False)	
 	
 def index(request, rme = ''):
 	if(p!=None):
-		t=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
+		t=requests.get('http://cbit-bus-tracking.herokuapp.com/routes',headers={'Authorization':f'Bearer {p}'})
 		buses=t.json()
-		td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
+		td=requests.get('http://cbit-bus-tracking.herokuapp.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
 		track_liv=td.json()
 		return render(request,'index.html',{'buses':buses,'track_liv':track_liv,'rme':rme})
 	else:
@@ -194,9 +194,9 @@ def index(request, rme = ''):
 
 def trackhistory(request):
 	if(p!=None):
-		t=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
+		t=requests.get('http://cbit-bus-tracking.herokuapp.com/routes',headers={'Authorization':f'Bearer {p}'})
 		buses=t.json()
-		td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
+		td=requests.get('http://cbit-bus-tracking.herokuapp.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
 		track_liv=td.json()
 		runHrs=None;bno=None;date=None;track_his=None;driver={};
 		if request.method=="POST":
@@ -205,9 +205,9 @@ def trackhistory(request):
 			temp=date.split('-')
 			temp[0],temp[2]=temp[2],temp[0]
 			date=('-'.join(temp))
-			th=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno,'deviceTime':date})
+			th=requests.get('http://cbit-bus-tracking.herokuapp.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno,'deviceTime':date})
 			track_his=th.json()
-			td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
+			td=requests.get('http://cbit-bus-tracking.herokuapp.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
 			track_liv=td.json()
 			try:
 				#runHrs=th.json()[-1]['runHrs']
@@ -222,11 +222,11 @@ def trackhistory(request):
 		return redirect('/')
 		
 def eta(request, bno):
-	t=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
+	t=requests.get('http://cbit-bus-tracking.herokuapp.com/routes',headers={'Authorization':f'Bearer {p}'})
 	buses=t.json()
-	td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
+	td=requests.get('http://cbit-bus-tracking.herokuapp.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
 	track_liv=td.json()
-	td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno})
+	td=requests.get('http://cbit-bus-tracking.herokuapp.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno})
 	if(td.json()==[]):
 		return render(request, 'busStopsEta.html', {'curRaw':{'lat':0,'lng':0}, 'buses': buses,'bno':bno,'prop':{},'track_liv':track_liv})
 	curRaw={'lat':td.json()[0]['latitude'],'lon':td.json()[0]['longitude']}
@@ -236,15 +236,15 @@ def eta(request, bno):
 		bus_co = [{'lat': float(i[1]), 'lng': float(i[0])} for i in bus_res[bno]]
 	except:
 		bus_co=[]
-	bStops = requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/busstops',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno})
+	bStops = requests.get('http://cbit-bus-tracking.herokuapp.com/busstops',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno})
 	return render(request, 'busStopsEta.html', {'curRaw':curRaw, 'buses': buses,'bno':bno,'prop':td.json()[0],'bus_co':bus_co, 'bStops':bStops.json(),'track_liv':track_liv})
 		
 		
 def replaytracking(request):
 	if(p!=None):
-		t=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
+		t=requests.get('http://cbit-bus-tracking.herokuapp.com/routes',headers={'Authorization':f'Bearer {p}'})
 		buses=t.json()
-		td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
+		td=requests.get('http://cbit-bus-tracking.herokuapp.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
 		track_liv=td.json()
 		if request.method=="POST":
 			bno=int(request.POST.get('bno'))
@@ -252,7 +252,7 @@ def replaytracking(request):
 			temp=date.split('-')
 			temp[0],temp[2]=temp[2],temp[0]
 			date=('-'.join(temp))
-			th=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno,'deviceTime':date})
+			th=requests.get('http://cbit-bus-tracking.herokuapp.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno,'deviceTime':date})
 			track_replay=th.json()
 			#runHrs=th.json()[-1]['runHrs']
 			vNo=th.json()[0]['vehicleNo']
@@ -264,27 +264,27 @@ def replaytracking(request):
 		return redirect('/')
 def clusterview(request):
 	if(p!=None):
-		t=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
+		t=requests.get('http://cbit-bus-tracking.herokuapp.com/routes',headers={'Authorization':f'Bearer {p}'})
 		buses=t.json()
-		td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
+		td=requests.get('http://cbit-bus-tracking.herokuapp.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
 		track_liv=td.json()
-		t=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
+		t=requests.get('http://cbit-bus-tracking.herokuapp.com/tracking',headers={'Authorization':f'Bearer {p}'})
 		cluster=t.json()
 		return render(request,'clusterview.html',{'cluster':cluster,'buses': buses,'track_liv':track_liv})
 	else:
 		s={'status':''}
 		return redirect('/')	
 def clusterinfo(request):
-	trk=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
+	trk=requests.get('http://cbit-bus-tracking.herokuapp.com/tracking',headers={'Authorization':f'Bearer {p}'})
 	return JsonResponse(trk.json(),safe=False)
 
 def detail(request, bno):
 	if(p!=None):
-		t=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
+		t=requests.get('http://cbit-bus-tracking.herokuapp.com/routes',headers={'Authorization':f'Bearer {p}'})
 		buses=t.json()
-		td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
+		td=requests.get('http://cbit-bus-tracking.herokuapp.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
 		track_liv=td.json()
-		td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno})
+		td=requests.get('http://cbit-bus-tracking.herokuapp.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno})
 		if(td.json()==[]):
 			return render(request, 'bus-detail.html', {'curRaw':{'lat':0,'lng':0}, 'buses': buses,'bno':bno,'prop':{},'track_liv':track_liv})
 		curRaw={'lat':td.json()[0]['latitude'],'lon':td.json()[0]['longitude']}
@@ -298,18 +298,18 @@ def detail(request, bno):
 		s={'status':''}
 		return redirect('/')	
 def info(request,bno):
-	td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno})
+	td=requests.get('http://cbit-bus-tracking.herokuapp.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno})
 	curRaw=td.json()[0]
 	
 	return JsonResponse(curRaw)
 
 def alerts(request):
 	if(p!=None):
-		tr=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
+		tr=requests.get('http://cbit-bus-tracking.herokuapp.com/tracking',headers={'Authorization':f'Bearer {p}'})
 		track=tr.json()
-		t=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/buses',headers={'Authorization':f'Bearer {p}'})
+		t=requests.get('http://cbit-bus-tracking.herokuapp.com/buses',headers={'Authorization':f'Bearer {p}'})
 		buses=t.json()
-		td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
+		td=requests.get('http://cbit-bus-tracking.herokuapp.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
 		track_liv=td.json()
 		if (request.method)=="POST":
 			gmailaddress =request.POST['smail']
@@ -331,7 +331,7 @@ def apicall(request):
 	if(p!=None):
 		today = date.today()
 		datee=str(today.year)+'-'+str(today.month)+'-'+str(today.day)
-		tr=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/alerts',headers={'Authorization':f'Bearer {p}'},data={'alertDate':datee})
+		tr=requests.get('http://cbit-bus-tracking.herokuapp.com/alerts',headers={'Authorization':f'Bearer {p}'},data={'alertDate':datee})
 		alertRes=tr.json()
 		return JsonResponse(alertRes,safe=False)
 	else:
@@ -339,21 +339,21 @@ def apicall(request):
 		return redirect('/')
 def sms(request,msg):
 	global p
-	t=requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/sms',headers={'Authorization':f'Bearer {p}'},data={'to':'krishna','description':msg})
+	t=requests.post('http://cbit-bus-tracking.herokuapp.com/sms',headers={'Authorization':f'Bearer {p}'},data={'to':'krishna','description':msg})
 	return None
 
 def alertcall(request, date):
-	tr=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/alerts',headers={'Authorization':f'Bearer {p}'}, data={'alertDate':date})
+	tr=requests.get('http://cbit-bus-tracking.herokuapp.com/alerts',headers={'Authorization':f'Bearer {p}'}, data={'alertDate':date})
 	track=tr.json()
 	return JsonResponse(track,safe=False)
 
 def geofence_report(request):
 	if(p!=None):
-		track_data=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
+		track_data=requests.get('http://cbit-bus-tracking.herokuapp.com/tracking',headers={'Authorization':f'Bearer {p}'})
 		cluster=track_data.json()
-		bus = requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
+		bus = requests.get('http://cbit-bus-tracking.herokuapp.com/routes',headers={'Authorization':f'Bearer {p}'})
 		buses = bus.json()
-		td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
+		td=requests.get('http://cbit-bus-tracking.herokuapp.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
 		track_liv=td.json()
 		geofence_report = None
 		if request.method=="POST":
@@ -369,14 +369,14 @@ def geofence_report(request):
 			gDate1=('-'.join(temp1))
 			if request.POST['busno']:
 				if dir>=0:
-					ress=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/geofence',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno,'fromDate':gDate,'toDate':gDate1,'status':dir})
+					ress=requests.get('http://cbit-bus-tracking.herokuapp.com/geofence',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno,'fromDate':gDate,'toDate':gDate1,'status':dir})
 				else:
-					ress=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/geofence',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno,'fromDate':gDate,'toDate':gDate1})
+					ress=requests.get('http://cbit-bus-tracking.herokuapp.com/geofence',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno,'fromDate':gDate,'toDate':gDate1})
 			else:
 				if dir>=0:
-					ress=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/geofence',headers={'Authorization':f'Bearer {p}'},data={'fromDate':gDate,'toDate':gDate1,'status':dir})
+					ress=requests.get('http://cbit-bus-tracking.herokuapp.com/geofence',headers={'Authorization':f'Bearer {p}'},data={'fromDate':gDate,'toDate':gDate1,'status':dir})
 				else:
-					ress=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/geofence',headers={'Authorization':f'Bearer {p}'},data={'fromDate':gDate,'toDate':gDate1})
+					ress=requests.get('http://cbit-bus-tracking.herokuapp.com/geofence',headers={'Authorization':f'Bearer {p}'},data={'fromDate':gDate,'toDate':gDate1})
 			geofence_report=ress.json()
 		return render(request,'geofence_report.html',{'cluster':cluster,'buses': buses,'geofence_report':geofence_report,'track_liv':track_liv})
 	else:
@@ -385,11 +385,11 @@ def geofence_report(request):
 		
 def buses(request):
 	if(p!=None):
-		b = requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
+		b = requests.get('http://cbit-bus-tracking.herokuapp.com/routes',headers={'Authorization':f'Bearer {p}'})
 		b = b.json()
-		drv = requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/sms',headers={'Authorization':f'Bearer {p}'})
+		drv = requests.get('http://cbit-bus-tracking.herokuapp.com/sms',headers={'Authorization':f'Bearer {p}'})
 		drv = drv.json()
-		td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
+		td=requests.get('http://cbit-bus-tracking.herokuapp.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
 		track_liv=td.json()
 		if (request.method)=="POST":
 			lis=request.POST.get('lis')
@@ -407,11 +407,11 @@ def buses(request):
 		return redirect('/')
 def geofence(request):
 	if(p!=None):
-		td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'})
+		td=requests.get('http://cbit-bus-tracking.herokuapp.com/tracking',headers={'Authorization':f'Bearer {p}'})
 		tracking=td.json()
-		rt=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
+		rt=requests.get('http://cbit-bus-tracking.herokuapp.com/routes',headers={'Authorization':f'Bearer {p}'})
 		buses=rt.json()
-		td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
+		td=requests.get('http://cbit-bus-tracking.herokuapp.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
 		track_liv=td.json()
 		return render(request,'geofence.html',{'buses':buses,'tracking':tracking,'track_liv':track_liv})
 	else:
@@ -422,15 +422,15 @@ def changep(request):
 	global p
 	uname=request.POST['username']
 	pas=request.POST['password']
-	r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':uname,'password':pas})
+	r = requests.post('http://cbit-bus-tracking.herokuapp.com/login',data={'username':uname,'password':pas})
 	p= r.json()['access_token']
 	return redirect('index')
 @csrf_exempt
 def add_geofence(request):
 	if(p!=None):
-		b1=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
+		b1=requests.get('http://cbit-bus-tracking.herokuapp.com/routes',headers={'Authorization':f'Bearer {p}'})
 		buses=b1.json()
-		td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
+		td=requests.get('http://cbit-bus-tracking.herokuapp.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
 		track_liv=td.json()
 		if request.method == "POST":
 			busnum = request.POST.get('busno')
@@ -439,10 +439,10 @@ def add_geofence(request):
 				busno = request.POST['bno']
 				obj = eval(polyarray)
 				pno = 1
-				requests.delete('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/busgeofence',headers={'Authorization':f'Bearer {p}'},json={'routeId': busno})
+				requests.delete('http://cbit-bus-tracking.herokuapp.com/busgeofence',headers={'Authorization':f'Bearer {p}'},json={'routeId': busno})
 				for i in obj:
 					print(i)
-					requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/busgeofence',headers={'Authorization':f'Bearer {p}'},json={'routeId': busno,'latitude':i[0],'longitude':i[1],'pointNum':pno})
+					requests.post('http://cbit-bus-tracking.herokuapp.com/busgeofence',headers={'Authorization':f'Bearer {p}'},json={'routeId': busno,'latitude':i[0],'longitude':i[1],'pointNum':pno})
 					pno += 1
 		return render(request, 'add_geofence.html', {'buses':buses,'busnum': busnum,'track_liv':track_liv})
 	else:
@@ -452,12 +452,12 @@ def add_geofence(request):
 @csrf_exempt
 def view_geofence(request):
 	if(p!=None):
-		bs=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
+		bs=requests.get('http://cbit-bus-tracking.herokuapp.com/routes',headers={'Authorization':f'Bearer {p}'})
 		buses=bs.json()
 		busnum = None
-		td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/busgeofence',headers={'Authorization':f'Bearer {p}'})
+		td=requests.get('http://cbit-bus-tracking.herokuapp.com/busgeofence',headers={'Authorization':f'Bearer {p}'})
 		bus_res=td.json()
-		td=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
+		td=requests.get('http://cbit-bus-tracking.herokuapp.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':None,'deviceTime':None})
 		track_liv=td.json()
 		if request.method == "POST":
 			busnum = request.POST.get('busno')
@@ -472,7 +472,7 @@ def view_geofence(request):
 # Author fox
 def fleetreport(request):
 	if(p!=None):
-		bus = requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
+		bus = requests.get('http://cbit-bus-tracking.herokuapp.com/routes',headers={'Authorization':f'Bearer {p}'})
 		buses = bus.json()
 		
 		if request.method =="POST":
@@ -488,7 +488,7 @@ def fleetreport(request):
 			print(fromDate)
 			print(toDate)
 
-			fleetdata = requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/reports/fleet',headers={'Authorization':f'Bearer {p}'}, data = {'routeId':bno, 'fromDate':fromDate,'toDate':toDate})
+			fleetdata = requests.get('http://cbit-bus-tracking.herokuapp.com/reports/fleet',headers={'Authorization':f'Bearer {p}'}, data = {'routeId':bno, 'fromDate':fromDate,'toDate':toDate})
 			fleetdata = fleetdata.json()
 		
 		return render(request,'fleet_report.html',{'busno':bno,'buses':buses,'fleetdata':fleetdata })
@@ -499,7 +499,7 @@ def fleetreport(request):
 
 def alertreport(request):
 	if(p!=None):
-		bus = requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/routes',headers={'Authorization':f'Bearer {p}'})
+		bus = requests.get('http://cbit-bus-tracking.herokuapp.com/routes',headers={'Authorization':f'Bearer {p}'})
 		buses = bus.json()
 		
 		if request.method =="POST":
@@ -516,7 +516,7 @@ def alertreport(request):
 			alertCode = request.POST.get('alertcode')
 			print(request)
 
-			alertdata = requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/reports/fleet',headers={'Authorization':f'Bearer {p}'}, data = {'routeId':bno, 'fromDate':fromDate,'toDate':toDate})
+			alertdata = requests.get('http://cbit-bus-tracking.herokuapp.com/reports/fleet',headers={'Authorization':f'Bearer {p}'}, data = {'routeId':bno, 'fromDate':fromDate,'toDate':toDate})
 			alertdata = alertdata.json()
 		
 		return render(request,'alert_report.html',{'busno':bno,'buses':buses,'alertdata':alertdata,'alertid':alertCode })
@@ -536,41 +536,41 @@ def dse(request):
 def add(request):
     return render(request,"index1.html")
 def emp(request):  
-    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    r = requests.post('http://cbit-bus-tracking.herokuapp.com/login',data={'username':'admin','password':'admin@123'})
     access_token = r.json()['access_token']
     new_details = {"driverName":request.POST["driverName"],"Phone":request.POST["phone"]}
-    response=requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/drivers',headers={'Authorization':f'Bearer {access_token}'},data=new_details),
+    response=requests.post('http://cbit-bus-tracking.herokuapp.com/drivers',headers={'Authorization':f'Bearer {access_token}'},data=new_details),
     print(response)
     return redirect('/show')  
 def show(request): 
     global access_token 
-    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    r = requests.post('http://cbit-bus-tracking.herokuapp.com/login',data={'username':'admin','password':'admin@123'})
     access_token = r.json()['access_token']
-    tr=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/drivers',headers={'Authorization':f'Bearer {access_token}'})
+    tr=requests.get('http://cbit-bus-tracking.herokuapp.com/drivers',headers={'Authorization':f'Bearer {access_token}'})
     drivers=tr.json()
     
     return render(request,"show.html",{'drivers':drivers})
 
 def edit(request, id):
-    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    r = requests.post('http://cbit-bus-tracking.herokuapp.com/login',data={'username':'admin','password':'admin@123'})
     access_token = r.json()['access_token']
-    tr = requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/drivers',headers={'Authorization':f'Bearer {access_token}'},data={'driverId':id}), 
+    tr = requests.get('http://cbit-bus-tracking.herokuapp.com/drivers',headers={'Authorization':f'Bearer {access_token}'},data={'driverId':id}), 
     driver= tr[0].json()
     print(driver)
     return render(request,'edit.html', {'employee':driver[0]})
 
 def update(request, id):
-    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    r = requests.post('http://cbit-bus-tracking.herokuapp.com/login',data={'username':'admin','password':'admin@123'})
     access_token = r.json()['access_token']
     updated_details = {'driverId':request.POST["driverId"],"driverName":request.POST["driverName"],"Phone":request.POST["phone"]}
-    response=requests.put('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/drivers',headers={'Authorization':f'Bearer {access_token}'},data=updated_details),
+    response=requests.put('http://cbit-bus-tracking.herokuapp.com/drivers',headers={'Authorization':f'Bearer {access_token}'},data=updated_details),
     print(response[0].json())
     return redirect('/show')  
 
 def destroy(request, id): 
-    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    r = requests.post('http://cbit-bus-tracking.herokuapp.com/login',data={'username':'admin','password':'admin@123'})
     access_token = r.json()['access_token']
-    tr = requests.delete('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/drivers',headers={'Authorization':f'Bearer {access_token}'},data={'driverId':id}), 
+    tr = requests.delete('http://cbit-bus-tracking.herokuapp.com/drivers',headers={'Authorization':f'Bearer {access_token}'},data={'driverId':id}), 
     return redirect("/show")
 
 #vehicles
@@ -578,163 +578,163 @@ def addBus(request):
     return render(request,"indexbus.html")
 
 def empbus(request):  
-    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    r = requests.post('http://cbit-bus-tracking.herokuapp.com/login',data={'username':'admin','password':'admin@123'})
     access_token = r.json()['access_token']
     new_details = {'IMEI':request.POST["busIMEI"],"vehicleNo":request.POST["vehicleNo"],"routeId":request.POST["routeId"],"status":request.POST["busStatus"],"personCapacity":request.POST["personCapacity"],"fuelCapacity":request.POST["fuelCapacity"],"driverId":request.POST["driverId"]}
-    response=requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/buses',headers={'Authorization':f'Bearer {access_token}'},data=new_details),
+    response=requests.post('http://cbit-bus-tracking.herokuapp.com/buses',headers={'Authorization':f'Bearer {access_token}'},data=new_details),
     print(response[0].json())
     return redirect('/showbus')
 def showbus(request): 
     global access_token 
-    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    r = requests.post('http://cbit-bus-tracking.herokuapp.com/login',data={'username':'admin','password':'admin@123'})
     access_token = r.json()['access_token']
-    tr=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/buses',headers={'Authorization':f'Bearer {access_token}'})
+    tr=requests.get('http://cbit-bus-tracking.herokuapp.com/buses',headers={'Authorization':f'Bearer {access_token}'})
     buses=tr.json()
     return render(request,"showbus.html",{'buses':buses})
     
 
 def editbus(request, id):
-    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    r = requests.post('http://cbit-bus-tracking.herokuapp.com/login',data={'username':'admin','password':'admin@123'})
     access_token = r.json()['access_token']
-    tr = requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/buses',headers={'Authorization':f'Bearer {access_token}'},data={'routeId':id}), 
+    tr = requests.get('http://cbit-bus-tracking.herokuapp.com/buses',headers={'Authorization':f'Bearer {access_token}'},data={'routeId':id}), 
     driver= tr[0].json()
     #print(driver)
     return render(request,'editbus.html', {'employee':driver[0]})
     
 
 def updatebus(request, id):
-    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    r = requests.post('http://cbit-bus-tracking.herokuapp.com/login',data={'username':'admin','password':'admin@123'})
     access_token = r.json()['access_token']
     
     updated_details = {'IMEI':request.POST["IMEI"],"vehicleNo":request.POST["vehicleNo"],"routeId":request.POST["routeId"],"status":request.POST["busStatus"],"personCapacity":request.POST["personCapacity"],"fuelCapacity":request.POST["fuelCapacity"],"driverId":request.POST["driverId"],"vendorId":request.POST["vendorId"]}
-    response=requests.put('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/buses',headers={'Authorization':f'Bearer {access_token}'},data=updated_details),
+    response=requests.put('http://cbit-bus-tracking.herokuapp.com/buses',headers={'Authorization':f'Bearer {access_token}'},data=updated_details),
     print(response[0].json())
     return redirect('/showbus')
 
 def destroybus(request, id): 
-    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    r = requests.post('http://cbit-bus-tracking.herokuapp.com/login',data={'username':'admin','password':'admin@123'})
     access_token = r.json()['access_token']
-    tr = requests.delete('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/buses',headers={'Authorization':f'Bearer {access_token}'},data={'routeId':id}), 
+    tr = requests.delete('http://cbit-bus-tracking.herokuapp.com/buses',headers={'Authorization':f'Bearer {access_token}'},data={'routeId':id}), 
     return redirect("/showbus")
 
     #user
 def addUser(request):
     return render(request,"indexUser.html")
 def empUser(request):  
-    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    r = requests.post('http://cbit-bus-tracking.herokuapp.com/login',data={'username':'admin','password':'admin@123'})
     access_token = r.json()['access_token']
     new_details =  {"username":request.POST["username"],"password":request.POST["password"],"firstName":request.POST["firstName"],"lastName":request.POST["lastName"],"phone":request.POST["phone"],"email":request.POST["email"],"createdDate":request.POST["createdDate"],"updatedDate":request.POST["updatedDate"],"vendorId":request.POST["vendorId"]}
-    response=requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/register',headers={'Authorization':f'Bearer {access_token}'},data=new_details),
+    response=requests.post('http://cbit-bus-tracking.herokuapp.com/register',headers={'Authorization':f'Bearer {access_token}'},data=new_details),
     print(response[0].json())
     return redirect('/showuser')
 def showUser(request): 
     global access_token 
-    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    r = requests.post('http://cbit-bus-tracking.herokuapp.com/login',data={'username':'admin','password':'admin@123'})
     access_token = r.json()['access_token']
-    tr=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/users',headers={'Authorization':f'Bearer {access_token}'})
+    tr=requests.get('http://cbit-bus-tracking.herokuapp.com/users',headers={'Authorization':f'Bearer {access_token}'})
     users=tr.json()
     
     return render(request,"showUser.html",{'users':users})
 
 def editUser(request, id):
-    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    r = requests.post('http://cbit-bus-tracking.herokuapp.com/login',data={'username':'admin','password':'admin@123'})
     access_token = r.json()['access_token']
-    tr = requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/users',headers={'Authorization':f'Bearer {access_token}'},data={'Id':id}), 
+    tr = requests.get('http://cbit-bus-tracking.herokuapp.com/users',headers={'Authorization':f'Bearer {access_token}'},data={'Id':id}), 
     user= tr[0].json()
     return render(request,'editUser.html', {'users':user[0]})
 
 def updateUser(request, id):
-    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    r = requests.post('http://cbit-bus-tracking.herokuapp.com/login',data={'username':'admin','password':'admin@123'})
     access_token = r.json()['access_token']
     updated_details = {'Id':request.POST["Id"],"username":request.POST["username"],"password":request.POST["password"],"firstName":request.POST["firstName"],"lastName":request.POST["lastName"],"phone":request.POST["phone"],"email":request.POST["email"],"createdDate":request.POST["createdDate"],"updatedDate":request.POST["updatedDate"],"vendorId":request.POST["vendorId"]}
-    response=requests.put('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/users',headers={'Authorization':f'Bearer {access_token}'},data=updated_details),
+    response=requests.put('http://cbit-bus-tracking.herokuapp.com/users',headers={'Authorization':f'Bearer {access_token}'},data=updated_details),
     print(response[0].json())
     return redirect('/showuser') 
 
 def destroyUser(request, id): 
-    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    r = requests.post('http://cbit-bus-tracking.herokuapp.com/login',data={'username':'admin','password':'admin@123'})
     access_token = r.json()['access_token']
-    tr = requests.delete('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/users',headers={'Authorization':f'Bearer {access_token}'},data={'Id':id}), 
+    tr = requests.delete('http://cbit-bus-tracking.herokuapp.com/users',headers={'Authorization':f'Bearer {access_token}'},data={'Id':id}), 
     return redirect("/showuser")
 
 #alertcontrol
 def addalerts(request):
     return render(request,"indexalerts.html")
 def empalerts(request):  
-    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    r = requests.post('http://cbit-bus-tracking.herokuapp.com/login',data={'username':'admin','password':'admin@123'})
     access_token = r.json()['access_token']
     new_details =  {'alertCode':request.POST["alertCode"],"alertInterval":request.POST["alertInterval"],"maxAlerts":request.POST["maxAlerts"],"description":request.POST["description"]}
-    response=requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/alertscontrol',headers={'Authorization':f'Bearer {access_token}'},data=new_details),
+    response=requests.post('http://cbit-bus-tracking.herokuapp.com/alertscontrol',headers={'Authorization':f'Bearer {access_token}'},data=new_details),
     print(response)
     return redirect('/showalerts')
 def showalerts(request): 
     global access_token 
-    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    r = requests.post('http://cbit-bus-tracking.herokuapp.com/login',data={'username':'admin','password':'admin@123'})
     access_token = r.json()['access_token']
-    tr=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/alertscontrol',headers={'Authorization':f'Bearer {access_token}'})
+    tr=requests.get('http://cbit-bus-tracking.herokuapp.com/alertscontrol',headers={'Authorization':f'Bearer {access_token}'})
     alerts=tr.json()
     
     return render(request,"showalerts.html",{'alertcontrol':alerts})
 
 def editalerts(request, id):
-    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    r = requests.post('http://cbit-bus-tracking.herokuapp.com/login',data={'username':'admin','password':'admin@123'})
     access_token = r.json()['access_token']
-    tr = requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/alertscontrol',headers={'Authorization':f'Bearer {access_token}'},data={'alertCode':id}), 
+    tr = requests.get('http://cbit-bus-tracking.herokuapp.com/alertscontrol',headers={'Authorization':f'Bearer {access_token}'},data={'alertCode':id}), 
     a= tr[0].json()
     return render(request,'editalerts.html', {'employee':a[0]})
 
 
 def updatealerts(request, id):
-    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    r = requests.post('http://cbit-bus-tracking.herokuapp.com/login',data={'username':'admin','password':'admin@123'})
     access_token = r.json()['access_token']
     print(requests)
     updated_details = {'alertCode':request.POST["alertCode"],"alertInterval":request.POST["alertInterval"],"maxAlerts":request.POST["maxAlerts"],"description":request.POST["description"]}
-    response=requests.put('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/alertscontrol',headers={'Authorization':f'Bearer {access_token}'},data=updated_details),
+    response=requests.put('http://cbit-bus-tracking.herokuapp.com/alertscontrol',headers={'Authorization':f'Bearer {access_token}'},data=updated_details),
     print(response[0].json())
     return redirect('/showalerts')  
 
 def destroyalerts(request, id): 
-    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    r = requests.post('http://cbit-bus-tracking.herokuapp.com/login',data={'username':'admin','password':'admin@123'})
     access_token = r.json()['access_token']
-    tr = requests.delete('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/alertscontrol',headers={'Authorization':f'Bearer {access_token}'},data={'alertCode':id}), 
+    tr = requests.delete('http://cbit-bus-tracking.herokuapp.com/alertscontrol',headers={'Authorization':f'Bearer {access_token}'},data={'alertCode':id}), 
     return redirect("/showalerts")
 def addVendor(request):
     return render(request,"indexvendors.html")
 
 def empVendor(request):  
-    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    r = requests.post('http://cbit-bus-tracking.herokuapp.com/login',data={'username':'admin','password':'admin@123'})
     access_token = r.json()['access_token']
     new_details = {'vendorName':request.POST["vendorName"],"vendorId":request.POST["vendorId"]}
-    response=requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/vendors',headers={'Authorization':f'Bearer {access_token}'},data=new_details),
+    response=requests.post('http://cbit-bus-tracking.herokuapp.com/vendors',headers={'Authorization':f'Bearer {access_token}'},data=new_details),
     print(response[0].json())
     return redirect('/showVendor')
 def showVendor(request): 
     global access_token 
-    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    r = requests.post('http://cbit-bus-tracking.herokuapp.com/login',data={'username':'admin','password':'admin@123'})
     access_token = r.json()['access_token']
-    tr=requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/vendors',headers={'Authorization':f'Bearer {access_token}'})
+    tr=requests.get('http://cbit-bus-tracking.herokuapp.com/vendors',headers={'Authorization':f'Bearer {access_token}'})
     vendors=tr.json()
     
     return render(request,"showvendors.html",{'vendors':vendors})
 
 def editVendor(request, id):
-    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    r = requests.post('http://cbit-bus-tracking.herokuapp.com/login',data={'username':'admin','password':'admin@123'})
     access_token = r.json()['access_token']
-    tr = requests.get('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/vendors',headers={'Authorization':f'Bearer {access_token}'},data={'vendorId':id}), 
+    tr = requests.get('http://cbit-bus-tracking.herokuapp.com/vendors',headers={'Authorization':f'Bearer {access_token}'},data={'vendorId':id}), 
     vendor= tr[0].json()
     return render(request,'editvendors.html', {'employee':vendor[0]})
 
 def updateVendor(request, id):
-    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    r = requests.post('http://cbit-bus-tracking.herokuapp.com/login',data={'username':'admin','password':'admin@123'})
     access_token = r.json()['access_token']
     updated_details = {'vendorName':request.POST["vendorName"],"vendorId":request.POST["vendorId"]}
-    response=requests.put('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/vendors',headers={'Authorization':f'Bearer {access_token}'},data=updated_details),
+    response=requests.put('http://cbit-bus-tracking.herokuapp.com/vendors',headers={'Authorization':f'Bearer {access_token}'},data=updated_details),
     print(response[0].json())
     return redirect('/showVendor')
 
 def destroyVendor(request, id): 
-    r = requests.post('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/login',data={'username':'admin','password':'admin@123'})
+    r = requests.post('http://cbit-bus-tracking.herokuapp.com/login',data={'username':'admin','password':'admin@123'})
     access_token = r.json()['access_token']
-    tr = requests.delete('http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/vendors',headers={'Authorization':f'Bearer {access_token}'},data={'vendorId':id}), 
+    tr = requests.delete('http://cbit-bus-tracking.herokuapp.com/vendors',headers={'Authorization':f'Bearer {access_token}'},data={'vendorId':id}), 
     return redirect("/showVendor")
 #crudex ends
