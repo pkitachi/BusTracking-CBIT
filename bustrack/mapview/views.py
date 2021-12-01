@@ -255,9 +255,12 @@ def replaytracking(request):
 			th=requests.get('http://cbit-bus-tracking.herokuapp.com/tracking',headers={'Authorization':f'Bearer {p}'},data={'routeId':bno,'deviceTime':date})
 			track_replay=th.json()
 			#runHrs=th.json()[-1]['runHrs']
-			vNo=th.json()[0]['vehicleNo']
-			dname=th.json()[0]['driverName']
-			dphone=th.json()[0]['driverPhone']#'runHrs':runHrs,
+			try:
+				vNo=th.json()[0]['vehicleNo']
+				dname=th.json()[0]['driverName']
+				dphone=th.json()[0]['driverPhone']#'runHrs':runHrs,
+			except IndexError:
+				return render(request,'indexerror.html',{'buses':buses,'track_liv':track_liv})
 			return render(request,'replayTrack.html',{'vNo':vNo,'buses':buses,"bno":bno,"date":date,"track_replay":track_replay,"dname":dname,"dphone":dphone,'track_liv':track_liv}) 
 	else:
 		s={'status':''}
